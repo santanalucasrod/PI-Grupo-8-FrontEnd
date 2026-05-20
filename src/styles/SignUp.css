@@ -1,0 +1,92 @@
+
+.card{
+display: flex;
+align-items: center;
+flex-flow: column nowrap;
+background-color: rgb(73, 73, 73);
+width: 50%;
+height: 80%;
+padding: 20px;
+border-radius: 30px;
+}
+.card>h2{
+    margin-bottom: 20px;
+} 
+.alerta_erro{
+  display: flex;
+  justify-content: flex-end;
+}
+.card-login{
+    height: 55%;
+}
+.card_erro {
+  display: none;
+  background-color: #fff;
+  color: black;
+  width: 230px;
+  position: fixed;
+  border-radius: 4px;
+  border: #ED145B 3px solid;
+  padding: 10px;
+  margin-right: 10%;
+  top: 100px;
+  right: 7px;
+}
+
+.card_erro #mensagem_erro{
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.formulario .tipo_campo {
+  font-size: 20px;
+  font-weight: 600 !important;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%; 
+  width: 75%;
+}
+
+.campo>input {
+  border: 2px solid #c0c0c0;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px; 
+}
+.campo{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+.campo>a{
+  text-decoration: underline;
+  color: rgb(119, 119, 255);
+}
+
+.formulario>.botao {
+  font-family: "Barlow", sans-serif;
+  border: 0;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 10px 15px;
+  color: white;
+  background-color: rgb(61, 61, 61);
+  width: 100%;
+  align-self: center;
+  margin-top: 40px;
+}
+
+.loading-div {
+  width: 50px;
+  margin: auto;
+  display: none;
+}
+
+.loading-div img {
+  height: 50px;
+  width: 50px;
+}
