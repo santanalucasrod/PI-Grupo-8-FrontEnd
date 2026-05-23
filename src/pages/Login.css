@@ -1,13 +1,25 @@
-
+main{
+display: flex;
+justify-content: center;
+align-items: center;
+height: 92vh;
+background-image: url('../../public/vecteezy_vector-seamless-pattern-with-coffee-beans-on-beige_11430848\ 1.png') ;
+}
+header{
+  height: 8vh;
+  background-color: #8D5B42;
+}
 .card{
 display: flex;
 align-items: center;
 flex-flow: column nowrap;
-background-color: rgb(73, 73, 73);
+background-color: #8D5B42;
 width: 50%;
-height: 80%;
+height: 60%;
 padding: 20px;
 border-radius: 30px;
+color: #fff;
+font-family: sans-serif;
 }
 .card>h2{
     margin-bottom: 20px;
@@ -40,24 +52,26 @@ border-radius: 30px;
 
 .formulario .tipo_campo {
   font-size: 20px;
-  font-weight: 600 !important;
+  
 }
 
 .formulario {
   display: flex;
   flex-direction: column;
-  min-height: 100%; 
   width: 75%;
 }
 
 .campo>input {
-  border: 2px solid #c0c0c0;
-  padding: 10px;
+  border: 2px solid #EEE5D2;
+  padding: 10px 0px;
   text-align: center;
   border-radius: 10px; 
+  width: 100%;
+  margin-top: 2px;
 }
 .campo{
   display: flex;
+  align-items: flex-start;
   flex-direction: column;
   margin-bottom: 18px;
 }
@@ -74,10 +88,11 @@ border-radius: 30px;
   font-size: 18px;
   padding: 10px 15px;
   color: white;
-  background-color: rgb(61, 61, 61);
+  background-color:#EEE5D2;
   width: 100%;
   align-self: center;
-  margin-top: 40px;
+  color: #8D5B42;
+  margin-top: 12vh;
 }
 
 .loading-div {

@@ -1,0 +1,107 @@
+main{
+display: flex;
+justify-content: center;
+align-items: center;
+height: 92vh;
+background-image: url('../../public/vecteezy_vector-seamless-pattern-with-coffee-beans-on-beige_11430848\ 1.png') ;
+}
+header{
+  height: 8vh;
+  background-color: #8D5B42;
+}
+.card{
+display: flex;
+align-items: center;
+flex-flow: column nowrap;
+background-color: #8D5B42;
+width: 50%;
+height: 60%;
+padding: 20px;
+border-radius: 30px;
+color: #fff;
+font-family: sans-serif;
+}
+.card>h2{
+    margin-bottom: 20px;
+} 
+.alerta_erro{
+  display: flex;
+  justify-content: flex-end;
+}
+.card-login{
+    height: 55%;
+}
+.card_erro {
+  display: none;
+  background-color: #fff;
+  color: black;
+  width: 230px;
+  position: fixed;
+  border-radius: 4px;
+  border: #ED145B 3px solid;
+  padding: 10px;
+  margin-right: 10%;
+  top: 100px;
+  right: 7px;
+}
+
+.card_erro #mensagem_erro{
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.formulario .tipo_campo {
+  font-size: 20px;
+  
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+
+.campo>input {
+  border: 2px solid #EEE5D2;
+  padding: 10px 0px;
+  text-align: center;
+  border-radius: 10px; 
+  width: 100%;
+  margin-top: 2px;
+}
+.campo{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+.campo>a{
+  text-decoration: underline;
+  color: rgb(119, 119, 255);
+}
+
+.formulario>.botao {
+  font-family: "Barlow", sans-serif;
+  border: 0;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 10px 15px;
+  color: white;
+  background-color:#EEE5D2;
+  width: 100%;
+  align-self: center;
+  color: #8D5B42;
+  margin-top: 8vh;
+}
+
+.loading-div {
+  width: 50px;
+  margin: auto;
+  display: none;
+}
+
+.loading-div img {
+  height: 50px;
+  width: 50px;
+}
