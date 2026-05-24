@@ -1,10 +1,75 @@
-import Cadastro from '../components/Cadastro';
+import { useEffect, useState } from "react";
 import '../pages/CadastroFuncionario.css' ;
 function CadastroFuncionario() {
 
     function cadastrar() {
-        console.log("Botão clicado")
+        var emailVar = email_input.value;
+        var nomeVar = nome_input.value;
+        var senhaVar = senha_input.value;
+
+        if (emailVar == "" || senhaVar == "") {
+            cardErro.style.display = "block"
+            mensagem_erro.innerHTML = "(todos os campos estão em branco)";
+            
+            return false;
+        }
+        else {
+            setInterval(sumirMensagem, 5000)
+        }
+
+        console.log("FORM LOGIN: ", emailVar);
+        console.log("FORM SENHA: ", senhaVar);
+
+        fetch("http://localhost:8080/funcionario/cadastro", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nome: nomeVar,
+                email: emailVar,
+                senha: senhaVar,
+                gerente: false
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+
+            if (resposta.ok) {
+                console.log(resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+                    localStorage.token = json.token; 
+
+                    setTimeout(function () {
+                        window.location = "./index.html";
+                    }, 1000); // apenas para exibir o loading
+
+                });
+
+            } else {
+
+                console.log("Houve um erro ao tentar realizar o login!");
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+        
     }
+    
+    function sumirMensagem() {
+        cardErro.style.display = "none"
+    }
+    
 
     return (
         <>
@@ -24,7 +89,7 @@ function CadastroFuncionario() {
                 <div className="formulario">
                     <div className="campo">
                         <span>Nome:</span>
-                        <input id="email_input" type="text" placeholder="Nome" />
+                        <input id="nome_input" type="text" placeholder="Nome" />
                     </div>
 
                     <div className="campo">
