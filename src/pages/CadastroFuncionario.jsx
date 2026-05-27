@@ -72,10 +72,7 @@ function CadastroFuncionario() {
     
 
     return (
-        <>
-        <header>
-            
-        </header>
+        <> 
         <main>
             <div className="login">
                 <div className="alerta_erro">
@@ -85,7 +82,7 @@ function CadastroFuncionario() {
                 </div>
             </div>
             <div className="card card-cadastro">
-                <h2>Adicionar</h2>
+                <h2>Adicionar Funcionario</h2>
                 <div className="formulario">
                     <div className="campo">
                         <span>Nome:</span>

@@ -67,10 +67,7 @@ function Login() {
         cardErro.style.display = "none"
     }
     return (
-        <>
-        <header>
-            
-        </header>
+        <> 
         <main>
             <div className="login">
                 <div className="alerta_erro">

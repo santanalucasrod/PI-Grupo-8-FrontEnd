@@ -1,14 +1,17 @@
-import styles from "./Header.module.css"
+// import styles from "./Header.module.css"
+import "../components/Header.css";
+import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 function Header() {
     return(
-        <header style={styles.header}>
-            <div className="logo" >
-                <h1>Teste</h1>
+        <header >
+            <div className="logo"  >
+                <div className="logo-circle">K</div>
+                <h1>Kento Café</h1>
             </div>
             <div className="navigation">
-                <h2>Cadastro</h2>
-                <h2>Login</h2>
-                <h2>Dashboard</h2>
+                <Link to="/cadastro"  className="link">Cadastro</Link>
+                <Link to="/login" className="link" >Login</Link>
+                <Link to="/dashboard"  className="link">Dashboard</Link>
             </div>
         </header>
 

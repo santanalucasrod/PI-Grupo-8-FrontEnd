@@ -1,0 +1,35 @@
+header{
+  height: 8vh;
+  background-color: #8D5B42;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  justify-content: space-between;
+
+  align-items: center;
+  padding: 0 24px;
+  gap: 12px;
+}
+header>div{
+  display: flex;
+  flex-direction: row;
+  
+}
+
+.logo-circle{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-right: 10px;
+}
+.navigation>.link{
+  text-decoration: none;
+  color: white;
+  margin-left: 20px;
+  font-size: 14pt;
+}

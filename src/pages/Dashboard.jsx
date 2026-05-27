@@ -268,12 +268,7 @@ function Dashboard() {
   const data = mockData[periodo] || mockData["Esta Semana"];
 
   return (
-    <>
-      <header className="dashboard-header">
-        <div className="logo-circle">K</div>
-        <h1>Kento Café</h1>
-      </header>
-
+    <> 
       <main className="dashboard-main">
         {/* Período */}
         <div className="periodo-bar">
