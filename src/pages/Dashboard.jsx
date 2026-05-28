@@ -29,6 +29,70 @@ Chart.register(
   Legend
 );
 
+//data real
+const realData = {
+  Hoje: {
+    faturamento: 1240.5,
+    pedidos: 87,
+    tempoMedio: 5.8,
+    produtoTop: "Espresso",
+    barras: {
+      labels: ["08h", "10h", "12h", "14h", "16h", "18h"],
+      fat:    [600,   950,  1200,  800,   700,   500],
+      ped:    [30,    55,   80,    45,    40,    28],
+    },
+    categorias: {
+      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
+      valores: [72, 48, 35, 22],
+    },
+  },
+  "Esta Semana": {
+    faturamento: 8730.0,
+    pedidos: 2000,
+    tempoMedio: 6.5,
+    produtoTop: "Cappuccino",
+    barras: {
+      labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+      fat:    [800,  1100,  950,  1300, 1200, 1400, 1000],
+      ped:    [45,   70,   60,   90,   85,   110,  65],
+    },
+    categorias: {
+      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
+      valores: [68, 54, 42, 30],
+    },
+  },
+  "Este Mês": {
+    faturamento: 32400.0,
+    pedidos: 7840,
+    tempoMedio: 6.2,
+    produtoTop: "Latte",
+    barras: {
+      labels: ["Semana 1", "Semana 2", "Semana 3", "Semana 4"],
+      fat:    [7000, 10000, 13000, 11500],
+      ped:    [400,  650,   900,   750],
+    },
+    categorias: {
+      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
+      valores: [65, 58, 46, 28],
+    },
+  },
+  Personalizado: {
+    faturamento: 15200.0,
+    pedidos: 3620,
+    tempoMedio: 7.1,
+    produtoTop: "Mocha",
+    barras: {
+      labels: ["Dia 1", "Dia 2", "Dia 3", "Dia 4", "Dia 5"],
+      fat:    [900,  1050,  850,  1200,  950],
+      ped:    [55,   68,    50,   80,    60],
+    },
+    categorias: {
+      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
+      valores: [70, 45, 38, 25],
+    },
+  },
+};
+
 // Mock data
 const mockData = {
   Hoje: {
@@ -266,6 +330,26 @@ function DonutChart({ categorias }) {
 function Dashboard() {
   const [periodo, setPeriodo] = useState("Esta Semana");
   const data = mockData[periodo] || mockData["Esta Semana"];
+  var faturamento=0
+  var soma_pedidos=0
+  
+
+  useEffect(()=>{ 
+    async function carregarData() { 
+      try {
+        const response = await fetch('http://localhost:8080/produtos')
+        const data = await response.json()
+        
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+
+      }
+    }
+    
+    carregarData()
+  },[])
+  
 
   return (
     <> 

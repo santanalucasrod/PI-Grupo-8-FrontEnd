@@ -53,7 +53,7 @@ body {
 .dashboard-main {
   min-height: 92vh;
   background-color: var(--cream-bg);
-  padding: 20px 28px 28px;
+  padding: 20px 10% 28px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -112,6 +112,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+  width: 100%;
 }
 
 .kpi-card {
@@ -164,6 +165,8 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   flex: 1;
+  width: 100%;
+  height: 100px;
 }
 
 .chart-card {
@@ -173,8 +176,8 @@ body {
   color: var(--white);
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: 260px;
+  gap: 16px; 
+  min-width: 180px;
 }
 
 .chart-card .chart-title {
@@ -441,12 +444,11 @@ body {
 
 .chartjs-wrap {
   flex: 1;
-  position: relative;
-  min-height: 200px;
+  position: relative; 
+  max-height: 100%;
 }
 
 .chartjs-wrap.donut {
-  min-height: 240px;
 }
 
 .chart-area, .bar-group, .bar-wrap, .bar,
