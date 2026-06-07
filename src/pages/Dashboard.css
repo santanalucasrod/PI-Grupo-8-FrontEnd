@@ -21,6 +21,9 @@ body {
   font-family: 'Barlow', sans-serif;
   background-color: var(--cream-bg);
 }
+.dashboard-main{
+  background-image: none;
+}
 
 .dashboard-header {
   height: 8vh;

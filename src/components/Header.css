@@ -26,6 +26,10 @@ header>div{
   justify-content: center;
   font-size: 18px;
   margin-right: 10px;
+  color: white;
+}
+.company-name{
+  color: white;
 }
 .navigation>.link{
   text-decoration: none;

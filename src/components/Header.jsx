@@ -6,7 +6,7 @@ function Header() {
         <header >
             <div className="logo"  >
                 <div className="logo-circle">K</div>
-                <h1>Kento Café</h1>
+                <h1 className="company-name">Kento Café</h1>
             </div>
             <div className="navigation">
                 <Link to="/cadastro"  className="link">Cadastro</Link>

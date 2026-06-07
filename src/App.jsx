@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Login from './pages/Login.jsx'
 import CadastroFuncionario from './pages/CadastroFuncionario.jsx'
-import Dashboard from './pages/Dashboardhideo.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 import './index.css'
 import Header from './components/Header.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
