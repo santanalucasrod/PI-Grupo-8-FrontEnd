@@ -46,7 +46,7 @@ function Login() {
                     window.location = "./index.html";
                 }, 1000);
             } else {
-                setErro("Email ou Senha Incorretos");
+                setErro("Email ou Senha Inválidos");
                 setMostrarErro(true);
 
                 // setTimeout(sumirMensagem, 5000);
@@ -66,15 +66,12 @@ function Login() {
 
             <div className="login">
                 <div className="alerta_erro">
-                    {
-                        console.log(mostrarErro)
-                    }
-                    {
-                        mostrarErro && (
-                            <div className="card_erro">
-                                <span>{erro}</span>
-                            </div>
-                        )}
+                    {   
+                    mostrarErro && (
+                        <div className="card_erro">
+                            <span>{erro}</span>
+                        </div>
+                    )}
                 </div>
             </div>
 

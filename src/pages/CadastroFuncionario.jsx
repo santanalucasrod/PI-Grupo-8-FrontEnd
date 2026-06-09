@@ -74,13 +74,6 @@ function CadastroFuncionario() {
     return (
         <> 
         <main>
-            <div className="login">
-                <div className="alerta_erro">
-                    <div className="card_erro" id="cardErro">
-                        <span id="mensagem_erro"></span>
-                    </div>
-                </div>
-            </div>
             <div className="card card-cadastro">
                 <h2>Adicionar Funcionario</h2>
                 <div className="formulario">
