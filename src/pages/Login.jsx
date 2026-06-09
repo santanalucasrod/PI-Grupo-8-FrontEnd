@@ -10,10 +10,8 @@ function Login() {
             cardErro.style.display = "block"
             mensagem_erro.innerHTML = "(todos os campos estão em branco)";
             
+            setTimeout(sumirMensagem, 5000)
             return false;
-        }
-        else {
-            setInterval(sumirMensagem, 5000)
         }
 
         console.log("FORM LOGIN: ", emailVar);
@@ -46,21 +44,17 @@ function Login() {
                 });
 
             } else {
-
-                console.log("Houve um erro ao tentar realizar o login!");
-
-                resposta.text().then(texto => {
-                    console.error(texto);
-                    
-                });
+                cardErro.style.display = "block"
+                mensagem_erro.innerHTML = "Email ou Senha Incorretos";
+                return false;
+                
             }
 
         }).catch(function (erro) {
             console.log(erro);
+            
         })
 
-        return false;
-        
     }
     
     function sumirMensagem() {
