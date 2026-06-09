@@ -1,100 +1,114 @@
-import '../pages/Login.css' ;
-import { useEffect, useState } from "react";
-function Login() {
-     
-    function login() {
-        var emailVar = email_input.value;
-        var senhaVar = senha_input.value;
+import "../pages/Login.css";
+import { useState } from "react";
 
-        if (emailVar == "" || senhaVar == "") {
-            cardErro.style.display = "block"
-            mensagem_erro.innerHTML = "(todos os campos estão em branco)";
-            
-            setTimeout(sumirMensagem, 5000)
-            return false;
+function Login() {
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+
+    const [erro, setErro] = useState("");
+    const [mostrarErro, setMostrarErro] = useState(false);
+
+    function sumirMensagem() {
+        setMostrarErro(false);
+        setErro("");
+    }
+
+    async function login() {
+        if (email === "" || senha === "") {
+            setErro("(todos os campos estão em branco)");
+            setMostrarErro(true);
+
+            setTimeout(sumirMensagem, 5000);
+            return;
         }
 
-        console.log("FORM LOGIN: ", emailVar);
-        console.log("FORM SENHA: ", senhaVar);
+        console.log("FORM LOGIN:", email);
+        console.log("FORM SENHA:", senha);
 
-        fetch("http://localhost:8080/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: emailVar,
-                password: senhaVar
-            })
-        }).then(function (resposta) {
-            console.log("ESTOU NO THEN DO entrar()!")
-
+        try {
+            const resposta = await fetch("http://localhost:8080/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: senha,
+                }),
+            });
             if (resposta.ok) {
-                console.log(resposta);
+                const json = await resposta.json();
 
-                resposta.json().then(json => {
-                    console.log(json);
-                    console.log(JSON.stringify(json));
-                    localStorage.token = json.token; 
+                console.log(json);
+                localStorage.setItem("token", json.token);
 
-                    setTimeout(function () {
-                        window.location = "./index.html";
-                    }, 1000); // apenas para exibir o loading
-
-                });
-
+                setTimeout(() => {
+                    window.location = "./index.html";
+                }, 1000);
             } else {
-                cardErro.style.display = "block"
-                mensagem_erro.innerHTML = "Email ou Senha Incorretos";
-                return false;
-                
+                setErro("Email ou Senha Incorretos");
+                setMostrarErro(true);
+
+                // setTimeout(sumirMensagem, 5000);
+
             }
-
-        }).catch(function (erro) {
+        } catch (erro) {
             console.log(erro);
-            
-        })
+            setErro("Erro ao conectar com o servidor");
+            setMostrarErro(true);
 
+            setTimeout(sumirMensagem, 5000);
+        }
     }
-    
-    function sumirMensagem() {
-        cardErro.style.display = "none"
-    }
+
     return (
-        <> 
         <main>
+
             <div className="login">
                 <div className="alerta_erro">
-                    <div className="card_erro" id="cardErro">
-                        <span id="mensagem_erro"></span>
-                    </div>
+                    {
+                        console.log(mostrarErro)
+                    }
+                    {
+                        mostrarErro && (
+                            <div className="card_erro">
+                                <span>{erro}</span>
+                            </div>
+                        )}
                 </div>
             </div>
+
             <div className="card card-cadastro">
                 <h2>Acesso</h2>
+
                 <div className="formulario">
                     <div className="campo">
                         <span>Email:</span>
-                        <input id="email_input" type="text" placeholder="meuemail@provedor.com" />
+                        <input
+                            type="text"
+                            placeholder="meuemail@provedor.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
 
                     <div className="campo">
                         <span>Senha:</span>
-                        <input id="senha_input" type="password" placeholder="******" />
+                        <input
+                            type="password"
+                            placeholder="******"
+                            value={senha}
+                            onChange={(e) => setSenha(e.target.value)}
+                        />
                     </div>
-                    
-                    <button className="botao" onClick={login}>Acessar</button>
-                </div>
-                <div id="div_aguardar" className="loading-div">
-                    <img src="./assets/circle-loading.gif" id="loading-gif" />
-                </div>
 
-                <div id="div_erros_login"></div>
+                    <button className="botao" onClick={login}>
+                        Acessar
+                    </button>
+                </div>
             </div>
         </main>
-        
-        </>
-    )
+    );
 }
 
-export default Login
+export default Login;

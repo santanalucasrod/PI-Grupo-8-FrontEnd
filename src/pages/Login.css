@@ -28,7 +28,6 @@ font-family: sans-serif;
     height: 55%;
 }
 .card_erro {
-  display: none;
   background-color: #fff;
   color: black;
   width: 230px;
@@ -39,6 +38,8 @@ font-family: sans-serif;
   margin-right: 10%;
   top: 100px;
   right: 7px;
+  display: block;
+  z-index: 9999;
 }
 
 .card_erro #mensagem_erro{
@@ -91,14 +92,4 @@ font-family: sans-serif;
   margin-top: 12vh;
   margin-bottom: 2vh;
 }
-
-.loading-div {
-  width: 50px;
-  margin: auto;
-  display: none;
-}
-
-.loading-div img {
-  height: 50px;
-  width: 50px;
-}
+ 
