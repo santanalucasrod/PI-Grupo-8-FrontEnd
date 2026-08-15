@@ -1,22 +1,22 @@
-header{
+.header {
   height: 8vh;
-  background-color: #8D5B42;
+  background-color: #8d5b42;
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
   justify-content: space-between;
-
   align-items: center;
   padding: 0 24px;
   gap: 12px;
 }
-header>div{
+
+.logo {
   display: flex;
   flex-direction: row;
-  
+  align-items: center;
 }
 
-.logo-circle{
+.logoCircle {
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -26,14 +26,23 @@ header>div{
   justify-content: center;
   font-size: 18px;
   margin-right: 10px;
+
   color: white;
 }
-.company-name{
+
+.companyName {
   color: white;
 }
-.navigation>.link{
+
+.navigation {
+  display: flex;
+  flex-direction: row;
+}
+
+.link {
   text-decoration: none;
   color: white;
+
   margin-left: 20px;
   font-size: 14pt;
 }

@@ -1,15 +1,18 @@
+import styles from './CadastroFuncionario.module.css';
 import { useEffect, useState } from "react";
-import '../pages/CadastroFuncionario.css' ;
+
 function CadastroFuncionario() {
 
     function cadastrar() {
-        var emailVar = email_input.value;
-        var nomeVar = nome_input.value;
-        var senhaVar = senha_input.value;
+        var emailVar = nome_input ? nome_input.value : document.getElementById('email_input')?.value;
+        var nomeVar = document.getElementById('nome_input')?.value;
+        var senhaVar = document.getElementById('senha_input')?.value;
 
         if (emailVar == "" || senhaVar == "") {
-            cardErro.style.display = "block"
-            mensagem_erro.innerHTML = "(todos os campos estão em branco)";
+            const cardErro = document.getElementById('div_erros_login')
+            if (cardErro) cardErro.style.display = "block"
+            const mensagem_erro = document.getElementById('mensagem_erro')
+            if (mensagem_erro) mensagem_erro.innerHTML = "(todos os campos estão em branco)";
             
             return false;
         }
@@ -67,41 +70,35 @@ function CadastroFuncionario() {
     }
     
     function sumirMensagem() {
-        cardErro.style.display = "none"
+        const cardErro = document.getElementById('div_erros_login')
+        if (cardErro) cardErro.style.display = "none"
     }
     
 
     return (
         <> 
         <main>
-            <div className="login">
-                <div className="alerta_erro">
-                    <div className="card_erro" id="cardErro">
-                        <span id="mensagem_erro"></span>
-                    </div>
-                </div>
-            </div>
-            <div className="card card-cadastro">
+            <div className={styles.card}>
                 <h2>Adicionar Funcionario</h2>
-                <div className="formulario">
-                    <div className="campo">
+                <div className={styles.formulario}>
+                    <div className={styles.campo}>
                         <span>Nome:</span>
                         <input id="nome_input" type="text" placeholder="Nome" />
                     </div>
 
-                    <div className="campo">
+                    <div className={styles.campo}>
                         <span>Email:</span>
                         <input id="email_input" type="text" placeholder="meuemail@provedor.com" />
                     </div>
 
-                    <div className="campo">
+                    <div className={styles.campo}>
                         <span>Senha:</span>
                         <input id="senha_input" type="password" placeholder="******" />
                     </div>
                     
-                    <button className="botao" onClick={cadastrar}>Adicionar</button>
+                    <button className={styles.botao} onClick={cadastrar}>Adicionar</button>
                 </div>
-                <div id="div_aguardar" className="loading-div">
+                <div id="div_aguardar" className={styles['loading-div']}>
                     <img src="./assets/circle-loading.gif" id="loading-gif" />
                 </div>
 
