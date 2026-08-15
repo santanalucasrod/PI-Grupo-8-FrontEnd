@@ -1,4 +1,4 @@
-import "../pages/Login.css";
+import styles from './Login.module.css';
 import { useState } from "react";
 
 function Login() {
@@ -64,22 +64,22 @@ function Login() {
     return (
         <main>
 
-            <div className="login">
-                <div className="alerta_erro">
+            <div className={styles.login}>
+                <div className={styles.alerta_erro}>
                     {   
                     mostrarErro && (
-                        <div className="card_erro">
+                        <div className={styles.card_erro}>
                             <span>{erro}</span>
                         </div>
                     )}
                 </div>
             </div>
 
-            <div className="card card-cadastro">
+            <div className={styles.card}>
                 <h2>Acesso</h2>
 
-                <div className="formulario">
-                    <div className="campo">
+                <div className={styles.formulario}>
+                    <div className={styles.campo}>
                         <span>Email:</span>
                         <input
                             type="text"
@@ -89,7 +89,7 @@ function Login() {
                         />
                     </div>
 
-                    <div className="campo">
+                    <div className={styles.campo}>
                         <span>Senha:</span>
                         <input
                             type="password"
@@ -99,7 +99,7 @@ function Login() {
                         />
                     </div>
 
-                    <button className="botao" onClick={login}>
+                    <button className={styles.botao} onClick={login}>
                         Acessar
                     </button>
                 </div>

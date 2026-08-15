@@ -105,7 +105,7 @@ body {
   background-color: rgba(255,255,255,0.12);
 }
 
-.periodo-btn.active {
+.active {
   background-color: rgba(255,255,255,0.18);
   opacity: 1;
   font-weight: 800;
@@ -201,7 +201,6 @@ body {
   padding-bottom: 8px;
 }
 
-/* Bar chart */
 .bar-group {
   display: flex;
   flex-direction: column;
@@ -378,7 +377,7 @@ body {
     opacity: 0.85;
     text-align: center;
   }
-  .periodo-btn.active {
+  .active {
     background-color: rgba(255,255,255,0.22);
     opacity: 1;
   }
@@ -397,7 +396,7 @@ body {
     font-size: 11px;
     letter-spacing: 0.2px;
   }
-  .kpi-card .kpi-value {
+  .kpi-card .kpi-value { 
     font-size: 28px;
   }
   .kpi-card .kpi-value.kpi-product {
@@ -451,7 +450,7 @@ body {
   max-height: 100%;
 }
 
-.chartjs-wrap.donut {
+.donut {
 }
 
 .chart-area, .bar-group, .bar-wrap, .bar,

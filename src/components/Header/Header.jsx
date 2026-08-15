@@ -1,5 +1,5 @@
 // import styles from "./Header.module.css"
-import "../components/Header.css";
+import "../Header/Header.css";
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 function Header() {
     return(

@@ -3,9 +3,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 height: 92vh;
-background-image: url('../../public/vecteezy_vector-seamless-pattern-with-coffee-beans-on-beige_11430848\ 1.png') ;
-}
-
+background-image: url('../../../public/vecteezy_vector-seamless-pattern-with-coffee-beans-on-beige_11430848\ 1.png') ;
+} 
 .card{
 display: flex;
 align-items: center;
@@ -41,6 +40,7 @@ font-family: sans-serif;
   display: block;
   z-index: 9999;
 }
+
 
 .card_erro #mensagem_erro{
   font-weight: 500;
@@ -89,7 +89,16 @@ font-family: sans-serif;
   width: 100%;
   align-self: center;
   color: #8D5B42;
-  margin-top: 12vh;
-  margin-bottom: 2vh;
+  margin-top: 8vh;
 }
- 
+
+.loading-div {
+  width: 50px;
+  margin: auto;
+  display: none;
+}
+
+.loading-div img {
+  height: 50px;
+  width: 50px;
+}

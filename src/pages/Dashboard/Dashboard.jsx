@@ -13,7 +13,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import "../pages/Dashboard.css";
+import styles from './Dashboard.module.css';
 
 Chart.register(
   BarController,
@@ -94,68 +94,7 @@ const realData = {
 };
 
 // Mock data
-const mockData = {
-  Hoje: {
-    faturamento: 1240.5,
-    pedidos: 87,
-    tempoMedio: 5.8,
-    produtoTop: "Espresso",
-    barras: {
-      labels: ["08h", "10h", "12h", "14h", "16h", "18h"],
-      fat:    [600,   950,  1200,  800,   700,   500],
-      ped:    [30,    55,   80,    45,    40,    28],
-    },
-    categorias: {
-      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
-      valores: [72, 48, 35, 22],
-    },
-  },
-  "Esta Semana": {
-    faturamento: 8730.0,
-    pedidos: 2000,
-    tempoMedio: 6.5,
-    produtoTop: "Cappuccino",
-    barras: {
-      labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-      fat:    [800,  1100,  950,  1300, 1200, 1400, 1000],
-      ped:    [45,   70,   60,   90,   85,   110,  65],
-    },
-    categorias: {
-      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
-      valores: [68, 54, 42, 30],
-    },
-  },
-  "Este Mês": {
-    faturamento: 32400.0,
-    pedidos: 7840,
-    tempoMedio: 6.2,
-    produtoTop: "Latte",
-    barras: {
-      labels: ["Semana 1", "Semana 2", "Semana 3", "Semana 4"],
-      fat:    [7000, 10000, 13000, 11500],
-      ped:    [400,  650,   900,   750],
-    },
-    categorias: {
-      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
-      valores: [65, 58, 46, 28],
-    },
-  },
-  Personalizado: {
-    faturamento: 15200.0,
-    pedidos: 3620,
-    tempoMedio: 7.1,
-    produtoTop: "Mocha",
-    barras: {
-      labels: ["Dia 1", "Dia 2", "Dia 3", "Dia 4", "Dia 5"],
-      fat:    [900,  1050,  850,  1200,  950],
-      ped:    [55,   68,    50,   80,    60],
-    },
-    categorias: {
-      labels: ["Cafés Quentes", "Bebidas Frias", "Doces & Bolos", "Salgados"],
-      valores: [70, 45, 38, 25],
-    },
-  },
-};
+const mockData = realData;
 
 const periodos = ["Hoje", "Esta Semana", "Este Mês", "Personalizado"];
 
@@ -249,7 +188,7 @@ function BarLineChart({ barras, periodo }) {
   }, [barras]);
 
   return (
-    <div className="chartjs-wrap">
+    <div className={styles['chartjs-wrap']}>
       <canvas ref={canvasRef} />
     </div>
   );
@@ -321,7 +260,7 @@ function DonutChart({ categorias }) {
   }, [categorias]);
 
   return (
-    <div className="chartjs-wrap donut">
+    <div className={`${styles['chartjs-wrap']} ${styles.donut}`}>
       <canvas ref={canvasRef} />
     </div>
   );
@@ -330,9 +269,6 @@ function DonutChart({ categorias }) {
 function Dashboard() {
   const [periodo, setPeriodo] = useState("Esta Semana");
   const data = mockData[periodo] || mockData["Esta Semana"];
-  var faturamento=0
-  var soma_pedidos=0
-  
 
   useEffect(()=>{ 
     async function carregarData() { 
@@ -350,18 +286,18 @@ function Dashboard() {
     carregarData()
   },[])
   
-
+  
   return (
     <> 
-      <main className="dashboard-main">
+      <main className={styles['dashboard-main']}>
         {/* Período */}
-        <div className="periodo-bar">
-          <span className="label">Selecione o Periodo:</span>
-          <div className="periodo-options">
+        <div className={styles['periodo-bar']}>
+          <span className={styles.label}>Selecione o Periodo:</span>
+          <div className={styles['periodo-options']}>
             {periodos.map((p) => (
               <button
                 key={p}
-                className={`periodo-btn ${periodo === p ? "active" : ""}`}
+                className={`${styles['periodo-btn']} ${periodo === p ? styles.active : ''}`}
                 onClick={() => setPeriodo(p)}
               >
                 {p === "Personalizado" ? "Personalizado (Calendário)" : p}
@@ -371,41 +307,41 @@ function Dashboard() {
         </div>
 
         {/* KPIs */}
-        <div className="kpi-row">
-          <div className="kpi-card">
-            <span className="kpi-title">Faturamento Total (R$)</span>
-            <span className="kpi-value" style={{ fontSize: "28px" }}>
+        <div className={styles['kpi-row']}>
+          <div className={styles['kpi-card']}>
+            <span className={styles['kpi-title']}>Faturamento Total (R$)</span>
+            <span className={styles['kpi-value']} style={{ fontSize: "28px" }}>
               R$ {formatMoney(data.faturamento)}
             </span>
-            <span className="kpi-sub">período selecionado</span>
+            <span className={styles['kpi-sub']}>período selecionado</span>
           </div>
-          <div className="kpi-card">
-            <span className="kpi-title">Total de Pedidos</span>
-            <span className="kpi-value">{data.pedidos.toLocaleString("pt-BR")}</span>
-            <span className="kpi-sub">pedidos realizados</span>
+          <div className={styles['kpi-card']}>
+            <span className={styles['kpi-title']}>Total de Pedidos</span>
+            <span className={styles['kpi-value']}>{data.pedidos.toLocaleString("pt-BR")}</span>
+            <span className={styles['kpi-sub']}>pedidos realizados</span>
           </div>
-          <div className="kpi-card">
-            <span className="kpi-title">Tempo médio de preparo (min)</span>
-            <span className="kpi-value">{data.tempoMedio}</span>
-            <span className="kpi-sub">minutos por pedido</span>
+          <div className={styles['kpi-card']}>
+            <span className={styles['kpi-title']}>Tempo médio de preparo (min)</span>
+            <span className={styles['kpi-value']}>{data.tempoMedio}</span>
+            <span className={styles['kpi-sub']}>minutos por pedido</span>
           </div>
-          <div className="kpi-card">
-            <span className="kpi-title">Produto Mais Vendido</span>
-            <span className="kpi-value kpi-product">{data.produtoTop}</span>
-            <span className="kpi-sub">mais pedido no período</span>
+          <div className={styles['kpi-card']}>
+            <span className={styles['kpi-title']}>Produto Mais Vendido</span>
+            <span className={`${styles['kpi-value']} ${styles['kpi-product']}`}>{data.produtoTop}</span>
+            <span className={styles['kpi-sub']}>mais pedido no período</span>
           </div>
         </div>
 
         {/* Gráficos Chart.js */}
-        <div className="charts-row">
-          <div className="chart-card">
-            <span className="chart-title">
+        <div className={styles['charts-row']}>
+          <div className={styles['chart-card']}>
+            <span className={styles['chart-title']}>
               Faturamento vs. Volume de Pedidos ({periodo})
             </span>
             <BarLineChart barras={data.barras} periodo={periodo} />
           </div>
-          <div className="chart-card">
-            <span className="chart-title">
+          <div className={styles['chart-card']}>
+            <span className={styles['chart-title']}>
               Top Categorias Mais Vendidas (Faturamento)
             </span>
             <DonutChart categorias={data.categorias} />
@@ -413,7 +349,7 @@ function Dashboard() {
         </div>
       </main>
 
-      <button className="pedidos-fab">
+      <button className={styles['pedidos-fab']}>
         Pedidos
       </button>
     </>
