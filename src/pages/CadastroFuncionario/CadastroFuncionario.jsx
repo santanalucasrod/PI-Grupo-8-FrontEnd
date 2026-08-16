@@ -2,26 +2,34 @@ import styles from './CadastroFuncionario.module.css';
 import { useEffect, useState } from "react";
 
 function CadastroFuncionario() {
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [nome, setNome] = useState("");
+
+    const [erro, setErro] = useState("");
+    const [mostrarErro, setMostrarErro] = useState(false);
+
+    function sumirMensagem() {
+        setMostrarErro(false);
+        setErro("");
+    }
+
 
     function cadastrar() {
-        var emailVar = nome_input ? nome_input.value : document.getElementById('email_input')?.value;
-        var nomeVar = document.getElementById('nome_input')?.value;
-        var senhaVar = document.getElementById('senha_input')?.value;
+        if (nome === "" || email === "" || senha === "") {
+            setErro("Todos os campos devem ser preenchidos!");
+            setMostrarErro(true);
 
-        if (emailVar == "" || senhaVar == "") {
-            const cardErro = document.getElementById('div_erros_login')
-            if (cardErro) cardErro.style.display = "block"
-            const mensagem_erro = document.getElementById('mensagem_erro')
-            if (mensagem_erro) mensagem_erro.innerHTML = "(todos os campos estão em branco)";
-            
-            return false;
-        }
-        else {
-            setInterval(sumirMensagem, 5000)
+            setTimeout(() => {
+                setMostrarErro(false);
+                setErro("");
+            }, 5000);
+
+            return;
         }
 
-        console.log("FORM LOGIN: ", emailVar);
-        console.log("FORM SENHA: ", senhaVar);
+        console.log("FORM LOGIN: ", email);
+        console.log("FORM SENHA: ", senha);
 
         fetch("http://localhost:8080/funcionario/cadastro", {
             method: "POST",
@@ -29,9 +37,9 @@ function CadastroFuncionario() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                nome: nomeVar,
-                email: emailVar,
-                senha: senhaVar,
+                nome: nome,
+                email: email,
+                senha: senha,
                 gerente: false
             })
         }).then(function (resposta) {
@@ -43,8 +51,10 @@ function CadastroFuncionario() {
                 resposta.json().then(json => {
                     console.log(json);
                     console.log(JSON.stringify(json));
-                    localStorage.token = json.token; 
+                    localStorage.token = json.token;
 
+                    setErro("Funcionário cadastrado com sucesso!");
+                    setMostrarErro(true);
                     setTimeout(function () {
                         window.location = "./index.html";
                     }, 1000); // apenas para exibir o loading
@@ -53,59 +63,89 @@ function CadastroFuncionario() {
 
             } else {
 
-                console.log("Houve um erro ao tentar realizar o login!");
+                setErro("Não foi possível cadastrar o funcionário.");
+                setMostrarErro(true);
 
-                resposta.text().then(texto => {
-                    console.error(texto);
-                    
-                });
+                setTimeout(() => {
+                    setMostrarErro(false);
+                    setErro("");
+                }, 5000);
             }
 
         }).catch(function (erro) {
             console.log(erro);
+
+            setErro("Erro ao conectar com o servidor.");
+            setMostrarErro(true);
+
+            setTimeout(() => {
+                setMostrarErro(false);
+                setErro("");
+            }, 5000);
         })
 
         return false;
-        
+
     }
-    
-    function sumirMensagem() {
-        const cardErro = document.getElementById('div_erros_login')
-        if (cardErro) cardErro.style.display = "none"
-    }
-    
+
 
     return (
-        <> 
-        <main className={styles.main}>
-            <div className={styles.card}>
-                <h2>Adicionar Funcionario</h2>
-                <div className={styles.formulario}>
-                    <div className={styles.campo}>
-                        <span>Nome:</span>
-                        <input id="nome_input" type="text" placeholder="Nome" />
+        <>
+            <main className={styles.main}>
+                <div className={styles.card}>
+                    <h2>Adicionar Funcionario</h2>
+                    <div className={styles.formulario}>
+                        <div className={styles.campo}>
+                            <span>Nome:</span>
+                            <input
+                                id="nome_input"
+                                type="text"
+                                placeholder="Nome"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                            />
+                        </div>
+
+                        <div className={styles.campo}>
+                            <span>Email:</span>
+                            <input
+                                id="email_input"
+                                type="text"
+                                placeholder="meuemail@provedor.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+
+                        <div className={styles.campo}>
+                            <span>Senha:</span>
+                            <input
+                                id="senha_input"
+                                type="password"
+                                placeholder="******"
+                                value={senha}
+                                onChange={(e) => setSenha(e.target.value)}
+                            />
+                        </div>
+
+                        <button className={styles.botao} onClick={cadastrar}>Adicionar</button>
+                    </div>
+                    <div id="div_aguardar" className={styles['loading-div']}>
+                        <img src="./assets/circle-loading.gif" id="loading-gif" />
                     </div>
 
-                    <div className={styles.campo}>
-                        <span>Email:</span>
-                        <input id="email_input" type="text" placeholder="meuemail@provedor.com" />
-                    </div>
+                    {mostrarErro && (
+                        <div className={styles.alerta_erro}>
+                            <div className={styles.card_erro}>
+                                <span>{erro}</span>
+                            </div>
+                        </div>
+                    )}
 
-                    <div className={styles.campo}>
-                        <span>Senha:</span>
-                        <input id="senha_input" type="password" placeholder="******" />
-                    </div>
-                    
-                    <button className={styles.botao} onClick={cadastrar}>Adicionar</button>
+
                 </div>
-                <div id="div_aguardar" className={styles['loading-div']}>
-                    <img src="./assets/circle-loading.gif" id="loading-gif" />
-                </div>
+            </main>
 
-                <div id="div_erros_login"></div>
-            </div>
-        </main>
-        
         </>
     )
 }
