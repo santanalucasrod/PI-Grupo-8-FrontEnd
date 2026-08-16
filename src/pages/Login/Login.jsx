@@ -62,7 +62,7 @@ function Login() {
     }
 
     return (
-        <main>
+        <main className={styles.main}>
 
             <div className={styles.login}>
                 <div className={styles.alerta_erro}>

@@ -6,6 +6,7 @@ import './index.css'
 import Header from './components/Header/Header.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import VLibras from './components/Vlibras.jsx'
+import './styles/colors.css';
 
 function App() {
   return (

@@ -77,7 +77,7 @@ function CadastroFuncionario() {
 
     return (
         <> 
-        <main>
+        <main className={styles.main}>
             <div className={styles.card}>
                 <h2>Adicionar Funcionario</h2>
                 <div className={styles.formulario}>

@@ -1,23 +1,25 @@
-main{
+.main{
 display: flex;
 justify-content: center;
 align-items: center;
 height: 92vh;
-background-image: url('../../../public/vecteezy_vector-seamless-pattern-with-coffee-beans-on-beige_11430848\ 1.png') ;
+background-color:var(--color-background);
 } 
 .card{
 display: flex;
 align-items: center;
 flex-flow: column nowrap;
-background-color: #8D5B42;
+background-color: white;
 width: 50%;
 padding: 20px;
+border: 2px solid #000000;
 border-radius: 30px;
-color: #fff;
+color: black;
 font-family: sans-serif;
 }
 .card>h2{
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+
 } 
 .alerta_erro{
   display: flex;
@@ -59,7 +61,7 @@ font-family: sans-serif;
 }
 
 .campo>input {
-  border: 2px solid #EEE5D2;
+  border: 2px solid #000000;
   padding: 10px 0px;
   text-align: center;
   border-radius: 10px; 
@@ -81,14 +83,15 @@ font-family: sans-serif;
   font-family: "Barlow", sans-serif;
   border: 0;
   border-radius: 15px;
+  border: 2px solid ;
+  border-color: #000;
   font-weight: 600;
   font-size: 18px;
   padding: 10px 15px;
-  color: white;
-  background-color:#EEE5D2;
+  background-color: #fff;
   width: 100%;
   align-self: center;
-  color: #8D5B42;
+  color: #000000;
   margin-top: 8vh;
 }
 

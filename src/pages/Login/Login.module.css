@@ -1,9 +1,9 @@
-main{
+.main{
 display: flex;
 justify-content: center;
 align-items: center;
 height: 92vh;
-background-image: url('../../../public/vecteezy_vector-seamless-pattern-with-coffee-beans-on-beige_11430848\ 1.png') ;
+background-color: var(--color-background);
 }
 
 .card{
