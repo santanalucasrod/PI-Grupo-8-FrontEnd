@@ -1,6 +1,7 @@
 import styles from './CadastroFuncionario.module.css';
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import Formulario from '../../components/Formulario/Formulario';
 
 function CadastroFuncionario() {
     const [email, setEmail] = useState("");
@@ -67,62 +68,29 @@ function CadastroFuncionario() {
 
     }
 
+    campos = [
+        {
+            nome: "nome",
+            placeholder: "Digite seu nome",
+            tipo: "text"
+        },
+        {
+            nome: "email",
+            placeholder: "Digite seu email",
+            tipo: "email"
+        }
+    ]
+    titulo = "Adicionar Funcionarios"
+    
 
     return (
         <>
             <main className={styles.main}>
-                <div className={styles.card}>
-                    <h2>Adicionar Funcionario</h2>
-                    <div className={styles.formulario}>
-                        <div className={styles.campo}>
-                            <span>Nome:</span>
-                            <input
-                                id="nome_input"
-                                type="text"
-                                placeholder="Nome"
-                                value={nome}
-                                onChange={(e) => setNome(e.target.value)}
-                            />
-                        </div>
-
-                        <div className={styles.campo}>
-                            <span>Email:</span>
-                            <input
-                                id="email_input"
-                                type="text"
-                                placeholder="meuemail@provedor.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-
-                        <div className={styles.campo}>
-                            <span>Senha:</span>
-                            <input
-                                id="senha_input"
-                                type="password"
-                                placeholder="******"
-                                value={senha}
-                                onChange={(e) => setSenha(e.target.value)}
-                            />
-                        </div>
-
-                        <button className={styles.botao} onClick={cadastrar}>Adicionar</button>
-                    </div>
-                    <div id="div_aguardar" className={styles['loading-div']}>
-                        <img src="./assets/circle-loading.gif" id="loading-gif" />
-                    </div>
-
-                    {mostrarErro && (
-                        <div className={styles.alerta_erro}>
-                            <div className={styles.card_erro}>
-                                <span>{erro}</span>
-                            </div>
-                        </div>
-                    )}
-
-
-                </div>
+                <Formulario
+                    campos={campos}
+                    titulo={titulo}
+                    cadastrar={cadastrar}
+                />
             </main>
 
         </>
