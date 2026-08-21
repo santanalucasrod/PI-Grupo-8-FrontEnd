@@ -1,0 +1,298 @@
+.main {
+  padding: 32px 40px;
+  background: var(--color-background);
+  min-height: calc(100vh - 80px);
+}
+
+.titulo {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin-bottom: 24px;
+}
+
+.subtitulo {
+  font-size: 22px;
+  font-weight: 600;
+  color: #3d3d3d;
+  margin: 32px 0 16px;
+}
+
+.vazio {
+  color: #555;
+  font-size: 18px;
+}
+
+.avisoErro {
+  background: var(--color-danger);
+  color: #5a2200;
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ---------- Pedidos em preparo (cards ativos) ---------- */
+
+.linhaAtivos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+}
+
+.card {
+  position: relative;
+  width: 440px;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: visible;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.cardHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #ececec;
+  padding: 22px 24px;
+  border-radius: 16px 16px 0 0;
+}
+
+.checkGrande {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid #b0b0b0;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  cursor: not-allowed;
+  flex-shrink: 0;
+}
+
+.checkGrandeAtivo {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  cursor: pointer;
+}
+
+.nomeCliente {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f1f1f;
+  flex: 1;
+}
+
+.iconeObs {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-brown);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.iconeObs:hover {
+  background: #6f4630;
+  transform: scale(1.06);
+}
+
+.popover {
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  width: 250px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  padding: 16px;
+  z-index: 10;
+}
+
+.popoverHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #1f1f1f;
+}
+
+.popoverFechar {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #555;
+}
+
+.popover p {
+  margin: 4px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.preferencia {
+  font-style: italic;
+}
+
+.barraProgresso {
+  height: 6px;
+  background: var(--color-success);
+  transition: width 0.3s ease;
+}
+
+.listaItens {
+  list-style: none;
+  margin: 0;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemLinha {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+}
+
+.linhaConectora {
+  position: absolute;
+  top: -17px;
+  left: 13px;
+  width: 2px;
+  height: 17px;
+  background: #d9d9d9;
+}
+
+.checkbox {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  padding: 0;
+  border: 2px solid #c9c9c9;
+  border-radius: 7px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 15px;
+}
+
+.checkboxMarcado {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.itemNome {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1f1f1f;
+}
+
+.itemFeito {
+  font-size: 20px;
+  font-weight: 500;
+  color: #7a7a7a;
+  text-decoration: line-through;
+}
+
+/* ---------- Prontos para entrega ---------- */
+
+.linhaProntos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chipPronto {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--color-success);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #2c2c2c;
+}
+
+.pontoVerde {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-success);
+}
+
+/* ---------- Fila (pedidos ainda não iniciados) ---------- */
+
+.linhaFila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cardFila {
+  width: 200px;
+  background: #ececec;
+  border: none;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.cardFila:hover {
+  background: #e0e0e0;
+}
+
+.cardFilaHeader {
+  font-size: 19px;
+  font-weight: 700;
+  color: #262626;
+  margin-bottom: 12px;
+}
+
+.listaFila {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listaFila li {
+  font-size: 16px;
+  font-weight: 500;
+  color: #454545;
+  padding-left: 14px;
+  position: relative;
+}
+
+.listaFila li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #b0b0b0;
+}

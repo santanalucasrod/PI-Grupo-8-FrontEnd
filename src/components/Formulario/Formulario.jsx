@@ -5,8 +5,7 @@ function Formulario({
     titulo,
     cadastrar,
     erro,
-    mostrarErro,
-    textoBotao = "Adicionar"
+    mostrarErro
 }) {
     return (
         <div className={styles.card}>
@@ -34,7 +33,7 @@ function Formulario({
                     className={styles.botao}
                     onClick={cadastrar}
                 >
-                    {textoBotao}
+                    Adicionar
                 </button>
 
             </div>
