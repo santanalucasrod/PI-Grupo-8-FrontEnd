@@ -1,0 +1,43 @@
+.componente {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    color: #333;
+    font-size: 14px;
+    text-align: left;
+}
+
+.tabela th,
+.tabela td {
+    padding: 13px 16px;
+    border-bottom: 1px solid #ededed;
+    white-space: nowrap;
+}
+
+.tabela th {
+    color: #666;
+    font-weight: 600;
+    font-family: sans-serif;
+    background: #ffffff;
+}
+
+.tabela tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.estado {
+    margin: 0;
+    padding: 32px 16px;
+    color: #777;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}

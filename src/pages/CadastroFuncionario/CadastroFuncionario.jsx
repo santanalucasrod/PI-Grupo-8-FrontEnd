@@ -1,15 +1,27 @@
 import styles from './CadastroFuncionario.module.css';
-import axios from 'axios';
 import { useEffect, useState } from "react";
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Formulario from '../../components/Formulario/Formulario';
 
 function CadastroFuncionario() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const dadosEdicao = location.state?.funcionario ?? null;
+    const estaEditando =location.state?.editar ?? null;
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [nome, setNome] = useState("");
 
     const [erro, setErro] = useState("");
     const [mostrarErro, setMostrarErro] = useState(false);
+
+    useEffect(() => {
+        if (estaEditando && dadosEdicao) {
+            setNome(dadosEdicao.nome ?? "");
+            setEmail(dadosEdicao.email ?? "");
+        }
+    }, [dadosEdicao, estaEditando]);
 
     function sumirMensagem() {
         setMostrarErro(false);
@@ -18,7 +30,7 @@ function CadastroFuncionario() {
 
 
     function cadastrar() {
-        if (nome === "" || email === "" || senha === "") {
+        if (nome === "" || email === "" || (!estaEditando && senha === "")) {
             setErro("Todos os campos devem ser preenchidos!");
             setMostrarErro(true);
 
@@ -32,39 +44,94 @@ function CadastroFuncionario() {
 
         console.log("FORM LOGIN: ", email);
         console.log("FORM SENHA: ", senha);
+        if (estaEditando) {
 
-        axios.post("http://localhost:8080/funcionario/cadastro", {
-            nome: nome,
-            email: email,
-            senha: senha,
-            gerente: false
+            axios.put(
+                `http://localhost:8080/funcionario/crud/${dadosEdicao.id}`,
 
-        }).then(function (resposta) {
-            console.log("ESTOU NO THEN DO CADASTRO!");
+                {
+                    nome: nome,
+                    email: email,
+                    senha: senha,
+                    gerente: false
+                },
 
-            console.log(resposta);
-            console.log(resposta.data);
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }
+            )
+                .then(function (resposta) {
+                    console.log("FUNCIONÁRIO ATUALIZADO!");
+                    console.log(resposta);
+                    console.log(resposta.data);
 
-            localStorage.token = resposta.data.token;
+                    setErro("Funcionário atualizado com sucesso!");
+                    setMostrarErro(true);
 
-            setErro("Funcionário cadastrado com sucesso!");
-            setMostrarErro(true);
+                    setTimeout(function () {
+                        navigate("/funcionarios");
+                    }, 1000);
+                })
+                .catch(function (erro) {
+                    console.log(erro);
 
-            setTimeout(function () {
-                window.location = "./index.html";
-            }, 1000);
+                    setErro("Erro ao atualizar funcionário.");
+                    setMostrarErro(true);
 
-        }).catch(function (erro) {
-            console.log(erro);
+                    setTimeout(function () {
+                        setMostrarErro(false);
+                        setErro("");
+                    }, 5000);
+                });
 
-            setErro("Erro ao conectar com o servidor.");
-            setMostrarErro(true);
+        } else {
 
-            setTimeout(() => {
-                setMostrarErro(false);
-                setErro("");
-            }, 5000);
-        })
+            axios.post(
+                "http://localhost:8080/funcionario/cadastro",
+
+                {
+                    nome: nome,
+                    email: email,
+                    senha: senha,
+                    gerente: false
+                },
+
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }
+            )
+                .then(function (resposta) {
+                    console.log("FUNCIONÁRIO CADASTRADO!");
+                    console.log(resposta);
+                    console.log(resposta.data);
+
+                    if (resposta.data?.token) {
+                        localStorage.token = resposta.data.token;
+                    }
+
+                    setErro("Funcionário cadastrado com sucesso!");
+                    setMostrarErro(true);
+
+                    setTimeout(function () {
+                        navigate("/funcionarios");
+                    }, 1000);
+                })
+                .catch(function (erro) {
+                    console.log(erro);
+
+                    setErro("Erro ao cadastrar funcionário.");
+                    setMostrarErro(true);
+
+                    setTimeout(function () {
+                        setMostrarErro(false);
+                        setErro("");
+                    }, 5000);
+                });
+        }
 
     }
 
@@ -91,8 +158,8 @@ function CadastroFuncionario() {
             setValor: setSenha
         }
     ]
-    const titulo = "Adicionar Funcionarios"
-    
+    const titulo = estaEditando ? "Editar Funcionário" : "Adicionar Funcionários";
+
 
     return (
         <>
@@ -103,6 +170,7 @@ function CadastroFuncionario() {
                     cadastrar={cadastrar}
                     erro={erro}
                     mostrarErro={mostrarErro}
+                    textoBotao={estaEditando ? "Editar" : "Adicionar"}
                 />
             </main>
 
