@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import Login from './pages/Login/Login.jsx'
 import CadastroFuncionario from './pages/CadastroFuncionario/CadastroFuncionario.jsx'
 import Dashboard from './pages/Dashboard/Dashboard.jsx'
+import Pedidos from './pages/Pedidos/Pedidos.jsx'
 import './index.css'
 import Header from './components/Header/Header.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
@@ -17,6 +17,7 @@ function App() {
         <Route path="/cadastro" element={<CadastroFuncionario />} />
         <Route path="/login"    element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pedidos" element={<Pedidos />} />
       </Routes>
     </BrowserRouter>
   )

@@ -21,6 +21,10 @@ function Header() {
         <Link to="/dashboard" className={styles.link}>
           Dashboard
         </Link>
+
+        <Link to="/pedidos" className={styles.link}>
+          Pedidos
+        </Link>
       </nav>
     </header>
   );
