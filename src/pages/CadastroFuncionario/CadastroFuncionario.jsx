@@ -68,19 +68,30 @@ function CadastroFuncionario() {
 
     }
 
-    campos = [
+    const campos = [
         {
-            nome: "nome",
-            placeholder: "Digite seu nome",
-            tipo: "text"
+            nome: "Nome",
+            placeholder: "Nome",
+            tipo: "text",
+            valor: nome,
+            setValor: setNome
         },
         {
-            nome: "email",
-            placeholder: "Digite seu email",
-            tipo: "email"
+            nome: "Email",
+            placeholder: "meuemail@provedor.com",
+            tipo: "email",
+            valor: email,
+            setValor: setEmail
+        },
+        {
+            nome: "Senha",
+            placeholder: "******",
+            tipo: "password",
+            valor: senha,
+            setValor: setSenha
         }
     ]
-    titulo = "Adicionar Funcionarios"
+    const titulo = "Adicionar Funcionarios"
     
 
     return (
@@ -90,6 +101,8 @@ function CadastroFuncionario() {
                     campos={campos}
                     titulo={titulo}
                     cadastrar={cadastrar}
+                    erro={erro}
+                    mostrarErro={mostrarErro}
                 />
             </main>
 
