@@ -16,12 +16,11 @@ import { useState, useEffect, useRef } from "react";
      id: 101,
      nome: "Ana Beatriz",
      status: "EM_PREPARO",
-     descricao: "Sem chantilly",
-     preferenciaIndividual: "Sem açúcar",
+     descricao: "Cliente vai retirar no balcão",
      itens: [
-       { id: 1, nomeProduto: "Cappuccino", quantidade: 1, pronto: true },
+       { id: 1, nomeProduto: "Cappuccino", quantidade: 1, pronto: true, volumeMl: 300, observacao: "Sem açúcar" },
        { id: 2, nomeProduto: "Pão de queijo", quantidade: 2, pronto: true },
-       { id: 3, nomeProduto: "Água com gás", quantidade: 1, pronto: false },
+       { id: 3, nomeProduto: "Água com gás", quantidade: 1, pronto: false, volumeMl: 500 },
      ],
    },
    {
@@ -29,9 +28,8 @@ import { useState, useEffect, useRef } from "react";
      nome: "Marcos Vinícius",
      status: "EM_PREPARO",
      descricao: "",
-     preferenciaIndividual: "",
      itens: [
-       { id: 4, nomeProduto: "Espresso duplo", quantidade: 1, pronto: false },
+       { id: 4, nomeProduto: "Espresso duplo", quantidade: 1, pronto: false, volumeMl: 60 },
        { id: 5, nomeProduto: "Croissant", quantidade: 1, pronto: false },
      ],
    },
@@ -40,9 +38,8 @@ import { useState, useEffect, useRef } from "react";
      nome: "Juliana Prado",
      status: "EM_PREPARO",
      descricao: "Alergia a lactose",
-     preferenciaIndividual: "Leite de aveia",
      itens: [
-       { id: 6, nomeProduto: "Latte", quantidade: 1, pronto: true },
+       { id: 6, nomeProduto: "Latte", quantidade: 1, pronto: true, volumeMl: 350, observacao: "Leite de aveia" },
      ],
    },
    {
@@ -50,9 +47,8 @@ import { useState, useEffect, useRef } from "react";
      nome: "Pedro Henrique",
      status: "PENDENTE",
      descricao: "",
-     preferenciaIndividual: "",
      itens: [
-       { id: 7, nomeProduto: "Mocha", quantidade: 1, pronto: false },
+       { id: 7, nomeProduto: "Mocha", quantidade: 1, pronto: false, volumeMl: 400 },
        { id: 8, nomeProduto: "Bolo de cenoura", quantidade: 1, pronto: false },
      ],
    },
@@ -60,10 +56,9 @@ import { useState, useEffect, useRef } from "react";
      id: 105,
      nome: "Camila Souza",
      status: "PENDENTE",
-     descricao: "Sem observações",
-     preferenciaIndividual: "",
+     descricao: "",
      itens: [
-       { id: 9, nomeProduto: "Chá gelado", quantidade: 2, pronto: false },
+       { id: 9, nomeProduto: "Chá gelado", quantidade: 2, pronto: false, volumeMl: 400, observacao: "Menos gelo" },
      ],
    },
    {
@@ -71,9 +66,8 @@ import { useState, useEffect, useRef } from "react";
      nome: "",
      status: "PENDENTE",
      descricao: "",
-     preferenciaIndividual: "",
      itens: [
-       { id: 10, nomeProduto: "Café coado", quantidade: 1, pronto: false },
+       { id: 10, nomeProduto: "Café coado", quantidade: 1, pronto: false, volumeMl: 300 },
        { id: 11, nomeProduto: "Torrada", quantidade: 1, pronto: false },
      ],
    },
@@ -87,9 +81,14 @@ import { useState, useEffect, useRef } from "react";
   *  - PATCH /pedidos/itens/{itemId}/pronto  -> marca/desmarca um item como pronto
   *  - PATCH /pedidos/{id}/status            -> move o pedido entre PENDENTE/EM_PREPARO/PRONTO
   *
-  * Observação sobre o modelo de dados: a observação/preferência ("Sem açúcar" etc.)
-  * é salva por PEDIDO (info_adicional), não por item. Por isso o ícone de observação
-  * fica no cabeçalho do card, não em cada item da lista.
+  * Observação sobre o modelo de dados: hoje o backend guarda a observação/preferência
+  * ("Sem açúcar", "Leite de aveia" etc.) por PEDIDO (info_adicional), não por item —
+  * mas isso obriga o barista a adivinhar qual produto a modificação afeta. Por isso,
+  * nesta tela, exibimos a preferência específica de produto junto ao item (usando um
+  * campo "observacao" no próprio item). Se necessário, isso ainda depende de o backend
+  * passar a associar essa informação ao item do pedido, e não só ao pedido como um todo.
+  * O ícone no cabeçalho do card continua existindo só para observações GERAIS do pedido
+  * (ex.: "Cliente vai retirar no balcão", alergias, etc.), que não são de um produto específico.
   */
  function Pedidos() {
    const [pedidos, setPedidos] = useState([]);
@@ -172,10 +171,17 @@ import { useState, useEffect, useRef } from "react";
    }
  
    async function iniciarPreparo(pedidoId) {
-     setPedidos((atual) =>
-       atual.map((p) => (p.id === pedidoId ? { ...p, status: "EM_PREPARO" } : p))
-     );
+     let bloqueado = false;
+     setPedidos((atual) => {
+       const totalEmPreparo = atual.filter((p) => p.status === "EM_PREPARO").length;
+       if (totalEmPreparo >= MAX_CARDS_ATIVOS) {
+         bloqueado = true;
+         return atual;
+       }
+       return atual.map((p) => (p.id === pedidoId ? { ...p, status: "EM_PREPARO" } : p));
+     });
 
+     if (bloqueado) return;
      if (USAR_DADOS_MOCK) return;
  
      try {
@@ -251,6 +257,7 @@ import { useState, useEffect, useRef } from "react";
                <CardPedidoFila
                  key={pedido.id}
                  pedido={pedido}
+                 bloqueado={todosEmPreparo.length >= MAX_CARDS_ATIVOS}
                  onIniciar={() => iniciarPreparo(pedido.id)}
                />
              ))}
@@ -272,7 +279,7 @@ import { useState, useEffect, useRef } from "react";
    const total = pedido.itens.length;
    const feitos = pedido.itens.filter((i) => i.pronto).length;
    const progresso = total === 0 ? 0 : Math.round((feitos / total) * 100);
-   const temObservacao = Boolean(pedido.descricao || pedido.preferenciaIndividual);
+   const temObservacaoGeral = Boolean(pedido.descricao);
    const tudoPronto = total > 0 && feitos === total;
  
    return (
@@ -289,13 +296,13 @@ import { useState, useEffect, useRef } from "react";
          </button>
          <span className={styles.nomeCliente}>{pedido.nome || `Pedido #${pedido.id}`}</span>
  
-         {temObservacao && (
+         {temObservacaoGeral && (
            <button
              type="button"
              className={styles.iconeObs}
              onClick={onAbrirPopover}
-             aria-label="Ver observações do pedido"
-             title="Ver observações do pedido"
+             aria-label="Ver observações gerais do pedido"
+             title="Ver observações gerais do pedido"
            >
              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path
@@ -313,15 +320,12 @@ import { useState, useEffect, useRef } from "react";
          {popoverAberto && (
            <div className={styles.popover}>
              <div className={styles.popoverHeader}>
-               <strong>Observações:</strong>
+               <strong>Observações gerais:</strong>
                <button className={styles.popoverFechar} onClick={onFecharPopover}>
                  ×
                </button>
              </div>
              <p>{pedido.descricao || "Sem observações"}</p>
-             {pedido.preferenciaIndividual && (
-               <p className={styles.preferencia}>{pedido.preferenciaIndividual}</p>
-             )}
            </div>
          )}
        </div>
@@ -340,8 +344,14 @@ import { useState, useEffect, useRef } from "react";
              >
                {item.pronto && "✓"}
              </button>
-             <span className={item.pronto ? styles.itemFeito : styles.itemNome}>
-               {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
+             <span className={styles.itemTextos}>
+               <span className={item.pronto ? styles.itemFeito : styles.itemNome}>
+                 {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
+                 {item.volumeMl && <span className={styles.itemVolume}> · {item.volumeMl}ml</span>}
+               </span>
+               {item.observacao && (
+                 <span className={styles.itemObservacao}>⚠ {item.observacao}</span>
+               )}
              </span>
            </li>
          ))}
@@ -350,17 +360,36 @@ import { useState, useEffect, useRef } from "react";
    );
  }
  
- function CardPedidoFila({ pedido, onIniciar }) {
+ function CardPedidoFila({ pedido, bloqueado, onIniciar }) {
    return (
-     <button type="button" className={styles.cardFila} onClick={onIniciar}>
+     <button
+       type="button"
+       className={`${styles.cardFila} ${bloqueado ? styles.cardFilaBloqueado : ""}`}
+       onClick={onIniciar}
+       disabled={bloqueado}
+       title={
+         bloqueado
+           ? "Conclua um pedido em preparo para liberar espaço"
+           : "Iniciar preparo deste pedido"
+       }
+     >
        <div className={styles.cardFilaHeader}>{pedido.nome || `Pedido #${pedido.id}`}</div>
        <ul className={styles.listaFila}>
          {pedido.itens.map((item) => (
            <li key={item.id}>
              {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
+             {item.volumeMl && <span className={styles.itemVolumeFila}> · {item.volumeMl}ml</span>}
+             {item.observacao && (
+               <span className={styles.itemObservacaoFila}> · {item.observacao}</span>
+             )}
            </li>
          ))}
        </ul>
+       {bloqueado && (
+         <div className={styles.cardFilaAvisoBloqueio}>
+           🔒 Aguardando vaga
+         </div>
+       )}
      </button>
    );
  }

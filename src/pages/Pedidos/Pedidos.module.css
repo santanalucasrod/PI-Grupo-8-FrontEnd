@@ -146,8 +146,13 @@
   color: #333;
 }
 
-.preferencia {
+.itemObservacaoFila {
   font-style: italic;
+  color: #8a5a3a;
+}
+
+.itemVolumeFila {
+  color: #7a7a7a;
 }
 
 .barraProgresso {
@@ -215,6 +220,31 @@
   text-decoration: line-through;
 }
 
+.itemVolume {
+  font-size: 16px;
+  font-weight: 500;
+  color: #7a7a7a;
+}
+
+.itemTextos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemObservacao {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #7a3300;
+  background: #FFBA9F;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
 /* ---------- Prontos para entrega ---------- */
 
 .linhaProntos {
@@ -264,6 +294,22 @@
 
 .cardFila:hover {
   background: #e0e0e0;
+}
+
+.cardFilaBloqueado {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.cardFilaBloqueado:hover {
+  background: #ececec;
+}
+
+.cardFilaAvisoBloqueio {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b6b6b;
 }
 
 .cardFilaHeader {
