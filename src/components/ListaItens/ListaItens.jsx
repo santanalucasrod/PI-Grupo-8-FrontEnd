@@ -1,7 +1,7 @@
 import styles from './ListaItens.module.css';
 import { useEffect, useRef, useState } from 'react';
 
-function ListaItens({ itens, colunas, mensagemVazia = 'Nenhum item encontrado.' }) {
+function ListaItens({ itens, colunas, carregando = false, mensagemVazia = 'Nenhum item encontrado.' }) {
 
     const tabelaRef = useRef(null);
     const scrollSuperiorRef = useRef(null);
@@ -33,6 +33,10 @@ function ListaItens({ itens, colunas, mensagemVazia = 'Nenhum item encontrado.' 
         if (scrollSuperiorRef.current) {
             scrollSuperiorRef.current.scrollLeft = e.target.scrollLeft;
         }
+    }
+
+    if (carregando) {
+        return <p className={styles.estado}>Carregando...</p>;
     }
 
     if (!itens.length) {

@@ -15,25 +15,36 @@
 
 .tabelaContainer {
     width: 100%;
+    min-width: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
 
 .tabela {
     width: 100%;
-    min-width: 600px;
     border-collapse: collapse;
     color: #333;
     font-size: 14px;
     text-align: left;
+    table-layout: fixed;
 }
 
 .tabela th,
 .tabela td {
     padding: 13px 16px;
     border-bottom: 1px solid #ededed;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
     font-family: sans-serif;
+}
+
+.tabela th:nth-last-child(-n + 2),
+.tabela td:nth-last-child(-n + 2) {
+    width: 72px;
+    padding-right: 16px;
+    padding-left: 6px;
+    text-align: center;
 }
 
 .tabela th {
@@ -58,13 +69,33 @@
 }
 
 @media screen and (max-width: 700px) {
+    .tabela th,
+    .tabela td {
+        padding: 12px 10px;
+    }
+
+    .tabela th:nth-last-child(-n + 2),
+    .tabela td:nth-last-child(-n + 2) {
+        /* width: 56px; */
+        padding-right: 4px;
+        padding-left: 4px;
+    }
+
+    .tabela td button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        min-height: 36px;
+        padding: 2px;
+    }
+
+    .imagem {
+        max-width: 22px;
+    }
+
     .scrollSuperior {
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        height: 5px;
-        border-bottom: 1px solid #ededed;
-        display: block;
+        display: none;
     }
 
     .scrollSuperiorConteudo {
