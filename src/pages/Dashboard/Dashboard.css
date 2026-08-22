@@ -71,6 +71,7 @@ body {
   display: flex;
   align-items: center;
   gap: 24px;
+  flex-wrap: wrap;
   color: var(--text-dark);
   font-family: 'Barlow', sans-serif;
   font-size: 15px;
@@ -82,46 +83,11 @@ body {
   opacity: 0.85;
 }
 
-.periodo-options {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.periodo-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-dark);
-  font-family: 'Barlow', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  opacity: 0.75;
-  transition: all 0.2s ease;
-}
-
-.periodo-btn:hover {
-  opacity: 1;
-  background-color: rgba(0,0,0,0.06);
-}
-
-.periodo-btn.active {
-  background-color: rgba(0,0,0,0.08);
-  color: var(--brown-dark);
-  opacity: 1;
-  font-weight: 800;
-}
-
-.periodo-personalizado {
+.periodo-datas {
   display: flex;
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-  padding-left: 16px;
-  margin-left: 8px;
-  border-left: 1px solid rgba(0,0,0,0.12);
 }
 
 .periodo-data-campo {
@@ -421,42 +387,22 @@ body {
   .periodo-bar .label {
     font-size: 13px;
   }
-  .periodo-options {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .periodo-btn {
-    font-size: 13px;
-    padding: 7px 10px;
-    border-radius: 8px;
-    background-color: rgba(0,0,0,0.04);
-    opacity: 0.85;
-    text-align: center;
-  }
-  .periodo-btn.active {
-    background-color: rgba(0,0,0,0.08);
-    color: var(--brown-dark);
-    opacity: 1;
-  }
 
-  .periodo-personalizado {
+  .periodo-datas {
     width: 100%;
-    padding-left: 0;
-    margin-left: 0;
-    border-left: none;
-    border-top: 1px solid rgba(0,0,0,0.12);
-    padding-top: 10px;
+    gap: 10px;
   }
 
   .periodo-data-campo {
     font-size: 13px;
+    flex: 1;
+    min-width: 130px;
   }
 
   .periodo-data-campo input[type="date"] {
     font-size: 13px;
     padding: 5px 8px;
+    width: 100%;
   }
 
   .kpi-row {
@@ -529,8 +475,13 @@ body {
     padding: 10px 10px 96px;
   }
 
-  .periodo-options {
-    grid-template-columns: 1fr;
+  .periodo-datas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .periodo-data-campo {
+    min-width: 0;
   }
 
   .kpi-row {
