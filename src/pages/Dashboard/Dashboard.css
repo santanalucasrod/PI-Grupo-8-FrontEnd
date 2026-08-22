@@ -114,6 +114,60 @@ body {
   font-weight: 800;
 }
 
+.periodo-personalizado {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-left: 16px;
+  margin-left: 8px;
+  border-left: 1px solid rgba(0,0,0,0.12);
+}
+
+.periodo-data-campo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  opacity: 0.85;
+}
+
+.periodo-data-campo input[type="date"] {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  background-color: var(--white);
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.periodo-data-campo input[type="date"]:focus {
+  outline: 2px solid var(--brown-mid);
+  outline-offset: 1px;
+}
+
+.periodo-erro {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b33c00;
+}
+
+.periodo-vazio {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--text-dark);
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -387,6 +441,24 @@ body {
     opacity: 1;
   }
 
+  .periodo-personalizado {
+    width: 100%;
+    padding-left: 0;
+    margin-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    padding-top: 10px;
+  }
+
+  .periodo-data-campo {
+    font-size: 13px;
+  }
+
+  .periodo-data-campo input[type="date"] {
+    font-size: 13px;
+    padding: 5px 8px;
+  }
+
   .kpi-row {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -446,6 +518,36 @@ body {
     right: 16px;
     font-size: 16px;
     padding: 12px 22px;
+  }
+}
+
+/* Celulares bem estreitos (ex.: iPhone SE, ~375px e abaixo): 2 colunas de
+   KPI ainda ficam apertadas pra caber valores como "R$ 32.400,00", então
+   aqui os KPIs passam a ocupar a largura toda, em coluna única. */
+@media (max-width: 380px) {
+  .dashboard-main {
+    padding: 10px 10px 96px;
+  }
+
+  .periodo-options {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-row {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-card {
+    min-height: auto;
+    padding: 12px 14px 14px;
+  }
+
+  .kpi-card .kpi-value {
+    font-size: 26px;
+  }
+
+  .kpi-card .kpi-value.kpi-product {
+    font-size: 19px;
   }
 }
 
