@@ -1,12 +1,13 @@
 .header {
   height: 8vh;
+  min-height: 56px;
   background-color: #8d5b42;
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 20px;
   gap: 12px;
 }
 
@@ -14,6 +15,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  min-width: 0;
 }
 
 .logoCircle {
@@ -26,23 +28,150 @@
   justify-content: center;
   font-size: 18px;
   margin-right: 10px;
-
+  flex-shrink: 0;
   color: white;
 }
 
 .companyName {
   color: white;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.navigation {
+/* ---------- Botão hambúrguer ---------- */
+
+.botaoMenu {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.14);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.linhaHamburguer {
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+/* ---------- Overlay + painel (drawer) ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Mobile (padrão): o menu ocupa a tela inteira */
+.drawer {
+  height: 100%;
+  width: 100%;
+  background: #fff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  animation: deslizarDaDireita 0.2s ease-out;
+}
+
+@keyframes deslizarDaDireita {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: #8d5b42;
+  flex-shrink: 0;
+}
+
+.drawerTitulo {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.botaoFechar {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.listaLinks {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .link {
+  display: block;
   text-decoration: none;
-  color: white;
+  color: #2c2c2c;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+}
 
-  margin-left: 20px;
-  font-size: 14pt;
+.linkAtivo {
+  color: #8d5b42;
+  background: rgba(141, 91, 66, 0.08);
+}
+
+/* ---------- Tablet: o menu ocupa MENOS de 25% da largura da tela ---------- */
+@media (min-width: 601px) {
+  .drawer {
+    width: 24vw;
+    max-width: 320px;
+  }
+
+  .drawerTitulo {
+    font-size: 16px;
+  }
+
+  .link {
+    font-size: 15px;
+    padding: 14px 16px;
+  }
+}
+
+/* Telas bem estreitas de celular: encolhe um pouco a marca no cabeçalho */
+@media (max-width: 380px) {
+  .header {
+    padding: 0 14px;
+  }
+  .companyName {
+    font-size: 15px;
+  }
+  .logoCircle {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+  }
 }
