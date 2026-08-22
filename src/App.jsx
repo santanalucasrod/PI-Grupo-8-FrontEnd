@@ -1,5 +1,5 @@
 import Login from './pages/Login/Login.jsx'
-import CadastroFuncionario from './pages/CadastroFuncionario/CadastroFuncionario.jsx'
+import CadastroFuncionario from './pages/Funcionarios/CadastroFuncionario.jsx'
 import Dashboard from './pages/Dashboard/Dashboard.jsx'
 import Funcionarios from './pages/Funcionarios/Funcionarios.jsx'
 import Pedidos from './pages/Pedidos/Pedidos.jsx'

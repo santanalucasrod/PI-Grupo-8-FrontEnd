@@ -7,16 +7,11 @@
 }
 
 .scrollSuperior {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    height: 5px;
-    border-bottom: 1px solid #ededed;
+
+    display: none;
 }
 
-.scrollSuperiorConteudo {
-    height: 1px;
-}
+
 
 .tabelaContainer {
     width: 100%;
@@ -60,4 +55,19 @@
     background: #fff;
     border: 1px solid #e5e5e5;
     border-radius: 4px;
+}
+
+@media screen and (max-width: 700px) {
+    .scrollSuperior {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: 5px;
+        border-bottom: 1px solid #ededed;
+        display: block;
+    }
+
+    .scrollSuperiorConteudo {
+        height: 1px;
+    }
 }
