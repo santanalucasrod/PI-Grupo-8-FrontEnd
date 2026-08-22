@@ -6,6 +6,7 @@ const LINKS = [
   { to: "/dashboard", label: "Dashboard" },
   { to: "/pedidos", label: "Pedidos" },
   { to: "/categorias", label: "Categorias" },
+  { to: "/funcionarios", label: "Funcionarios" },
   { to: "/ingredientes", label: "Ingredientes" },
   { to: "/personalizacoes", label: "Personalizações" },
   { to: "/cadastro", label: "Cadastro" },
