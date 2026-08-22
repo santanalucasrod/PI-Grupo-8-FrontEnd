@@ -135,16 +135,27 @@ function CadastroFuncionario() {
 
     }
 
-    campos = [
+    const campos = [
         {
-            nome: "nome",
-            placeholder: "Digite seu nome",
-            tipo: "text"
+            nome: "Nome",
+            placeholder: "Nome",
+            tipo: "text",
+            valor: nome,
+            setValor: setNome
         },
         {
-            nome: "email",
-            placeholder: "Digite seu email",
-            tipo: "email"
+            nome: "Email",
+            placeholder: "meuemail@provedor.com",
+            tipo: "email",
+            valor: email,
+            setValor: setEmail
+        },
+        {
+            nome: "Senha",
+            placeholder: "******",
+            tipo: "password",
+            valor: senha,
+            setValor: setSenha
         }
     ]
     const titulo = estaEditando ? "Editar Funcionário" : "Adicionar Funcionários";

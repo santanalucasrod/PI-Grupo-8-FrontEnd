@@ -7,14 +7,6 @@ import styles from './Funcionarios.module.css';
 import editarIcone from '../../assets/editaricon.png';
 import deletarIcone from '../../assets/lixeiraicon.png';
 
-function extrairFuncionarios(resposta) {
-    const corpo = resposta?.data;
-    if (Array.isArray(corpo)) return corpo;
-    if (Array.isArray(corpo?.data)) return corpo.data;
-    if (Array.isArray(corpo?.funcionarios)) return corpo.funcionarios;
-    return [];
-}
-
 function Funcionarios() {
     const [funcionarios, setFuncionarios] = useState([]);
     const [termo, setTermo] = useState('');
@@ -70,7 +62,7 @@ function Funcionarios() {
         {
             chave: 'editar',
             titulo: 'Editar',
-            renderizar: (item) => (
+            componente: (item) => (
                 <button className={styles.acao} onClick={() => editarFuncionario(item)} aria-label={`Editar ${item.nome}`} title="Editar">
                     <img src={editarIcone} alt="" className={styles.imagem} />
                 </button>
@@ -79,7 +71,7 @@ function Funcionarios() {
         {
             chave: 'excluir',
             titulo: 'Excluir',
-            renderizar: (item) => (
+            componente: (item) => (
                 <button className={`${styles.acao} ${styles.excluir}`} onClick={() => excluirFuncionario(item)} aria-label={`Excluir ${item.nome}`} title="Excluir">
                     <img src={deletarIcone} alt="" className={styles.imagem} />
                 </button>

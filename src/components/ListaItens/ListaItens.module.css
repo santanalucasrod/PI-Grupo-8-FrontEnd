@@ -1,13 +1,32 @@
 .componente {
     width: 100%;
-    overflow-x: auto;
     background: #fff;
     border: 1px solid #e5e5e5;
     border-radius: 4px;
+    overflow: hidden;
+}
+
+.scrollSuperior {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 5px;
+    border-bottom: 1px solid #ededed;
+}
+
+.scrollSuperiorConteudo {
+    height: 1px;
+}
+
+.tabelaContainer {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .tabela {
     width: 100%;
+    min-width: 600px;
     border-collapse: collapse;
     color: #333;
     font-size: 14px;
@@ -19,13 +38,14 @@
     padding: 13px 16px;
     border-bottom: 1px solid #ededed;
     white-space: nowrap;
+    font-family: sans-serif;
 }
 
 .tabela th {
-    color: #666;
+    color: #3a3a3a;
     font-weight: 600;
     font-family: sans-serif;
-    background: #ffffff;
+    background: #e6e5e5;
 }
 
 .tabela tbody tr:last-child td {
