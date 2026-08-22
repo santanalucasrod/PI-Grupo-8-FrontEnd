@@ -342,3 +342,89 @@
   left: 0;
   color: #b0b0b0;
 }
+
+/* =====================================================================
+   Responsividade para tablet
+   (o site é pensado só para tablet e mobile — sem breakpoint de desktop)
+   ===================================================================== */
+
+/* Tablet em modo paisagem (~1024px e abaixo): os 2 cards ativos ainda
+   cabem lado a lado, só ficam um pouco mais estreitos. */
+@media (max-width: 1024px) {
+  .main {
+    padding: 24px 20px;
+  }
+
+  .card {
+    width: 380px;
+  }
+
+  .linhaAtivos {
+    gap: 20px;
+  }
+}
+
+/* Tablet em modo retrato (~820px e abaixo): não cabem 2 cards de 380px
+   lado a lado com conforto, então empilha os cards ativos em coluna única
+   e reduz um pouco textos/paddings para telas mais estreitas. */
+@media (max-width: 820px) {
+  .main {
+    padding: 20px 16px;
+  }
+
+  .titulo {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  .subtitulo {
+    font-size: 19px;
+    margin: 24px 0 12px;
+  }
+
+  .linhaAtivos {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .cardHeader {
+    padding: 18px 20px;
+    gap: 12px;
+  }
+
+  .nomeCliente {
+    font-size: 22px;
+  }
+
+  .listaItens {
+    padding: 18px 20px;
+  }
+
+  .itemNome,
+  .itemFeito {
+    font-size: 18px;
+  }
+
+  .itemObservacao {
+    font-size: 13px;
+  }
+
+  .linhaFila {
+    justify-content: center;
+  }
+
+  .cardFila {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .popover {
+    width: 220px;
+  }
+}
