@@ -1,0 +1,30 @@
+/* RedButton.module.css */
+.btn2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #FFBA9F;
+    border: 1px solid #D31F1F;
+}
+
+.btn2 p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    line-height: 2;
+}
+
+.btn2 img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.btn2:hover {
+    background-color: #D31F1F;
+    color: #F9F9F9;
+    transition: 0.5s;
+}

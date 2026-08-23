@@ -1,0 +1,140 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.btnAdd, .btnRemove {
+  background-color: transparent;
+  border: 1px solid #333;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+.selectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select {
+  width: 100%;
+  padding: 8px 30px 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: #fff;
+  outline: none;
+}
+
+.select:focus {
+  border-color: #8D5B42;
+}
+
+.selectError {
+  border-color: #B00020;
+}
+
+.selectError:focus {
+  border-color: #B00020;
+}
+
+.errorText {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #B00020;
+}
+
+.arrowIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 12px;
+  color: #333;
+}
+
+.dropdownList {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+}
+
+.dropdownItem {
+  padding: 8px 10px;
+  font-size: 14px;
+  color: #333;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dropdownItem:hover,
+.dropdownItemAtivo {
+  background-color: #8D5B42;
+  color: #fff;
+}
+
+.dropdownItemNovo {
+  font-style: italic;
+  color: #8D5B42;
+}
+
+.dropdownItemNovo.dropdownItemAtivo,
+.dropdownItemNovo:hover {
+  color: #fff;
+}
+
+.itemList {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+  width: 100%;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.itemText {
+  font-size: 14px;
+  color: #333;
+}

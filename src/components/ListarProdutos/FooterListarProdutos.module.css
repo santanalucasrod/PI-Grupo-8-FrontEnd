@@ -1,0 +1,42 @@
+/* FooterListarProdutos.module.css */
+.footer_grupo {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    background-color: #8D5B42;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 0;
+    box-sizing: border-box;
+    z-index: 999;
+}
+
+.botao_adicionar {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-top: -30px;
+    margin-bottom: -30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.botao_adicionar img {
+    width: 90px;
+    height: auto;
+    display: block;
+}
+
+.texto_adicionar {
+    color: #F9F9F9;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}

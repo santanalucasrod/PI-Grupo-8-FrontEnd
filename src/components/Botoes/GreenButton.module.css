@@ -1,0 +1,22 @@
+/* GreenButton.module.css */
+.btn1 {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #6EB277;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn1 p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    line-height: 2;
+}
+
+.btn1:hover {
+    background-color: #4e7c54;
+    color: #F9F9F9;
+    transition: 0.5s;
+}

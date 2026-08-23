@@ -1,0 +1,23 @@
+/* WhiteButton.module.css */
+.btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #F9F9F9;
+    border-radius: 6px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.btn p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    line-height: 2;
+}
+
+.btn:hover {
+    background-color: #838181;
+    color: #F9F9F9;
+    transition: 0.5s;
+}

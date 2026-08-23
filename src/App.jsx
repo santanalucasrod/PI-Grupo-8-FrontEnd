@@ -10,16 +10,24 @@ import CadastroIngrediente from './pages/Ingrediente/CadastroIngrediente.jsx'
 import Personalizacoes from './pages/Personalizacao/Personalizacoes.jsx'
 import CadastroPersonalizacao from './pages/Personalizacao/CadastroPersonalizacao.jsx'
 import './index.css'
-import Header from './components/Header/Header.jsx'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import VLibras from './components/Vlibras.jsx'
+import Header from './components/Header/Header.jsx'
 import './styles/colors.css';
+import TelaListarProdutos from './components/ListarProdutos/TelaListarProdutos.jsx'
+import TelaCadastrarProduto from './components/CadastrarProduto/TelaCadastrarProduto.jsx'
+import TelaEditarProduto from './components/CadastrarProduto/TelaEditarProduto.jsx'
+function HeaderCondicional() {
+  const location = useLocation();
+  if (location.pathname.startsWith('/produtos')) return null;
+  return <Header />;
+}
 
 function App() {
   return (
     <BrowserRouter>
       <VLibras />
-      <Header />
+      <HeaderCondicional />
       <Routes>
         <Route path="/cadastro" element={<CadastroFuncionario />} />
         <Route path="/login"    element={<Login />} />
@@ -32,9 +40,11 @@ function App() {
         <Route path="/ingredientes/cadastro" element={<CadastroIngrediente />} />
         <Route path="/personalizacoes" element={<Personalizacoes />} />
         <Route path="/personalizacoes/cadastro" element={<CadastroPersonalizacao />} />
+        <Route path="/produtos" element={<TelaListarProdutos />} />
+        <Route path="/produtos/cadastro" element={<TelaCadastrarProduto />} />
+        <Route path="/produtos/editar/:id" element={<TelaEditarProduto />} />
       </Routes>
     </BrowserRouter>
   )
 }
-
 export default App

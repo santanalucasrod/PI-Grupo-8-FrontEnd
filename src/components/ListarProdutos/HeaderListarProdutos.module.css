@@ -1,0 +1,35 @@
+/* HeaderListarProdutos.module.css */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #8D5B42;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    box-sizing: border-box;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+}
+
+.header img {
+    width: 1.5rem;
+    cursor: pointer;
+}
+
+.header.oculto {
+    transform: translateY(-100%);
+}
+
+.titulo {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}

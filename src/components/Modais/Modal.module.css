@@ -1,0 +1,221 @@
+/* Modal.module.css — compartilhado entre Modal, ModalProduto e ModalExcluir */
+
+/* Fundo escurecido */
+.shadow_modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Caixa do modal — padrão (celular): mais alta e espaçada */
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    width: 85%;
+    gap: 1rem;
+    height: auto;
+    border-radius: 6px;
+    background-color: #F9F9F9;
+    padding: 2rem 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Botões lado a lado */
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+/* Wrapper com input + botões */
+.ipt_buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 80%;
+}
+
+/* Título do modal */
+.titulo_modal {
+    text-align: center;
+    font-size: 1.5rem;
+    align-self: center;
+}
+
+/* Topo do produto (botão voltar) */
+.topo_produto {
+    width: 90%;
+}
+
+/* Imagem + nome do produto */
+.produto_img {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.produto_img p {
+    font-size: 1.5rem;
+}
+
+/* Linha chave–valor */
+.listar_modal {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Grupo de linhas chave–valor */
+.listar_modal_grupo {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    gap: 1rem;
+}
+
+/* Campo de input dentro do modal */
+.ipt_standard {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.ipt_standard input {
+    width: 100%;
+    background-color: #F9F9F9;
+    border-radius: 6px;
+    font-size: 14px;
+    height: 1.5rem;
+    padding: 0.1rem 0.1rem 0.1rem 0.4rem;
+    border: 1px solid black;
+}
+
+.ipt_standard label {
+    font-size: 14px;
+}
+
+/* Textarea dentro do modal */
+.txta_standard {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.txta_standard textarea {
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid black;
+    resize: none;
+    width: 80%;
+    padding: 0.1rem 0.1rem 0.1rem 0.4rem;
+}
+
+.txta_standard label {
+    text-align: left;
+    width: 80%;
+}
+
+/* Imagem do produto dentro do modal */
+.imagem_modal {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.imagem_modal img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Responsivo — computador: versão compacta para caber na tela sem scroll */
+@media (min-width: 769px) {
+    .modal {
+        width: 50%;
+        max-width: 460px;
+        gap: 0.5rem;
+        max-height: 95vh;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+
+    .modal p,
+    .modal label,
+    .modal h1,
+    .modal h2 {
+        margin: 0;
+    }
+
+    .buttons {
+        gap: 0.5rem;
+    }
+
+    .ipt_buttons {
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .produto_img {
+        gap: 0.35rem;
+    }
+
+    .produto_img p {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .listar_modal {
+        font-size: 0.9rem;
+    }
+
+    .listar_modal_grupo {
+        width: 100%;
+        gap: 0.35rem;
+    }
+
+    .ipt_standard input {
+        font-size: 12px;
+        height: 1.25rem;
+        padding: 0.05rem 0.05rem 0.05rem 0.3rem;
+    }
+
+    .ipt_standard label {
+        font-size: 12px;
+    }
+
+    .txta_standard {
+        gap: 0.25rem;
+    }
+
+    .txta_standard textarea {
+        font-size: 12px;
+        width: 100%;
+        padding: 0.4rem;
+        height: 55px;
+    }
+
+    .txta_standard label {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .imagem_modal {
+        width: 70px;
+        height: 70px;
+    }
+}
