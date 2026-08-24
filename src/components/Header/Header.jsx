@@ -5,6 +5,7 @@ import styles from "./Header.module.css";
 const LINKS = [
   { to: "/dashboard", label: "Dashboard" },
   { to: "/pedidos", label: "Pedidos" },
+  { to: "/produtos", label: "Produtos" },
   { to: "/categorias", label: "Categorias" },
   { to: "/funcionarios", label: "Funcionarios" },
   { to: "/ingredientes", label: "Ingredientes" },
