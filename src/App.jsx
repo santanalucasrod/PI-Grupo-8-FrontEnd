@@ -10,17 +10,31 @@ import CadastroIngrediente from './pages/Ingrediente/CadastroIngrediente.jsx'
 import Personalizacoes from './pages/Personalizacao/Personalizacoes.jsx'
 import CadastroPersonalizacao from './pages/Personalizacao/CadastroPersonalizacao.jsx'
 import './index.css'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import VLibras from './components/Vlibras.jsx'
 import Header from './components/Header/Header.jsx'
 import './styles/colors.css';
 import TelaListarProdutos from './components/ListarProdutos/TelaListarProdutos.jsx'
 import TelaCadastrarProduto from './components/CadastrarProduto/TelaCadastrarProduto.jsx'
 import TelaEditarProduto from './components/CadastrarProduto/TelaEditarProduto.jsx'
+import TelaCardapio from './components/Cardapio/TelaCardapio.jsx'
+import TelaProdutoDetalhe from './components/Cardapio/TelaProdutoDetalhe.jsx'
+import TelaSacola from './components/Cardapio/TelaSacola.jsx'
+import { CartProvider } from './providers/CartContext.jsx'
+
 function HeaderCondicional() {
   const location = useLocation();
   if (location.pathname.startsWith('/produtos')) return null;
+  if (location.pathname.startsWith('/cardapio')) return null;
   return <Header />;
+}
+
+function LayoutCardapio() {
+  return (
+    <CartProvider>
+      <Outlet />
+    </CartProvider>
+  );
 }
 
 function App() {
@@ -43,6 +57,11 @@ function App() {
         <Route path="/produtos" element={<TelaListarProdutos />} />
         <Route path="/produtos/cadastro" element={<TelaCadastrarProduto />} />
         <Route path="/produtos/editar/:id" element={<TelaEditarProduto />} />
+        <Route element={<LayoutCardapio />}>
+          <Route path="/cardapio" element={<TelaCardapio />} />
+          <Route path="/cardapio/produto/:id" element={<TelaProdutoDetalhe />} />
+          <Route path="/cardapio/sacola" element={<TelaSacola />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )

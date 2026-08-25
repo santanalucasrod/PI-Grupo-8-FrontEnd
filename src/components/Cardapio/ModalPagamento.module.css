@@ -1,0 +1,66 @@
+.painel {
+  gap: 40px;
+  padding-top: 46px;
+  padding-bottom: 22px;
+}
+
+.painel:focus {
+  outline: 0;
+}
+
+.texto {
+  max-width: 250px;
+  margin: 0 auto;
+  text-align: center;
+  color: #111;
+  font: 14px/1.35 Arial, sans-serif;
+}
+
+.erro {
+  margin: -12px 0;
+  padding: 7px 9px;
+  border-radius: 5px;
+  background: #ffe6e6;
+  color: #a31515;
+  font: 11px/1.3 Arial, sans-serif;
+  text-align: center;
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.botaoEscuro,
+.botaoSalmao {
+  width: 100%;
+  height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  color: #111;
+  font: 13px Arial, sans-serif;
+  cursor: pointer;
+}
+
+.botaoEscuro {
+  background: #b7b7b7;
+}
+
+.botaoSalmao {
+  background: var(--color-danger, #ffba9f);
+  color: #a31515;
+}
+
+.botaoEscuro:disabled,
+.botaoSalmao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.botaoEscuro:focus-visible,
+.botaoSalmao:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}

@@ -1,0 +1,97 @@
+.secao {
+  margin-top: 10px;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+.titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
+  color: #111;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  text-align: left;
+}
+
+.titulo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #535353;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.card {
+  min-width: 0;
+  height: 124px;
+  padding: 7px 4px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-brown, #8d5b42);
+  outline-offset: 2px;
+}
+
+.imagemContainer {
+  width: 64px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.imagemContainer img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.nome {
+  width: 100%;
+  min-height: 24px;
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 12px;
+  text-align: center;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.preco {
+  margin-top: auto;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, 116px);
+    justify-content: start;
+  }
+}

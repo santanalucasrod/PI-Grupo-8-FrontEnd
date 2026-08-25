@@ -1,0 +1,43 @@
+.abas {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: min(calc(100% - 28px), 520px);
+  margin: 0 auto;
+  padding: 0 0 7px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.abas::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(58%, 300px);
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-brown, #8d5b42);
+}
+
+.aba {
+  height: 25px;
+  border: 0;
+  background: transparent;
+  color: #111;
+  border-radius: 5px;
+  padding: 0 13px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.abaAtiva {
+  background: var(--color-brown, #8d5b42);
+  color: #fff;
+}
+
+.aba:focus-visible {
+  outline: 2px solid #161616;
+  outline-offset: 2px;
+}

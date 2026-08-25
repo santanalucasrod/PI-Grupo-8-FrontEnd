@@ -1,0 +1,52 @@
+.footer {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(100%, 960px);
+  min-height: 55px;
+  background: var(--color-brown, #8d5b42);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+.total {
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.botaoFinalizar {
+  min-width: 136px;
+  height: 35px;
+  padding: 0 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 5px;
+  background: #fff;
+  color: #111;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.botaoFinalizar img {
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+}
+
+.botaoFinalizar:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
