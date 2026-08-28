@@ -11,6 +11,7 @@ import ModalAdicionar from './ModalAdicionar';
 import { validarProduto, LIMITES } from './validacaoProduto';
 import { vincularIngredienteAoProduto } from './produtoIngredienteApi';
 import { enviarImagemProduto } from './produtoImagemApi';
+import { authHeader } from '../../utils/authHeader';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -32,9 +33,10 @@ export default function TelaCadastrarProduto() {
   const [ingredientes, setIngredientes] = useState([]);
   const [ingredientesApi, setIngredientesApi] = useState([]); // lista completa {id, nome} vinda da API
 
-  const [opcoesPersonalizacao, setOpcoesPersonalizacao] = useState(['Sem açúcar', 'Chantilly', 'Gelo extra']);
+  const [opcoesPersonalizacao, setOpcoesPersonalizacao] = useState([]);
   const [personalizacaoAtual, setPersonalizacaoAtual] = useState('');
   const [personalizacoes, setPersonalizacoes] = useState([]);
+  const [personalizacoesApi, setPersonalizacoesApi] = useState([]); // lista completa {id, nome} vinda da API
 
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', title: '' });
   const [erros, setErros] = useState({});
@@ -49,7 +51,7 @@ export default function TelaCadastrarProduto() {
       try {
         const resposta = await fetch(`${API_BASE_URL}/ingredientes`, {
           method: 'GET',
-          headers: { accept: '*/*' },
+          headers: { accept: '*/*', ...authHeader() },
         });
 
         if (!resposta.ok) {
@@ -74,7 +76,7 @@ export default function TelaCadastrarProduto() {
       try {
         const resposta = await fetch(`${API_BASE_URL}/categorias`, {
           method: 'GET',
-          headers: { accept: '*/*' },
+          headers: { accept: '*/*', ...authHeader() },
         });
 
         if (!resposta.ok) {
@@ -91,6 +93,31 @@ export default function TelaCadastrarProduto() {
     }
 
     buscarCategorias();
+  }, []);
+
+  // Busca a lista de personalizações disponíveis na API para o select
+  useEffect(() => {
+    async function buscarPersonalizacoes() {
+      try {
+        const resposta = await fetch(`${API_BASE_URL}/personalizacoes`, {
+          method: 'GET',
+          headers: { accept: '*/*', ...authHeader() },
+        });
+
+        if (!resposta.ok) {
+          throw new Error(`Erro ${resposta.status} ao buscar personalizações`);
+        }
+
+        const dados = await resposta.json();
+        setPersonalizacoesApi(dados || []);
+        const nomes = (dados || []).map((item) => item.nome).filter(Boolean);
+        setOpcoesPersonalizacao(nomes);
+      } catch (err) {
+        console.error('Erro ao buscar personalizações:', err);
+      }
+    }
+
+    buscarPersonalizacoes();
   }, []);
 
   const handleCadastrar = async () => {
@@ -129,6 +156,7 @@ export default function TelaCadastrarProduto() {
         headers: {
           accept: '*/*',
           'Content-Type': 'application/json',
+          ...authHeader(),
         },
         body: JSON.stringify(payload),
       });
@@ -231,6 +259,7 @@ export default function TelaCadastrarProduto() {
       headers: {
         accept: '*/*',
         'Content-Type': 'application/json',
+        ...authHeader(),
       },
       body: JSON.stringify({ nome }),
     });
@@ -280,9 +309,23 @@ export default function TelaCadastrarProduto() {
         setSalvandoModal(false);
       }
     } else if (modalConfig.type === 'personalizacao') {
-      if (!opcoesPersonalizacao.includes(nomeLimpo)) setOpcoesPersonalizacao([...opcoesPersonalizacao, nomeLimpo]);
-      if (!personalizacoes.includes(nomeLimpo)) setPersonalizacoes([...personalizacoes, nomeLimpo]);
-      closeModal();
+      try {
+        setSalvandoModal(true);
+        setErroModal(null);
+        const criada = await criarNaApi('personalizacoes', nomeLimpo);
+        const nomeSalvo = criada?.nome || nomeLimpo;
+        if (!opcoesPersonalizacao.includes(nomeSalvo)) setOpcoesPersonalizacao([...opcoesPersonalizacao, nomeSalvo]);
+        if (!personalizacoes.includes(nomeSalvo)) setPersonalizacoes([...personalizacoes, nomeSalvo]);
+        if (criada?.id != null) {
+          setPersonalizacoesApi((atual) => [...atual, criada]);
+        }
+        closeModal();
+      } catch (err) {
+        console.error('Erro ao criar personalização:', err);
+        setErroModal('Não foi possível criar a personalização. Tente novamente.');
+      } finally {
+        setSalvandoModal(false);
+      }
     }
   };
 

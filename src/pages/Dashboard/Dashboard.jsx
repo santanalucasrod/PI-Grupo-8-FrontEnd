@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { authHeader } from "../../utils/authHeader";
 import {
   Chart,
   BarController,
@@ -335,7 +336,9 @@ function Painel() {
   useEffect(() => {
     async function carregarDados() {
       try {
-        const resposta = await fetch("http://localhost:8080/produtos");
+        const resposta = await fetch("http://localhost:8080/produtos", {
+          headers: { ...authHeader() },
+        });
         const dadosApi = await resposta.json();
 
         console.log(dadosApi);

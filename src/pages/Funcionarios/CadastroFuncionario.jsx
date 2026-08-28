@@ -47,7 +47,7 @@ function CadastroFuncionario() {
         if (estaEditando) {
 
             axios.put(
-                `http://localhost:8080/funcionario/crud/${dadosEdicao.id}`,
+                `http://localhost:8080/funcionarios/crud/${dadosEdicao.id}`,
 
                 {
                     nome: nome,
@@ -89,7 +89,7 @@ function CadastroFuncionario() {
         } else {
 
             axios.post(
-                "http://localhost:8080/funcionario/cadastro",
+                "http://localhost:8080/funcionarios/cadastro",
 
                 {
                     nome: nome,

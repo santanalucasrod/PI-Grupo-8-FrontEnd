@@ -6,6 +6,7 @@ import ImagemProduto from '../../assets/img-cafe.png';
 import ListaCategorias from './ListaCategorias';
 import ModalProduto from '../Modais/ModalProduto';
 import ModalExcluir from '../Modais/ModalExcluir';
+import { authHeader } from '../../utils/authHeader';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -41,7 +42,7 @@ export default function TelaListarProdutos() {
 
       const resposta = await fetch(`${API_BASE_URL}/produtos/agrupados`, {
         method: 'GET',
-        headers: { accept: '*/*' },
+        headers: { accept: '*/*', ...authHeader() },
       });
 
       if (!resposta.ok) {
@@ -84,7 +85,7 @@ export default function TelaListarProdutos() {
 
       const resposta = await fetch(`${API_BASE_URL}/produtos/${produtoSelecionado.id}`, {
         method: 'DELETE',
-        headers: { accept: '*/*' },
+        headers: { accept: '*/*', ...authHeader() },
       });
 
       if (!resposta.ok) {

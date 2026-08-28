@@ -35,12 +35,12 @@ export default function TelaProdutoDetalhe() {
       try {
         setCarregando(true);
         setErro(null);
-        const [dadosProduto, nomesPersonalizacao] = await Promise.all([
+        const [dadosProduto, itensPersonalizacao] = await Promise.all([
           buscarProdutoPorId(id, controller.signal),
           buscarPersonalizacoesPorProduto(id, controller.signal),
         ]);
         setProduto(dadosProduto);
-        setPersonalizacoes(nomesPersonalizacao.map((nome) => ({ nome, quantidade: 1 })));
+        setPersonalizacoes(itensPersonalizacao.map((item) => ({ ...item, quantidade: 1 })));
       } catch (err) {
         if (err?.code === 'ERR_CANCELED') return;
         setErro('Não foi possível carregar o produto. Verifique se a API está rodando em ' + API_BASE_URL);

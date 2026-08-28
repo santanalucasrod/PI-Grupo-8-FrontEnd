@@ -9,8 +9,9 @@ import TextArea from './TextArea';
 import SelectGroup from './SelectGroup';
 import ModalAdicionar from './ModalAdicionar';
 import { validarProduto, LIMITES } from './validacaoProduto';
-import { vincularIngredienteAoProduto } from './produtoIngredienteApi';
+import { vincularIngredienteAoProduto, desvincularIngredienteDoProduto } from './produtoIngredienteApi';
 import { enviarImagemProduto } from './produtoImagemApi';
+import { authHeader } from '../../utils/authHeader';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -36,9 +37,10 @@ export default function TelaEditarProduto() {
   const [ingredientesApi, setIngredientesApi] = useState([]); // lista completa {id, nome} vinda da API
   const [ingredientesVinculados, setIngredientesVinculados] = useState([]); // nomes já vinculados a este produto na API
 
-  const [opcoesPersonalizacao, setOpcoesPersonalizacao] = useState(['Sem açúcar', 'Chantilly', 'Gelo extra']);
+  const [opcoesPersonalizacao, setOpcoesPersonalizacao] = useState([]);
   const [personalizacaoAtual, setPersonalizacaoAtual] = useState('');
   const [personalizacoes, setPersonalizacoes] = useState([]);
+  const [personalizacoesApi, setPersonalizacoesApi] = useState([]); // lista completa {id, nome} vinda da API
 
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', title: '' });
 
@@ -56,7 +58,7 @@ export default function TelaEditarProduto() {
       try {
         const resposta = await fetch(`${API_BASE_URL}/ingredientes`, {
           method: 'GET',
-          headers: { accept: '*/*' },
+          headers: { accept: '*/*', ...authHeader() },
         });
 
         if (!resposta.ok) {
@@ -88,7 +90,7 @@ export default function TelaEditarProduto() {
       try {
         const resposta = await fetch(`${API_BASE_URL}/categorias`, {
           method: 'GET',
-          headers: { accept: '*/*' },
+          headers: { accept: '*/*', ...authHeader() },
         });
 
         if (!resposta.ok) {
@@ -111,6 +113,31 @@ export default function TelaEditarProduto() {
     buscarCategorias();
   }, []);
 
+  // Busca a lista de personalizações disponíveis na API para o select
+  useEffect(() => {
+    async function buscarPersonalizacoes() {
+      try {
+        const resposta = await fetch(`${API_BASE_URL}/personalizacoes`, {
+          method: 'GET',
+          headers: { accept: '*/*', ...authHeader() },
+        });
+
+        if (!resposta.ok) {
+          throw new Error(`Erro ${resposta.status} ao buscar personalizações`);
+        }
+
+        const dados = await resposta.json();
+        setPersonalizacoesApi(dados || []);
+        const nomes = (dados || []).map((item) => item.nome).filter(Boolean);
+        setOpcoesPersonalizacao((atual) => Array.from(new Set([...atual, ...nomes])));
+      } catch (err) {
+        console.error('Erro ao buscar personalizações:', err);
+      }
+    }
+
+    buscarPersonalizacoes();
+  }, []);
+
   // Busca os dados reais do produto na API e preenche o formulário
   useEffect(() => {
     async function buscarProduto() {
@@ -125,7 +152,7 @@ export default function TelaEditarProduto() {
 
         const resposta = await fetch(`${API_BASE_URL}/produtos/${produtoId}`, {
           method: 'GET',
-          headers: { accept: '*/*' },
+          headers: { accept: '*/*', ...authHeader() },
         });
 
         if (!resposta.ok) {
@@ -171,8 +198,8 @@ export default function TelaEditarProduto() {
 
       try {
         const resposta = await fetch(
-          `${API_BASE_URL}/produto-ingrediente/por-produto/${produtoId}?id=${produtoId}`,
-          { method: 'GET', headers: { accept: '*/*' } }
+          `${API_BASE_URL}/produtos/${produtoId}/ingredientes`,
+          { method: 'GET', headers: { accept: '*/*', ...authHeader() } }
         );
 
         if (!resposta.ok) {
@@ -180,8 +207,8 @@ export default function TelaEditarProduto() {
         }
 
         const dados = await resposta.json();
-        // Cada item é uma relação produto_ingrediente: { id, produto, ingrediente: { id, nome } }
-        const ingredientesDoProduto = (dados || []).map((item) => item.ingrediente).filter(Boolean);
+        // A rota devolve os ingredientes do produto diretamente: [{ id, nome }, ...]
+        const ingredientesDoProduto = (dados || []).filter(Boolean);
         const nomesIngredientes = ingredientesDoProduto.map((item) => item.nome).filter(Boolean);
 
         setIngredientes(nomesIngredientes);
@@ -235,6 +262,7 @@ export default function TelaEditarProduto() {
         headers: {
           accept: '*/*',
           'Content-Type': 'application/json',
+          ...authHeader(),
         },
         body: JSON.stringify(payload),
       });
@@ -277,10 +305,11 @@ export default function TelaEditarProduto() {
       };
 
       const novosIngredientes = ingredientes.filter((nome) => !ingredientesVinculados.includes(nome));
+      const ingredientesRemovidos = ingredientesVinculados.filter((nome) => !ingredientes.includes(nome));
 
       // Para cada ingrediente novo: acha o objeto {id, nome} já conhecido, ou (se foi digitado
       // direto no combobox como tag nova, sem passar pelo modal "+") cria na API antes de vincular.
-      const resultados = await Promise.allSettled(
+      const resultadosVincular = await Promise.allSettled(
         novosIngredientes.map(async (nomeIngrediente) => {
           let ingredienteObj = ingredientesApi.find(
             (i) => i.nome?.trim().toLowerCase() === nomeIngrediente.trim().toLowerCase()
@@ -301,15 +330,45 @@ export default function TelaEditarProduto() {
         })
       );
 
+      // Para cada ingrediente que estava vinculado e foi removido da lista, desfaz o vínculo na API
+      const resultadosDesvincular = await Promise.allSettled(
+        ingredientesRemovidos.map(async (nomeIngrediente) => {
+          const ingredienteObj = ingredientesApi.find(
+            (i) => i.nome?.trim().toLowerCase() === nomeIngrediente.trim().toLowerCase()
+          );
+
+          if (!ingredienteObj?.id) {
+            throw new Error(`Ingrediente "${nomeIngrediente}" sem id válido, não foi possível remover`);
+          }
+
+          return desvincularIngredienteDoProduto(produtoId, ingredienteObj.id);
+        })
+      );
+
       const falhas = [...falhasImagem];
-      resultados.forEach((resultado, indice) => {
+      const naoVinculados = [];
+      resultadosVincular.forEach((resultado, indice) => {
         if (resultado.status === 'rejected') {
           console.error(`Erro ao vincular ingrediente "${novosIngredientes[indice]}":`, resultado.reason);
           falhas.push(novosIngredientes[indice]);
+          naoVinculados.push(novosIngredientes[indice]);
         }
       });
 
-      setIngredientesVinculados(ingredientes.filter((nome) => !falhas.includes(nome)));
+      const naoRemovidos = [];
+      resultadosDesvincular.forEach((resultado, indice) => {
+        if (resultado.status === 'rejected') {
+          console.error(`Erro ao remover ingrediente "${ingredientesRemovidos[indice]}":`, resultado.reason);
+          falhas.push(ingredientesRemovidos[indice]);
+          naoRemovidos.push(ingredientesRemovidos[indice]);
+        }
+      });
+
+      // Reflete no estado só o que realmente ficou vinculado na API: a lista atual menos
+      // o que falhou ao vincular, mais o que falhou ao remover (continua vinculado de fato).
+      setIngredientesVinculados(
+        Array.from(new Set([...ingredientes.filter((nome) => !naoVinculados.includes(nome)), ...naoRemovidos]))
+      );
 
       if (falhas.length > 0) {
         // Mantém a tela de edição aberta para o usuário ver o erro e poder tentar de novo,
@@ -346,6 +405,7 @@ export default function TelaEditarProduto() {
       headers: {
         accept: '*/*',
         'Content-Type': 'application/json',
+        ...authHeader(),
       },
       body: JSON.stringify({ nome }),
     });
@@ -398,9 +458,23 @@ export default function TelaEditarProduto() {
         setSalvandoModal(false);
       }
     } else if (modalConfig.type === 'personalizacao') {
-      if (!opcoesPersonalizacao.includes(nomeLimpo)) setOpcoesPersonalizacao([...opcoesPersonalizacao, nomeLimpo]);
-      if (!personalizacoes.includes(nomeLimpo)) setPersonalizacoes([...personalizacoes, nomeLimpo]);
-      closeModal();
+      try {
+        setSalvandoModal(true);
+        setErroModal(null);
+        const criada = await criarNaApi('personalizacoes', nomeLimpo);
+        const nomeSalvo = criada?.nome || nomeLimpo;
+        if (!opcoesPersonalizacao.includes(nomeSalvo)) setOpcoesPersonalizacao([...opcoesPersonalizacao, nomeSalvo]);
+        if (!personalizacoes.includes(nomeSalvo)) setPersonalizacoes([...personalizacoes, nomeSalvo]);
+        if (criada?.id != null) {
+          setPersonalizacoesApi((atual) => [...atual, criada]);
+        }
+        closeModal();
+      } catch (err) {
+        console.error('Erro ao criar personalização:', err);
+        setErroModal('Não foi possível criar a personalização. Tente novamente.');
+      } finally {
+        setSalvandoModal(false);
+      }
     }
   };
 

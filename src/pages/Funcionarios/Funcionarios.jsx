@@ -24,7 +24,7 @@ function Funcionarios() {
 
     function carregarFuncionarios() {
 
-        return api.get('/funcionario/crud', configuracao())
+        return api.get('/funcionarios/crud', configuracao())
             .then((resposta) => {
                 setFuncionarios(resposta.data);
             })
@@ -47,7 +47,7 @@ function Funcionarios() {
     function excluirFuncionario(funcionario) {
         if (!funcionario.id || !window.confirm(`Excluir o funcionario ${funcionario.nome}?`)) return;
 
-        api.delete(`/funcionario/crud/${funcionario.id}`, configuracao())
+        api.delete(`/funcionarios/crud/${funcionario.id}`, configuracao())
             .then(carregarFuncionarios)
             .catch(() => setErro('Nao foi possivel excluir o funcionario.'));
     }

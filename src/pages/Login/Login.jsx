@@ -33,7 +33,7 @@ function Login() {
                 },
                 body: JSON.stringify({
                     email: email,
-                    password: senha,
+                    senha: senha,
                 }),
             });
             if (resposta.ok) {
@@ -41,6 +41,14 @@ function Login() {
 
                 console.log(json);
                 localStorage.setItem("token", json.token);
+
+                // O /auth/login devolve o id do funcionário logado; guardamos aqui pra
+                // ficar disponível pro criarPedido (POST /pedidos exige funcionarioId).
+                if (json.id != null) {
+                    localStorage.setItem("funcionarioId", String(json.id));
+                } else {
+                    console.warn("A resposta do login não trouxe um id de funcionário.");
+                }
 
                 setTimeout(() => {
                     window.location = "./index.html";

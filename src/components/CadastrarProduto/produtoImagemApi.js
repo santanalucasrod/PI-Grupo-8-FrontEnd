@@ -1,3 +1,5 @@
+import { authHeader } from '../../utils/authHeader';
+
 const API_BASE_URL = 'http://localhost:8080';
 
 // Envia a imagem do produto (multipart/form-data) e retorna o produto atualizado (com o novo pathFt)
@@ -9,6 +11,7 @@ export async function enviarImagemProduto(produtoId, arquivo) {
     method: 'POST',
     headers: {
       accept: '*/*',
+      ...authHeader(),
       // Sem "Content-Type" manual: o browser define o boundary do multipart sozinho.
     },
     body: formData,

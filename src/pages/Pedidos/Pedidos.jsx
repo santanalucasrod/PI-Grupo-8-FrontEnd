@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
  import axios from "axios";
+ import { authHeader } from "../../utils/authHeader";
  import styles from "./Pedidos.module.css";
  
  const API_URL = "http://localhost:8080";
@@ -114,6 +115,7 @@ import { useState, useEffect, useRef } from "react";
        try {
          const resposta = await axios.get(`${API_URL}/pedidos`, {
            params: { ativos: true },
+           headers: authHeader(),
          });
          if (cancelado) return;
          setPedidos(resposta.data);
@@ -154,7 +156,7 @@ import { useState, useEffect, useRef } from "react";
      try {
        await axios.patch(`${API_URL}/pedidos/itens/${itemId}/pronto`, {
          pronto: !prontoAtual,
-       });
+       }, { headers: authHeader() });
      } catch (e) {
        console.log(e);
        setErro("Não foi possível atualizar o item. Recarregando...");
@@ -162,6 +164,7 @@ import { useState, useEffect, useRef } from "react";
        try {
          const resposta = await axios.get(`${API_URL}/pedidos`, {
            params: { ativos: true },
+           headers: authHeader(),
          });
          setPedidos(resposta.data);
        } catch (e2) {
@@ -187,7 +190,7 @@ import { useState, useEffect, useRef } from "react";
      try {
        await axios.patch(`${API_URL}/pedidos/${pedidoId}/status`, {
          status: "EM_PREPARO",
-       });
+       }, { headers: authHeader() });
      } catch (e) {
        console.log(e);
        setErro("Não foi possível iniciar o preparo do pedido.");
@@ -203,7 +206,7 @@ import { useState, useEffect, useRef } from "react";
      try {
        await axios.patch(`${API_URL}/pedidos/${pedidoId}/status`, {
          status: "PRONTO",
-       });
+       }, { headers: authHeader() });
        setPedidos((atual) => atual.filter((p) => p.id !== pedidoId));
      } catch (e) {
        console.log(e);
