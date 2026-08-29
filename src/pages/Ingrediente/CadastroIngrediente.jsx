@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Formulario from '../../components/Formulario/Formulario';
+import Header from '../../components/CadastrarProduto/Header';
 
 function CadastroIngrediente() {
     const location = useLocation();
@@ -85,6 +86,8 @@ function CadastroIngrediente() {
     const titulo = estaEditando ? 'Editar Ingrediente' : 'Adicionar Ingrediente';
 
     return (
+        <>
+        <Header title={titulo} onCancel={() => navigate('/ingredientes')} />
         <main className={styles.main}>
             <Formulario
                 campos={campos}
@@ -93,8 +96,9 @@ function CadastroIngrediente() {
                 erro={erro}
                 mostrarErro={mostrarErro}
                 textoBotao={estaEditando ? 'Editar' : 'Adicionar'}
-            />
+                />
         </main>
+        </>
     );
 }
 

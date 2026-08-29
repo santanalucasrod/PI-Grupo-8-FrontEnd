@@ -8,6 +8,7 @@
     width: min(100%, 960px);
     margin: 0 auto;
     text-align: left;
+    padding-bottom: 64px;
 }
 
 .cabecalho {

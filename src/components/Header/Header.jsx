@@ -11,7 +11,6 @@ const LINKS = [
   { to: "/funcionarios", label: "Funcionarios" },
   { to: "/ingredientes", label: "Ingredientes" },
   { to: "/personalizacoes", label: "Personalizações" },
-  { to: "/cadastro", label: "Cadastro" },
   { to: "/login", label: "Login" },
 ];
 

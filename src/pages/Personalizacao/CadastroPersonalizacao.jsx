@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Formulario from '../../components/Formulario/Formulario';
+import Header from '../../components/CadastrarProduto/Header';
 
 function CadastroPersonalizacao() {
     const location = useLocation();
@@ -85,16 +86,20 @@ function CadastroPersonalizacao() {
     const titulo = estaEditando ? 'Editar Personalizacao' : 'Adicionar Personalizacao';
 
     return (
-        <main className={styles.main}>
-            <Formulario
-                campos={campos}
-                titulo={titulo}
-                cadastrar={cadastrar}
-                erro={erro}
-                mostrarErro={mostrarErro}
-                textoBotao={estaEditando ? 'Editar' : 'Adicionar'}
-            />
-        </main>
+        <>
+
+            <Header title={titulo} onCancel={() => navigate('/personalizacoes')} />
+            <main className={styles.main}>
+                <Formulario
+                    campos={campos}
+                    titulo={titulo}
+                    cadastrar={cadastrar}
+                    erro={erro}
+                    mostrarErro={mostrarErro}
+                    textoBotao={estaEditando ? 'Editar' : 'Adicionar'}
+                />
+            </main>
+        </>
     );
 }
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Formulario from '../../components/Formulario/Formulario';
+import Header from '../../components/CadastrarProduto/Header';
 
 function CadastroCategoria() {
     const location = useLocation();
@@ -85,6 +86,8 @@ function CadastroCategoria() {
     const titulo = estaEditando ? 'Editar Categoria' : 'Adicionar Categoria';
 
     return (
+        <>
+        <Header title={titulo} onCancel={() => navigate('/categorias')} />
         <main className={styles.main}>
             <Formulario
                 campos={campos}
@@ -95,6 +98,7 @@ function CadastroCategoria() {
                 textoBotao={estaEditando ? 'Editar' : 'Adicionar'}
             />
         </main>
+        </>
     );
 }
 

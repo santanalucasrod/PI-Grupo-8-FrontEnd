@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../providers/axiosClient';
 import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa';
+import Footer from '../../components/ListarProdutos/FooterListarProdutos';
+import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Categorias.module.css';
 import editarIcone from '../../assets/editaricon.png';
 import deletarIcone from '../../assets/lixeiraicon.png';
@@ -12,6 +14,7 @@ function Categorias() {
     const [termo, setTermo] = useState('');
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
+    const [categoriaExcluir, setCategoriaExcluir] = useState(null);
     const navigate = useNavigate();
 
     function configuracao() {
@@ -29,10 +32,14 @@ function Categorias() {
         carregarCategorias();
     }, []);
 
-    function excluirCategoria(categoria) {
-        if (!categoria.id || !window.confirm(`Excluir a categoria ${categoria.nome}?`)) return;
-        api.delete(`/categorias/${categoria.id}`, configuracao())
-            .then(carregarCategorias)
+    function confirmarExclusaoCategoria() {
+        if (!categoriaExcluir?.id) return;
+
+        api.delete(`/categorias/${categoriaExcluir.id}`, configuracao())
+            .then(() => {
+                setCategoriaExcluir(null);
+                carregarCategorias();
+            })
             .catch(() => setErro('Nao foi possivel excluir a categoria.'));
     }
 
@@ -51,7 +58,7 @@ function Categorias() {
             chave: 'excluir',
             titulo: 'Excluir',
             componente: (item) => (
-                <button className={`${styles.acao} ${styles.excluir}`} onClick={() => excluirCategoria(item)} aria-label={`Excluir ${item.nome}`} title="Excluir">
+                <button className={`${styles.acao} ${styles.excluir}`} onClick={() => setCategoriaExcluir(item)} aria-label={`Excluir ${item.nome}`} title="Excluir">
                     <img src={deletarIcone} alt="" className={styles.imagem} />
                 </button>
             )
@@ -59,21 +66,30 @@ function Categorias() {
     ];
 
     return (
-        <main className={styles.main}>
-            <section className={styles.conteudo}>
-                <div className={styles.cabecalho}>
-                    <div>
-                        <p className={styles.eyebrow}>Gerenciamento</p>
-                        <h2 className={styles.titulo}>Categorias</h2>
-                    </div>
-                    <div className={styles.acoesCabecalho}>
+        <>
+            <main className={styles.main}>
+                <section className={styles.conteudo}>
+                    <div className={styles.cabecalho}>
+                        <div>
+                            <p className={styles.eyebrow}>Gerenciamento</p>
+                            <h2 className={styles.titulo}>Categorias</h2>
+                        </div>
                         <Pesquisa valor={termo} aoPesquisar={setTermo} />
-                        <button className={styles.botaoAdicionar} onClick={() => navigate('/categorias/cadastro')}>Adicionar</button>
                     </div>
-                </div>
-                {erro ? <p className={styles.erro}>{erro}</p> : <ListaItens itens={categorias} colunas={colunas} carregando={carregando} />}
-            </section>
-        </main>
+                    {erro ? <p className={styles.erro}>{erro}</p> : <ListaItens itens={categorias} colunas={colunas} carregando={carregando} />}
+                </section>
+            </main>
+            <Footer onClickAdd={() => navigate('/categorias/cadastro')} texto="Adicionar Categoria" />
+            {categoriaExcluir && (
+                <ModalExcluir
+                    titulo={`Você deseja mesmo excluir ${categoriaExcluir.nome.toLowerCase()}?`}
+                    whiteButton="Voltar"
+                    redButton="Excluir"
+                    onCancel={() => setCategoriaExcluir(null)}
+                    onConfirm={confirmarExclusaoCategoria}
+                />
+            )}
+        </>
     );
 }
 

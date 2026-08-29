@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../providers/axiosClient';
 import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa';
+import Footer from '../../components/ListarProdutos/FooterListarProdutos';
+import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Funcionarios.module.css';
 import editarIcone from '../../assets/editaricon.png';
 import deletarIcone from '../../assets/lixeiraicon.png';
@@ -12,6 +14,7 @@ function Funcionarios() {
     const [termo, setTermo] = useState('');
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
+    const [funcionarioExcluir, setFuncionarioExcluir] = useState(null);
     const navigate = useNavigate();
 
     function configuracao() {
@@ -41,14 +44,17 @@ function Funcionarios() {
     }, []);
 
     function editarFuncionario(funcionario) {
-        navigate('/cadastro', { state: { editar: true, funcionario } });
+        navigate('/funcionarios/cadastro', { state: { editar: true, funcionario } });
     }
 
-    function excluirFuncionario(funcionario) {
-        if (!funcionario.id || !window.confirm(`Excluir o funcionario ${funcionario.nome}?`)) return;
+    function confirmarExclusaoFuncionario() {
+        if (!funcionarioExcluir?.id) return;
 
-        api.delete(`/funcionarios/crud/${funcionario.id}`, configuracao())
-            .then(carregarFuncionarios)
+        api.delete(`/funcionarios/crud/${funcionarioExcluir.id}`, configuracao())
+            .then(() => {
+                setFuncionarioExcluir(null);
+                carregarFuncionarios();
+            })
             .catch(() => setErro('Nao foi possivel excluir o funcionario.'));
     }
 
@@ -72,7 +78,7 @@ function Funcionarios() {
             chave: 'excluir',
             titulo: 'Excluir',
             componente: (item) => (
-                <button className={`${styles.acao} ${styles.excluir}`} onClick={() => excluirFuncionario(item)} aria-label={`Excluir ${item.nome}`} title="Excluir">
+                <button className={`${styles.acao} ${styles.excluir}`} onClick={() => setFuncionarioExcluir(item)} aria-label={`Excluir ${item.nome}`} title="Excluir">
                     <img src={deletarIcone} alt="" className={styles.imagem} />
                 </button>
             )
@@ -80,20 +86,31 @@ function Funcionarios() {
     ];
 
     return (
-        <main className={styles.main}>
-            <section className={styles.conteudo}>
-                <div className={styles.cabecalho}>
-                    <div>
-                        <p className={styles.eyebrow}>Gerenciamento</p>
-                        <h2 className={styles.titulo}>Funcionarios</h2>
+        <><main className={styles.main}>
+                <section className={styles.conteudo}>
+                    <div className={styles.cabecalho}>
+                        <div>
+                            <p className={styles.eyebrow}>Gerenciamento</p>
+                            <h2 className={styles.titulo}>Funcionarios</h2>
+                        </div>
+                        <Pesquisa valor={termo} aoPesquisar={setTermo} />
                     </div>
-                    <Pesquisa valor={termo} aoPesquisar={setTermo} />
-                </div>
-                {erro ? <p className={styles.erro}>{erro}</p> : (
-                    <ListaItens itens={funcionariosFiltrados} colunas={colunas} carregando={carregando} />
-                )}
-            </section>
-        </main>
+                    {erro ? <p className={styles.erro}>{erro}</p> : (
+                        <ListaItens itens={funcionariosFiltrados} colunas={colunas} carregando={carregando} />
+                    )}
+                </section>
+            </main>
+            <Footer onClickAdd={() => navigate('/funcionarios/cadastro')} texto="Adicionar Funcionário" />
+            {funcionarioExcluir && (
+                <ModalExcluir
+                    titulo={`Você deseja mesmo excluir ${funcionarioExcluir.nome.toLowerCase()}?`}
+                    whiteButton="Voltar"
+                    redButton="Excluir"
+                    onCancel={() => setFuncionarioExcluir(null)}
+                    onConfirm={confirmarExclusaoFuncionario}
+                />
+            )}
+        </>
     );
 }
 

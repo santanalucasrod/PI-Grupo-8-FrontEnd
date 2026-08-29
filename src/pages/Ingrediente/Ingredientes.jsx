@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../providers/axiosClient';
 import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa';
+import Footer from '../../components/ListarProdutos/FooterListarProdutos';
+import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Ingredientes.module.css';
 import editarIcone from '../../assets/editaricon.png';
 import deletarIcone from '../../assets/lixeiraicon.png';
@@ -12,6 +14,7 @@ function Ingredientes() {
     const [termo, setTermo] = useState('');
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
+    const [ingredienteExcluir, setIngredienteExcluir] = useState(null);
     const navigate = useNavigate();
 
     function configuracao() {
@@ -29,10 +32,14 @@ function Ingredientes() {
         carregarIngredientes();
     }, []);
 
-    function excluirIngrediente(ingrediente) {
-        if (!ingrediente.id || !window.confirm(`Excluir o ingrediente ${ingrediente.nome}?`)) return;
-        api.delete(`/ingredientes/${ingrediente.id}`, configuracao())
-            .then(carregarIngredientes)
+    function confirmarExclusaoIngrediente() {
+        if (!ingredienteExcluir?.id) return;
+
+        api.delete(`/ingredientes/${ingredienteExcluir.id}`, configuracao())
+            .then(() => {
+                setIngredienteExcluir(null);
+                carregarIngredientes();
+            })
             .catch(() => setErro('Nao foi possivel excluir o ingrediente.'));
     }
 
@@ -51,7 +58,7 @@ function Ingredientes() {
             chave: 'excluir',
             titulo: 'Excluir',
             componente: (item) => (
-                <button className={`${styles.acao} ${styles.excluir}`} onClick={() => excluirIngrediente(item)} aria-label={`Excluir ${item.nome}`} title="Excluir">
+                <button className={`${styles.acao} ${styles.excluir}`} onClick={() => setIngredienteExcluir(item)} aria-label={`Excluir ${item.nome}`} title="Excluir">
                     <img src={deletarIcone} alt="" className={styles.imagem} />
                 </button>
             )
@@ -59,21 +66,30 @@ function Ingredientes() {
     ];
 
     return (
-        <main className={styles.main}>
-            <section className={styles.conteudo}>
-                <div className={styles.cabecalho}>
-                    <div>
-                        <p className={styles.eyebrow}>Gerenciamento</p>
-                        <h2 className={styles.titulo}>Ingredientes</h2>
-                    </div>
-                    <div className={styles.acoesCabecalho}>
+        <>
+            <main className={styles.main}>
+                <section className={styles.conteudo}>
+                    <div className={styles.cabecalho}>
+                        <div>
+                            <p className={styles.eyebrow}>Gerenciamento</p>
+                            <h2 className={styles.titulo}>Ingredientes</h2>
+                        </div>
                         <Pesquisa valor={termo} aoPesquisar={setTermo} />
-                        <button className={styles.botaoAdicionar} onClick={() => navigate('/ingredientes/cadastro')}>Adicionar</button>
                     </div>
-                </div>
-                {erro ? <p className={styles.erro}>{erro}</p> : <ListaItens itens={ingredientes} colunas={colunas} carregando={carregando} />}
-            </section>
-        </main>
+                    {erro ? <p className={styles.erro}>{erro}</p> : <ListaItens itens={ingredientes} colunas={colunas} carregando={carregando} />}
+                </section>
+            </main>
+            <Footer onClickAdd={() => navigate('/ingredientes/cadastro')} texto="Adicionar Ingrediente" />
+            {ingredienteExcluir && (
+                <ModalExcluir
+                    titulo={`Você deseja mesmo excluir ${ingredienteExcluir.nome.toLowerCase()}?`}
+                    whiteButton="Voltar"
+                    redButton="Excluir"
+                    onCancel={() => setIngredienteExcluir(null)}
+                    onConfirm={confirmarExclusaoIngrediente}
+                />
+            )}
+        </>
     );
 }
 

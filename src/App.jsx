@@ -26,6 +26,10 @@ function HeaderCondicional() {
   const location = useLocation();
   if (location.pathname.startsWith('/produtos')) return null;
   if (location.pathname.startsWith('/cardapio')) return null;
+  if (location.pathname.startsWith('/personalizacoes/cadastro')) return null;
+  if (location.pathname.startsWith('/categorias/cadastro')) return null;
+  if (location.pathname.startsWith('/ingredientes/cadastro')) return null;
+  if (location.pathname.startsWith('/funcionarios/cadastro')) return null;
   return <Header />;
 }
 
@@ -43,8 +47,8 @@ function App() {
       <VLibras />
       <HeaderCondicional />
       <Routes>
-        <Route path="/cadastro" element={<CadastroFuncionario />} />
-        <Route path="/login"    element={<Login />} />
+        <Route path="/funcionarios/cadastro" element={<CadastroFuncionario />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/funcionarios" element={<Funcionarios />} />
         <Route path="/pedidos" element={<Pedidos />} />
