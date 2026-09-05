@@ -1,43 +1,48 @@
 .abas {
   display: flex;
   align-items: center;
-  gap: 2px;
-  width: min(calc(100% - 28px), 520px);
-  margin: 0 auto;
-  padding: 0 0 7px;
-  position: relative;
+  gap: 8px;
+  width: 100%;
+  margin: 0 0 28px;
+  padding: 0 0 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid #ded8d4;
   box-sizing: border-box;
-}
-
-.abas::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: min(58%, 300px);
-  height: 2px;
-  border-radius: 999px;
-  background: var(--color-brown, #8d5b42);
+  scrollbar-width: thin;
 }
 
 .aba {
-  height: 25px;
-  border: 0;
-  background: transparent;
-  color: #111;
-  border-radius: 5px;
-  padding: 0 13px;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
+  min-height: 38px;
+  flex: 0 0 auto;
+  border: 1px solid #d8ceca;
+  background: #fff;
+  color: #4b3b34;
+  border-radius: 4px;
+  padding: 8px 18px;
+  font: 600 14px/1 Arial, sans-serif;
   cursor: pointer;
 }
 
 .abaAtiva {
   background: var(--color-brown, #8d5b42);
+  border-color: var(--color-brown, #8d5b42);
   color: #fff;
 }
 
 .aba:focus-visible {
-  outline: 2px solid #161616;
+  outline: 2px solid var(--color-brown, #8d5b42);
   outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .abas {
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+
+  .aba {
+    min-height: 36px;
+    padding-inline: 14px;
+    font-size: 13px;
+  }
 }

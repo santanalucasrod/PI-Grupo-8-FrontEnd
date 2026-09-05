@@ -8,13 +8,14 @@ const ABAS = [
 
 export default function AbasCategoria({ abaAtiva, onSelecionar }) {
   return (
-    <nav className={styles.abas} aria-label="Filtro de categorias">
+    <nav className={styles.abas} aria-label="Filtrar cardápio por temperatura">
       {ABAS.map((aba) => (
         <button
           key={aba.chave}
           type="button"
           className={`${styles.aba} ${abaAtiva === aba.chave ? styles.abaAtiva : ''}`}
           onClick={() => onSelecionar(aba.chave)}
+          aria-pressed={abaAtiva === aba.chave}
         >
           {aba.rotulo}
         </button>

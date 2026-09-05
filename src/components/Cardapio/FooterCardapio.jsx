@@ -5,13 +5,16 @@ function formatarPreco(valor) {
   return valor.toFixed(2).replace('.', ',');
 }
 
-export default function FooterCardapio({ total, onFinalizar }) {
+export default function FooterCardapio({ total, quantidadeItens, onFinalizar }) {
   return (
     <div className={styles.footer}>
-      <span className={styles.total}>R$ {formatarPreco(total)}</span>
+      <div className={styles.resumo}>
+        <span className={styles.rotulo}>Total da sacola</span>
+        <strong className={styles.total}>R$ {formatarPreco(total)}</strong>
+      </div>
       <button type="button" className={styles.botaoFinalizar} onClick={onFinalizar}>
         <img src={carrinho} alt="" />
-        Finalizar
+        Sacola{quantidadeItens > 0 ? ` (${quantidadeItens})` : ''}
       </button>
     </div>
   );

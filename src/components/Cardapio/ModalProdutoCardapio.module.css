@@ -1,0 +1,246 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(0 0 0 / 0.42);
+  box-sizing: border-box;
+}
+
+.painel {
+  width: min(100%, 820px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  padding: 24px;
+  border: 1px solid #eee8e5;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 18px 48px rgb(0 0 0 / 0.22);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.painel:focus {
+  outline: none;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--color-brown, #8d5b42);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nome {
+  margin: 0;
+  color: #333;
+  font-size: clamp(21px, 3vw, 28px);
+  overflow-wrap: anywhere;
+}
+
+.fechar {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  padding: 0 0 3px;
+  border: 1px solid #dfd6d1;
+  border-radius: 4px;
+  background: #fff;
+  color: #555;
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.corpo {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr);
+  gap: 28px;
+}
+
+.imagemContainer {
+  min-width: 0;
+  height: 260px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #faf8f7;
+}
+
+.imagemContainer img {
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.informacoes {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.dados {
+  margin: 0;
+}
+
+.linhaDado,
+.linhaControle,
+.linhaPersonalizacao {
+  min-width: 0;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #eee8e5;
+}
+
+.linhaDado dt,
+.linhaControle > span,
+.linhaPersonalizacao > span {
+  min-width: 0;
+  color: #555;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.linhaDado dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.descricao h3,
+.ingredientes h3,
+.personalizacoes h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.descricao p,
+.ingredientes p {
+  margin: 0;
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.aviso {
+  color: #9b2c2c !important;
+}
+
+.listaIngredientes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaIngredientes li {
+  padding: 5px 8px;
+  border: 1px solid #e5ddd9;
+  border-radius: 4px;
+  background: #faf8f7;
+  color: #555;
+  font-size: 12px;
+}
+
+.personalizacoes {
+  display: flex;
+  flex-direction: column;
+}
+
+.linhaPersonalizacao {
+  min-height: 38px;
+}
+
+.adicionar {
+  align-self: flex-end;
+  min-width: 190px;
+  min-height: 42px;
+  margin-top: 2px;
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--color-brown, #8d5b42);
+  color: #fff;
+  font: 600 14px Arial, sans-serif;
+  cursor: pointer;
+}
+
+.fechar:focus-visible,
+.adicionar:focus-visible {
+  outline: 2px solid var(--color-brown, #8d5b42);
+  outline-offset: 2px;
+}
+
+@media (max-width: 680px) {
+  .overlay {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .painel {
+    max-height: calc(100dvh - 24px);
+    padding: 18px;
+  }
+
+  .corpo {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .imagemContainer {
+    width: min(100%, 280px);
+    height: 170px;
+    margin: 0 auto;
+  }
+
+  .informacoes {
+    gap: 12px;
+  }
+
+  .adicionar {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .overlay {
+    padding: 8px;
+  }
+
+  .painel {
+    max-height: calc(100dvh - 16px);
+    padding: 15px;
+  }
+
+  .imagemContainer {
+    height: 140px;
+  }
+
+  .linhaPersonalizacao {
+    gap: 8px;
+  }
+}

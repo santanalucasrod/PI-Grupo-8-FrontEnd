@@ -17,15 +17,13 @@ import './styles/colors.css';
 import TelaListarProdutos from './components/ListarProdutos/TelaListarProdutos.jsx'
 import TelaCadastrarProduto from './components/CadastrarProduto/TelaCadastrarProduto.jsx'
 import TelaEditarProduto from './components/CadastrarProduto/TelaEditarProduto.jsx'
-import TelaCardapio from './components/Cardapio/TelaCardapio.jsx'
-import TelaProdutoDetalhe from './components/Cardapio/TelaProdutoDetalhe.jsx'
-import TelaSacola from './components/Cardapio/TelaSacola.jsx'
+import Cardapio from './pages/Cardapio/Cardapio.jsx'
+import Sacola from './pages/Cardapio/Sacola.jsx'
 import { CartProvider } from './providers/CartContext.jsx'
 
 function HeaderCondicional() {
   const location = useLocation();
   if (location.pathname.startsWith('/produtos')) return null;
-  if (location.pathname.startsWith('/cardapio')) return null;
   if (location.pathname.startsWith('/personalizacoes/cadastro')) return null;
   if (location.pathname.startsWith('/categorias/cadastro')) return null;
   if (location.pathname.startsWith('/ingredientes/cadastro')) return null;
@@ -62,9 +60,8 @@ function App() {
         <Route path="/produtos/cadastro" element={<TelaCadastrarProduto />} />
         <Route path="/produtos/editar/:id" element={<TelaEditarProduto />} />
         <Route element={<LayoutCardapio />}>
-          <Route path="/cardapio" element={<TelaCardapio />} />
-          <Route path="/cardapio/produto/:id" element={<TelaProdutoDetalhe />} />
-          <Route path="/cardapio/sacola" element={<TelaSacola />} />
+          <Route path="/cardapio" element={<Cardapio />} />
+          <Route path="/cardapio/sacola" element={<Sacola />} />
         </Route>
       </Routes>
     </BrowserRouter>

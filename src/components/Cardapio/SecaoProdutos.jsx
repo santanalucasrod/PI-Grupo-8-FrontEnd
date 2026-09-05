@@ -31,7 +31,7 @@ export default function SecaoProdutos({ titulo, produtos, onProdutoClick }) {
               />
             </span>
             <span className={styles.nome}>{produto.nome}</span>
-            <span className={styles.preco}>R${formatarPreco(produto.precoUnidade)}</span>
+            <span className={styles.preco}>R$ {formatarPreco(produto.precoUnidade)}</span>
           </button>
         ))}
       </div>

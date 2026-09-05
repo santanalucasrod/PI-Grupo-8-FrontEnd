@@ -4,35 +4,50 @@
   bottom: 0;
   transform: translateX(-50%);
   width: min(100%, 960px);
-  min-height: 55px;
+  min-height: 68px;
+  margin: 0 auto;
   background: var(--color-brown, #8d5b42);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+  gap: 16px;
+  padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
   box-sizing: border-box;
-  z-index: 20;
+  z-index: 30;
+  box-shadow: 0 -4px 14px rgb(76 53 42 / 0.16);
+}
+
+.resumo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rotulo {
+  color: rgb(255 255 255 / 0.8);
+  font: 11px/1.2 Arial, sans-serif;
 }
 
 .total {
   color: #fff;
   font-family: Arial, sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .botaoFinalizar {
-  min-width: 136px;
-  height: 35px;
-  padding: 0 12px;
+  min-width: 146px;
+  min-height: 42px;
+  padding: 8px 14px;
   border: 1px solid #cfcfcf;
   border-radius: 5px;
   background: #fff;
-  color: #111;
+  color: #333;
   font-family: Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -49,4 +64,18 @@
 .botaoFinalizar:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 2px;
+}
+
+@media (max-width: 380px) {
+  .footer {
+    padding-inline: 14px;
+  }
+
+  .botaoFinalizar {
+    min-width: 0;
+  }
+
+  .rotulo {
+    display: none;
+  }
 }

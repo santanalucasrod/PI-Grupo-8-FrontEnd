@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import modalStyles from './ModalCheckout.module.css';
 import styles from './ModalPagamento.module.css';
-import { criarPedido } from './cardapioApi';
 
 function formatarPreco(valor) {
   return Number(valor || 0).toFixed(2).replace('.', ',');
 }
 
-export default function ModalPagamento({ total, nomeCliente, itens, onPagamentoEfetuado, onCancelar }) {
+export default function ModalPagamento({ total, onConfirmar, onPagamentoEfetuado, onCancelar }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState(null);
   const painelRef = useRef(null);
@@ -53,7 +52,7 @@ export default function ModalPagamento({ total, nomeCliente, itens, onPagamentoE
     try {
       setEnviando(true);
       setErro(null);
-      await criarPedido({ nome: nomeCliente, itens });
+      await onConfirmar();
       pagamentoConfirmado = true;
     } catch (err) {
       setErro(err.message || 'Não foi possível confirmar o pagamento. Tente novamente.');

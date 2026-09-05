@@ -72,7 +72,12 @@ export default function ModalNomeCliente({ onConcluir, onFechar }) {
 
           {erro && <p id="modal-nome-erro" className={styles.erro}>{erro}</p>}
 
-          <button type="submit" className={styles.botao}>Concluir</button>
+          <div className={styles.acoes}>
+            <button type="button" className={styles.botaoSecundario} onClick={onFechar}>
+              Voltar
+            </button>
+            <button type="submit" className={styles.botao}>Concluir</button>
+          </div>
         </form>
       </div>
     </div>
