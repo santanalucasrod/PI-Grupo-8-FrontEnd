@@ -1,9 +1,11 @@
 import styles from './Login.module.css';
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const navigate = useNavigate();
 
     const [erro, setErro] = useState("");
     const [mostrarErro, setMostrarErro] = useState(false);
@@ -51,7 +53,7 @@ function Login() {
                 }
 
                 setTimeout(() => {
-                    window.location = "./index.html";
+                    navigate('/cardapio')
                 }, 1000);
             } else {
                 setErro("Email ou Senha Inválidos");

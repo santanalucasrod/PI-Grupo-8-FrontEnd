@@ -29,7 +29,11 @@ function Funcionarios() {
 
         return api.get('/funcionarios/crud', configuracao())
             .then((resposta) => {
-                setFuncionarios(resposta.data);
+                const funcionariosAtivos = resposta.data.filter(
+                    (funcionario) => funcionario.ativo === true
+                );
+
+                setFuncionarios(funcionariosAtivos);
             })
             .catch(() => {
                 setErro('Nao foi possivel carregar os funcionarios.');
@@ -87,19 +91,19 @@ function Funcionarios() {
 
     return (
         <><main className={styles.main}>
-                <section className={styles.conteudo}>
-                    <div className={styles.cabecalho}>
-                        <div>
-                            <p className={styles.eyebrow}>Gerenciamento</p>
-                            <h2 className={styles.titulo}>Funcionarios</h2>
-                        </div>
-                        <Pesquisa valor={termo} aoPesquisar={setTermo} />
+            <section className={styles.conteudo}>
+                <div className={styles.cabecalho}>
+                    <div>
+                        <p className={styles.eyebrow}>Gerenciamento</p>
+                        <h2 className={styles.titulo}>Funcionarios</h2>
                     </div>
-                    {erro ? <p className={styles.erro}>{erro}</p> : (
-                        <ListaItens itens={funcionariosFiltrados} colunas={colunas} carregando={carregando} />
-                    )}
-                </section>
-            </main>
+                    <Pesquisa valor={termo} aoPesquisar={setTermo} />
+                </div>
+                {erro ? <p className={styles.erro}>{erro}</p> : (
+                    <ListaItens itens={funcionariosFiltrados} colunas={colunas} carregando={carregando} />
+                )}
+            </section>
+        </main>
             <Footer onClickAdd={() => navigate('/funcionarios/cadastro')} texto="Adicionar Funcionário" />
             {funcionarioExcluir && (
                 <ModalExcluir
