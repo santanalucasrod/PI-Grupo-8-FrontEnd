@@ -3,15 +3,6 @@ import ImagemProduto from '../../assets/img-cafe.png';
 import Stepper from './Stepper';
 import styles from './ModalProdutoCardapio.module.css';
 
-// Fonte temporária e isolada: quando o backend expuser a rota, basta enviar a
-// lista real pela prop `personalizacoesDisponiveis`.
-const PERSONALIZACOES_TEMPORARIAS = [
-  { id: 'cafe-espresso', nome: 'Café espresso' },
-  { id: 'acucar', nome: 'Açúcar' },
-  { id: 'gelo', nome: 'Gelo' },
-  { id: 'chantilly', nome: 'Chantilly' },
-];
-
 function formatarPreco(valor) {
   return Number(valor || 0).toFixed(2).replace('.', ',');
 }
@@ -21,7 +12,9 @@ export default function ModalProdutoCardapio({
   ingredientes,
   carregandoIngredientes,
   avisoIngredientes,
-  personalizacoesDisponiveis = PERSONALIZACOES_TEMPORARIAS,
+  personalizacoesDisponiveis = [],
+  carregandoPersonalizacoes,
+  avisoPersonalizacoes,
   onAdicionar,
   onFechar,
 }) {
@@ -64,7 +57,8 @@ export default function ModalProdutoCardapio({
   function alterarPersonalizacao(id, delta) {
     setQuantidadesPersonalizacoes((quantidadesAtuais) => ({
       ...quantidadesAtuais,
-      [id]: Math.min(9, Math.max(0, (quantidadesAtuais[id] || 0) + delta)),
+      // O backend atual recebe uma lista de IDs, sem quantidade por personalização.
+      [id]: Math.min(1, Math.max(0, (quantidadesAtuais[id] || 0) + delta)),
     }));
   }
 
@@ -170,7 +164,16 @@ export default function ModalProdutoCardapio({
 
             <section className={styles.personalizacoes}>
               <h3>Personalizações</h3>
-              {personalizacoesDisponiveis.map((item) => {
+              {carregandoPersonalizacoes && <p>Carregando personalizações...</p>}
+              {!carregandoPersonalizacoes && avisoPersonalizacoes && (
+                <p className={styles.aviso}>{avisoPersonalizacoes}</p>
+              )}
+              {!carregandoPersonalizacoes &&
+                !avisoPersonalizacoes &&
+                personalizacoesDisponiveis.length === 0 && (
+                  <p>Nenhuma personalização está disponível para este produto.</p>
+                )}
+              {!carregandoPersonalizacoes && personalizacoesDisponiveis.map((item) => {
                 const quantidadePersonalizacao = quantidadesPersonalizacoes[item.id] || 0;
 
                 return (
@@ -179,7 +182,7 @@ export default function ModalProdutoCardapio({
                     <Stepper
                       valor={quantidadePersonalizacao}
                       min={0}
-                      podeIncrementar={quantidadePersonalizacao < 9}
+                      podeIncrementar={quantidadePersonalizacao < 1}
                       onDecrementar={() => alterarPersonalizacao(item.id, -1)}
                       onIncrementar={() => alterarPersonalizacao(item.id, 1)}
                     />

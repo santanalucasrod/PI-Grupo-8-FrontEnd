@@ -8,6 +8,7 @@ import SecaoProdutos from '../../components/Cardapio/SecaoProdutos';
 import { useCart } from '../../providers/CartContext';
 import {
   buscarIngredientesPorProduto,
+  buscarPersonalizacoesPorProduto,
   buscarProdutosAgrupados,
   resolverImagemProduto,
 } from './cardapioApi';
@@ -66,6 +67,9 @@ export default function Cardapio() {
   const [ingredientes, setIngredientes] = useState([]);
   const [carregandoIngredientes, setCarregandoIngredientes] = useState(false);
   const [avisoIngredientes, setAvisoIngredientes] = useState('');
+  const [personalizacoes, setPersonalizacoes] = useState([]);
+  const [carregandoPersonalizacoes, setCarregandoPersonalizacoes] = useState(false);
+  const [avisoPersonalizacoes, setAvisoPersonalizacoes] = useState('');
   const fecharProduto = useCallback(() => setProdutoSelecionado(null), []);
 
   useEffect(() => {
@@ -94,23 +98,30 @@ export default function Cardapio() {
 
     const controller = new AbortController();
 
-    async function carregarIngredientes() {
-      try {
-        const dados = await buscarIngredientesPorProduto(
-          produtoSelecionado.id,
-          controller.signal
-        );
-        setIngredientes(dados);
-      } catch (erroRequisicao) {
+    buscarIngredientesPorProduto(produtoSelecionado.id, controller.signal)
+      .then((dados) => setIngredientes(dados))
+      .catch((erroRequisicao) => {
         if (erroRequisicao?.code !== 'ERR_CANCELED') {
           setAvisoIngredientes('Não foi possível carregar os ingredientes deste produto.');
         }
-      } finally {
+      })
+      .finally(() => {
         if (!controller.signal.aborted) setCarregandoIngredientes(false);
-      }
-    }
+      });
 
-    carregarIngredientes();
+    buscarPersonalizacoesPorProduto(produtoSelecionado.id, controller.signal)
+      .then((dados) => setPersonalizacoes(dados))
+      .catch((erroRequisicao) => {
+        if (erroRequisicao?.code !== 'ERR_CANCELED') {
+          setAvisoPersonalizacoes(
+            'Não foi possível carregar as personalizações deste produto.'
+          );
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setCarregandoPersonalizacoes(false);
+      });
+
     return () => controller.abort();
   }, [produtoSelecionado]);
 
@@ -137,6 +148,9 @@ export default function Cardapio() {
     setIngredientes([]);
     setAvisoIngredientes('');
     setCarregandoIngredientes(true);
+    setPersonalizacoes([]);
+    setAvisoPersonalizacoes('');
+    setCarregandoPersonalizacoes(true);
     setProdutoSelecionado(produto);
   }
 
@@ -205,6 +219,9 @@ export default function Cardapio() {
           ingredientes={ingredientes}
           carregandoIngredientes={carregandoIngredientes}
           avisoIngredientes={avisoIngredientes}
+          personalizacoesDisponiveis={personalizacoes}
+          carregandoPersonalizacoes={carregandoPersonalizacoes}
+          avisoPersonalizacoes={avisoPersonalizacoes}
           onAdicionar={adicionarProduto}
           onFechar={fecharProduto}
         />

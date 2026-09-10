@@ -29,10 +29,7 @@ export async function buscarIngredientesPorProduto(id, signal) {
   if (!produtoId) throw new Error('Produto inválido.');
 
   try {
-    const resposta = await api.get(
-      `/ingredientes/por-produto/${produtoId}`,
-      configuracao(signal, { params: { produtoId } })
-    );
+    const resposta = await api.get(`/produtos/${produtoId}/ingredientes`, configuracao(signal));
 
     const vistos = new Set();
     return (Array.isArray(resposta.data) ? resposta.data : [])
@@ -51,6 +48,27 @@ export async function buscarIngredientesPorProduto(id, signal) {
   }
 }
 
+export async function buscarPersonalizacoesPorProduto(id, signal) {
+  const produtoId = inteiroPositivo(id);
+  if (!produtoId) throw new Error('Produto inválido.');
+
+  const resposta = await api.get(
+    `/produtos/${produtoId}/personalizacoes`,
+    configuracao(signal)
+  );
+
+  const vistos = new Set();
+  return (Array.isArray(resposta.data) ? resposta.data : [])
+    .filter((item) => inteiroPositivo(item?.id) && String(item?.nome || '').trim())
+    .filter((item) => {
+      const idPersonalizacao = Number(item.id);
+      if (vistos.has(idPersonalizacao)) return false;
+      vistos.add(idPersonalizacao);
+      return true;
+    })
+    .map((item) => ({ id: Number(item.id), nome: String(item.nome).trim() }));
+}
+
 export function resolverImagemProduto(pathFt) {
   const caminho = String(pathFt || '').trim();
   if (!caminho) return null;
@@ -58,11 +76,10 @@ export function resolverImagemProduto(pathFt) {
   return `${API_BASE_URL}/imagens/${caminho.replace(/^\/+/, '')}`;
 }
 
-export async function criarPedido({ nome, funcionarioId, infoAdicionalId, itens }) {
+export async function criarPedido({ nomeCliente, funcionarioId, itens }) {
   const funcionarioIdResolvido = inteiroPositivo(
     funcionarioId ?? localStorage.getItem('funcionarioId')
   );
-  const infoAdicionalIdResolvido = inteiroPositivo(infoAdicionalId);
 
   if (!funcionarioIdResolvido) {
     throw new Error(
@@ -70,22 +87,46 @@ export async function criarPedido({ nome, funcionarioId, infoAdicionalId, itens 
     );
   }
 
-  if (!infoAdicionalIdResolvido) {
-    throw new Error(
-      'A API exige uma informação adicional já cadastrada para concluir o pedido.'
-    );
-  }
-
   const payload = {
-    nome: String(nome || '').trim(),
-    funcionario: { id: funcionarioIdResolvido },
-    infoAdicional: { id: infoAdicionalIdResolvido },
-    itens: itens.map((item) => ({
-      produtoId: inteiroPositivo(item.produtoId),
-      quantidade: inteiroPositivo(item.quantidade),
-    })),
+    nomeCliente: String(nomeCliente || '').trim(),
+    funcionarioId: funcionarioIdResolvido,
+    itens: itens.map((item) => {
+      const produtoId = inteiroPositivo(item.produtoId);
+      const quantidade = inteiroPositivo(item.quantidade);
+
+      if (!produtoId || !quantidade) {
+        throw new Error('A sacola contém um item inválido. Remova-o e adicione novamente.');
+      }
+
+      const personalizacaoIds = Array.from(
+        new Set(
+          (Array.isArray(item.personalizacoes) ? item.personalizacoes : [])
+            .map((personalizacao) => inteiroPositivo(personalizacao?.id))
+            .filter(Boolean)
+        )
+      );
+
+      const itemPedido = { produtoId, quantidade, personalizacaoIds };
+      const tamanhoId = inteiroPositivo(item.tamanhoId);
+      if (tamanhoId) itemPedido.tamanhoId = tamanhoId;
+
+      return itemPedido;
+    }),
   };
 
-  const resposta = await api.post('/pedidos', payload, configuracao());
-  return resposta.data;
+  if (!payload.nomeCliente) throw new Error('Informe o nome do cliente.');
+  if (payload.itens.length === 0) throw new Error('A sacola está vazia.');
+
+  try {
+    const resposta = await api.post('/pedidos', payload, configuracao());
+    return resposta.data;
+  } catch (erro) {
+    const detalhe = erro?.response?.data;
+    const mensagem =
+      (typeof detalhe === 'string' && detalhe.trim()) ||
+      detalhe?.message ||
+      detalhe?.erro ||
+      'Não foi possível criar o pedido. Tente novamente.';
+    throw new Error(mensagem, { cause: erro });
+  }
 }

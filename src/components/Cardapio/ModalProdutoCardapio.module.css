@@ -135,7 +135,8 @@
 }
 
 .descricao p,
-.ingredientes p {
+.ingredientes p,
+.personalizacoes p {
   margin: 0;
   color: #666;
   font-size: 12px;

@@ -4,6 +4,24 @@ const CartContext = createContext(null);
 
 const CHAVE_STORAGE = 'kentocafe_carrinho';
 
+function normalizarPersonalizacoes(personalizacoes) {
+  const idsVistos = new Set();
+
+  return (Array.isArray(personalizacoes) ? personalizacoes : [])
+    .filter((item) => {
+      const id = Number(item?.id);
+      const nome = String(item?.nome || '').trim();
+      if (!Number.isInteger(id) || id <= 0 || !nome || idsVistos.has(id)) return false;
+      idsVistos.add(id);
+      return true;
+    })
+    .map((item) => ({
+      id: Number(item.id),
+      nome: String(item.nome).trim(),
+      quantidade: 1,
+    }));
+}
+
 function carregarCarrinhoInicial() {
   try {
     const salvo = localStorage.getItem(CHAVE_STORAGE);
@@ -27,6 +45,7 @@ function carregarCarrinhoInicial() {
         produtoId: Number(item.produtoId),
         precoUnidade: Number(item.precoUnidade),
         quantidade: Number(item.quantidade),
+        personalizacoes: normalizarPersonalizacoes(item.personalizacoes),
       }));
   } catch {
     return [];
@@ -50,6 +69,10 @@ export function CartProvider({ children }) {
       {
         cartItemId: `${item.produtoId}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         ...item,
+        produtoId: Number(item.produtoId),
+        precoUnidade: Number(item.precoUnidade),
+        quantidade: Number(item.quantidade),
+        personalizacoes: normalizarPersonalizacoes(item.personalizacoes),
       },
     ]);
   }

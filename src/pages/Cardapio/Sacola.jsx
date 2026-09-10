@@ -22,7 +22,7 @@ export default function Sacola() {
   }
 
   async function confirmarPedido() {
-    return criarPedido({ nome: nomeCliente, itens });
+    return criarPedido({ nomeCliente, itens });
   }
 
   function concluirPedido() {
@@ -62,10 +62,7 @@ export default function Sacola() {
                     {item.personalizacoes?.length > 0 && (
                       <span>
                         {item.personalizacoes
-                          .map(
-                            (personalizacao) =>
-                              `${personalizacao.nome} (${personalizacao.quantidade})`
-                          )
+                          .map((personalizacao) => personalizacao.nome)
                           .join(', ')}
                       </span>
                     )}
