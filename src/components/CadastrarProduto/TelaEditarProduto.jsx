@@ -10,10 +10,11 @@ import SelectGroup from './SelectGroup';
 import ModalAdicionar from './ModalAdicionar';
 import { validarProduto, LIMITES } from './validacaoProduto';
 import { vincularIngredienteAoProduto, desvincularIngredienteDoProduto } from './produtoIngredienteApi';
+import { vincularPersonalizacaoAoProduto, desvincularPersonalizacaoDoProduto } from './produtoPersonalizacaoApi';
 import { enviarImagemProduto } from './produtoImagemApi';
 import { authHeader } from '../../utils/authHeader';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = '/api';
 
 export default function TelaEditarProduto() {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ export default function TelaEditarProduto() {
   const [personalizacaoAtual, setPersonalizacaoAtual] = useState('');
   const [personalizacoes, setPersonalizacoes] = useState([]);
   const [personalizacoesApi, setPersonalizacoesApi] = useState([]); // lista completa {id, nome} vinda da API
+  const [personalizacoesVinculadas, setPersonalizacoesVinculadas] = useState([]); // nomes já vinculados a este produto na API
 
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', title: '' });
 
@@ -230,6 +232,45 @@ export default function TelaEditarProduto() {
     buscarIngredientesDoProduto();
   }, [produtoId]);
 
+  // Busca as personalizações já vinculadas ao produto e marca como já adicionadas
+  useEffect(() => {
+    async function buscarPersonalizacoesDoProduto() {
+      if (!produtoId) return;
+
+      try {
+        const resposta = await fetch(
+          `${API_BASE_URL}/produtos/${produtoId}/personalizacoes`,
+          { method: 'GET', headers: { accept: '*/*', ...authHeader() } }
+        );
+
+        if (!resposta.ok) {
+          throw new Error(`Erro ${resposta.status} ao buscar personalizações do produto`);
+        }
+
+        const dados = await resposta.json();
+        // A rota devolve as personalizações do produto diretamente: [{ id, nome }, ...]
+        const personalizacoesDoProduto = (dados || []).filter(Boolean);
+        const nomesPersonalizacoes = personalizacoesDoProduto.map((item) => item.nome).filter(Boolean);
+
+        setPersonalizacoes(nomesPersonalizacoes);
+        setPersonalizacoesVinculadas(nomesPersonalizacoes);
+        setOpcoesPersonalizacao((atual) => {
+          const novos = nomesPersonalizacoes.filter((nome) => !atual.includes(nome));
+          return novos.length ? [...atual, ...novos] : atual;
+        });
+        setPersonalizacoesApi((atual) => {
+          const idsAtuais = new Set(atual.map((p) => p.id));
+          const novos = personalizacoesDoProduto.filter((p) => p && !idsAtuais.has(p.id));
+          return [...atual, ...novos];
+        });
+      } catch (err) {
+        console.error('Erro ao buscar personalizações do produto:', err);
+      }
+    }
+
+    buscarPersonalizacoesDoProduto();
+  }, [produtoId]);
+
   const handleEditar = async () => {
     if (!produtoId) return;
 
@@ -368,6 +409,75 @@ export default function TelaEditarProduto() {
       // o que falhou ao vincular, mais o que falhou ao remover (continua vinculado de fato).
       setIngredientesVinculados(
         Array.from(new Set([...ingredientes.filter((nome) => !naoVinculados.includes(nome)), ...naoRemovidos]))
+      );
+
+      // Vincula na API cada personalização da lista que ainda não estava associada ao produto,
+      // e desfaz o vínculo de quem foi removido da lista (mesmo padrão do ingrediente).
+      const novasPersonalizacoes = personalizacoes.filter((nome) => !personalizacoesVinculadas.includes(nome));
+      const personalizacoesRemovidas = personalizacoesVinculadas.filter((nome) => !personalizacoes.includes(nome));
+
+      const resultadosVincularPersonalizacao = await Promise.allSettled(
+        novasPersonalizacoes.map(async (nomePersonalizacao) => {
+          let personalizacaoObj = personalizacoesApi.find(
+            (p) => p.nome?.trim().toLowerCase() === nomePersonalizacao.trim().toLowerCase()
+          );
+
+          if (!personalizacaoObj) {
+            personalizacaoObj = await criarNaApi('personalizacoes', nomePersonalizacao);
+            if (personalizacaoObj?.id != null) {
+              setPersonalizacoesApi((atual) => [...atual, personalizacaoObj]);
+            }
+          }
+
+          if (!personalizacaoObj?.id) {
+            throw new Error(`Personalização "${nomePersonalizacao}" sem id válido, não foi possível vincular`);
+          }
+
+          return vincularPersonalizacaoAoProduto(produtoVinculo, personalizacaoObj);
+        })
+      );
+
+      const resultadosDesvincularPersonalizacao = await Promise.allSettled(
+        personalizacoesRemovidas.map(async (nomePersonalizacao) => {
+          const personalizacaoObj = personalizacoesApi.find(
+            (p) => p.nome?.trim().toLowerCase() === nomePersonalizacao.trim().toLowerCase()
+          );
+
+          if (!personalizacaoObj?.id) {
+            throw new Error(`Personalização "${nomePersonalizacao}" sem id válido, não foi possível remover`);
+          }
+
+          return desvincularPersonalizacaoDoProduto(produtoId, personalizacaoObj.id);
+        })
+      );
+
+      const naoVinculadosPersonalizacao = [];
+      resultadosVincularPersonalizacao.forEach((resultado, indice) => {
+        if (resultado.status === 'rejected') {
+          console.error(`Erro ao vincular personalização "${novasPersonalizacoes[indice]}":`, resultado.reason);
+          falhas.push(novasPersonalizacoes[indice]);
+          naoVinculadosPersonalizacao.push(novasPersonalizacoes[indice]);
+        }
+      });
+
+      const naoRemovidosPersonalizacao = [];
+      resultadosDesvincularPersonalizacao.forEach((resultado, indice) => {
+        if (resultado.status === 'rejected') {
+          console.error(`Erro ao remover personalização "${personalizacoesRemovidas[indice]}":`, resultado.reason);
+          falhas.push(personalizacoesRemovidas[indice]);
+          naoRemovidosPersonalizacao.push(personalizacoesRemovidas[indice]);
+        }
+      });
+
+      // Reflete no estado só o que realmente ficou vinculado na API: a lista atual menos
+      // o que falhou ao vincular, mais o que falhou ao remover (continua vinculado de fato).
+      setPersonalizacoesVinculadas(
+        Array.from(
+          new Set([
+            ...personalizacoes.filter((nome) => !naoVinculadosPersonalizacao.includes(nome)),
+            ...naoRemovidosPersonalizacao,
+          ])
+        )
       );
 
       if (falhas.length > 0) {

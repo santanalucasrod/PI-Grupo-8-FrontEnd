@@ -30,7 +30,7 @@ function CadastroPersonalizacao() {
 
         if (estaEditando) {
             axios.put(
-                `http://localhost:8080/personalizacoes/${dadosEdicao.id}`,
+                `/api/personalizacoes/${dadosEdicao.id}`,
                 { nome },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )
@@ -51,7 +51,7 @@ function CadastroPersonalizacao() {
                 });
         } else {
             axios.post(
-                'http://localhost:8080/personalizacoes',
+                '/api/personalizacoes',
                 { nome },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )

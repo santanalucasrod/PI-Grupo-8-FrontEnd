@@ -1,6 +1,6 @@
 import { authHeader } from '../../utils/authHeader';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = '/api';
 
 // Envia a imagem do produto (multipart/form-data) e retorna o produto atualizado (com o novo pathFt)
 export async function enviarImagemProduto(produtoId, arquivo) {

@@ -28,7 +28,7 @@ function Login() {
         console.log("FORM SENHA:", senha);
 
         try {
-            const resposta = await fetch("http://localhost:8080/auth/login", {
+            const resposta = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

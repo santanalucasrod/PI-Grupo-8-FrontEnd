@@ -277,7 +277,7 @@ function Dashboard() {
   useEffect(() => {
     async function carregarData() {
       try {
-        const response = await fetch("http://localhost:8080/pedidos", {
+        const response = await fetch("/api/pedidos", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

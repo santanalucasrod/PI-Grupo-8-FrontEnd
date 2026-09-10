@@ -1,6 +1,6 @@
 import { authHeader } from '../../utils/authHeader';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = '/api';
 
 // Cria o vínculo entre um produto e um ingrediente.
 // Rota nova: POST /produtos/{produtoId}/ingredientes/{ingredienteId}, sem corpo.

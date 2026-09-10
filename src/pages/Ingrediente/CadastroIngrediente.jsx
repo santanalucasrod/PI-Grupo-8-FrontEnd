@@ -30,7 +30,7 @@ function CadastroIngrediente() {
 
         if (estaEditando) {
             axios.put(
-                `http://localhost:8080/ingredientes/${dadosEdicao.id}`,
+                `/api/ingredientes/${dadosEdicao.id}`,
                 { nome },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )
@@ -51,7 +51,7 @@ function CadastroIngrediente() {
                 });
         } else {
             axios.post(
-                'http://localhost:8080/ingredientes',
+                '/api/ingredientes',
                 { nome },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )

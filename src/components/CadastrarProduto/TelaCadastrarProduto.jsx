@@ -10,10 +10,11 @@ import SelectGroup from './SelectGroup';
 import ModalAdicionar from './ModalAdicionar';
 import { validarProduto, LIMITES } from './validacaoProduto';
 import { vincularIngredienteAoProduto } from './produtoIngredienteApi';
+import { vincularPersonalizacaoAoProduto } from './produtoPersonalizacaoApi';
 import { enviarImagemProduto } from './produtoImagemApi';
 import { authHeader } from '../../utils/authHeader';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = '/api';
 
 export default function TelaCadastrarProduto() {
   const navigate = useNavigate();
@@ -221,6 +222,35 @@ export default function TelaCadastrarProduto() {
         if (resultado.status === 'rejected') {
           console.error(`Erro ao vincular ingrediente "${ingredientes[indice]}":`, resultado.reason);
           falhas.push(ingredientes[indice]);
+        }
+      });
+
+      // Vincula na API cada personalização selecionada ao produto recém-criado
+      const resultadosPersonalizacao = await Promise.allSettled(
+        personalizacoes.map(async (nomePersonalizacao) => {
+          let personalizacaoObj = personalizacoesApi.find(
+            (p) => p.nome?.trim().toLowerCase() === nomePersonalizacao.trim().toLowerCase()
+          );
+
+          if (!personalizacaoObj) {
+            personalizacaoObj = await criarNaApi('personalizacoes', nomePersonalizacao);
+            if (personalizacaoObj?.id != null) {
+              setPersonalizacoesApi((atual) => [...atual, personalizacaoObj]);
+            }
+          }
+
+          if (!personalizacaoObj?.id) {
+            throw new Error(`Personalização "${nomePersonalizacao}" sem id válido, não foi possível vincular`);
+          }
+
+          return vincularPersonalizacaoAoProduto(produtoVinculo, personalizacaoObj);
+        })
+      );
+
+      resultadosPersonalizacao.forEach((resultado, indice) => {
+        if (resultado.status === 'rejected') {
+          console.error(`Erro ao vincular personalização "${personalizacoes[indice]}":`, resultado.reason);
+          falhas.push(personalizacoes[indice]);
         }
       });
 

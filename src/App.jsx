@@ -10,7 +10,7 @@ import CadastroIngrediente from './pages/Ingrediente/CadastroIngrediente.jsx'
 import Personalizacoes from './pages/Personalizacao/Personalizacoes.jsx'
 import CadastroPersonalizacao from './pages/Personalizacao/CadastroPersonalizacao.jsx'
 import './index.css'
-import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, useLocation, Navigate } from 'react-router-dom'
 import VLibras from './components/Vlibras.jsx'
 import Header from './components/Header/Header.jsx'
 import './styles/colors.css';
@@ -45,6 +45,7 @@ function App() {
       <VLibras />
       <HeaderCondicional />
       <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/funcionarios/cadastro" element={<CadastroFuncionario />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
