@@ -336,7 +336,7 @@ function Painel() {
   useEffect(() => {
     async function carregarDados() {
       try {
-        const resposta = await fetch("http://localhost:8080/produtos", {
+        const resposta = await fetch("/api/produtos", {
           headers: { ...authHeader() },
         });
         const dadosApi = await resposta.json();

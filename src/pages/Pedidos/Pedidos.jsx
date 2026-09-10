@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
  import { authHeader } from "../../utils/authHeader";
  import styles from "./Pedidos.module.css";
  
- const API_URL = "http://localhost:8080";
+ const API_URL = "/api";
  const INTERVALO_ATUALIZACAO_MS = 5000;
  
  // ---------------------------------------------------------------------------

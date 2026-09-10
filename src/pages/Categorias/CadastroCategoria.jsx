@@ -30,7 +30,7 @@ function CadastroCategoria() {
 
         if (estaEditando) {
             axios.put(
-                `http://localhost:8080/categorias/${dadosEdicao.id}`,
+                `/api/categorias/${dadosEdicao.id}`,
                 { nome },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )
@@ -51,7 +51,7 @@ function CadastroCategoria() {
                 });
         } else {
             axios.post(
-                'http://localhost:8080/categorias',
+                '/api/categorias',
                 { nome },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )

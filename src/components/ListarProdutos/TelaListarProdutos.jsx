@@ -8,7 +8,7 @@ import ModalProduto from '../Modais/ModalProduto';
 import ModalExcluir from '../Modais/ModalExcluir';
 import { authHeader } from '../../utils/authHeader';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = '/api';
 
 function mapearProduto(produto) {
   return {
