@@ -1,11 +1,13 @@
 import styles from './Login.module.css';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../providers/AuthProvider.jsx';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const navigate = useNavigate();
+    const { login: loginAuth } = useAuth();
 
     const [erro, setErro] = useState("");
     const [mostrarErro, setMostrarErro] = useState(false);
@@ -24,9 +26,6 @@ function Login() {
             return;
         }
 
-        console.log("FORM LOGIN:", email);
-        console.log("FORM SENHA:", senha);
-
         try {
             const resposta = await fetch("/api/auth/login", {
                 method: "POST",
@@ -40,27 +39,26 @@ function Login() {
             });
             if (resposta.ok) {
                 const json = await resposta.json();
+                const usuario = json?.usuario ?? json?.funcionario ?? json?.user ?? {};
+                const gerente = json?.gerente ?? usuario?.gerente ?? usuario?.isGerente ?? false;
 
-                console.log(json);
                 localStorage.setItem("token", json.token);
+                loginAuth({
+                    token: json.token,
+                    user: usuario,
+                    gerente,
+                });
 
-                // O /auth/login devolve o id do funcionário logado; guardamos aqui pra
-                // ficar disponível pro criarPedido (POST /pedidos exige funcionarioId).
                 if (json.id != null) {
                     localStorage.setItem("funcionarioId", String(json.id));
-                } else {
-                    console.warn("A resposta do login não trouxe um id de funcionário.");
                 }
 
                 setTimeout(() => {
-                    navigate('/cardapio')
-                }, 1000);
+                    navigate(gerente ? '/dashboard' : '/cardapio');
+                }, 500);
             } else {
                 setErro("Email ou Senha Inválidos");
                 setMostrarErro(true);
-
-                // setTimeout(sumirMensagem, 5000);
-
             }
         } catch (erro) {
             console.log(erro);

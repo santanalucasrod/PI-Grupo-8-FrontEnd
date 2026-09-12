@@ -125,7 +125,7 @@ export default function TelaListarProdutos() {
 
   return (
     <div>
-      <HeaderListarProdutos header_titulo="Produtos" />
+      {/* <HeaderListarProdutos header_titulo="Produtos" /> */}
 
       <FooterListarProdutos onClickAdd={() => navigate('/produtos/cadastro')} />
 

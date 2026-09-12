@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../../providers/AuthProvider.jsx";
 import styles from "./Header.module.css";
 
-const LINKS = [
+const LINKS_GERENTE = [
   { to: "/dashboard", label: "Dashboard" },
   { to: "/pedidos", label: "Pedidos" },
   { to: "/produtos", label: "Produtos" },
@@ -11,7 +12,13 @@ const LINKS = [
   { to: "/funcionarios", label: "Funcionarios" },
   { to: "/ingredientes", label: "Ingredientes" },
   { to: "/personalizacoes", label: "Personalizações" },
-  { to: "/login", label: "Login" },
+  { to: "/perfil", label: "Perfil" },
+];
+
+const LINKS_FUNCIONARIO = [
+  { to: "/cardapio", label: "Cardápio" },
+  { to: "/pedidos", label: "Pedidos" },
+  { to: "/perfil", label: "Perfil" },
 ];
 
 /**
@@ -30,6 +37,8 @@ const LINKS = [
 function Header() {
   const [menuAberto, setMenuAberto] = useState(false);
   const location = useLocation();
+  const { isGerente, isAuthenticated } = useAuth();
+  const links = isGerente ? LINKS_GERENTE : LINKS_FUNCIONARIO;
 
   // fecha o menu automaticamente ao navegar para outra tela
   useEffect(() => {
@@ -84,7 +93,7 @@ function Header() {
             </div>
 
             <ul className={styles.listaLinks}>
-              {LINKS.map((link) => (
+              {links.map((link) => (
                 <li key={link.to}>
                   <Link
                     to={link.to}
@@ -96,6 +105,14 @@ function Header() {
                   </Link>
                 </li>
               ))}
+
+              {!isAuthenticated && (
+                <li>
+                  <Link to="/login" className={`${styles.link} ${location.pathname === '/login' ? styles.linkAtivo : ''}`}>
+                    Login
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
         </div>

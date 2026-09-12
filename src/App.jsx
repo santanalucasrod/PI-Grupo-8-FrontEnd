@@ -19,15 +19,38 @@ import TelaCadastrarProduto from './components/CadastrarProduto/TelaCadastrarPro
 import TelaEditarProduto from './components/CadastrarProduto/TelaEditarProduto.jsx'
 import Cardapio from './pages/Cardapio/Cardapio.jsx'
 import Sacola from './pages/Cardapio/Sacola.jsx'
+import Perfil from './pages/Perfil/Perfil.jsx'
 import { CartProvider } from './providers/CartContext.jsx'
+import { AuthProvider, useAuth } from './providers/AuthProvider.jsx'
+
+const ROTAS_GERENTE = [
+  '/dashboard',
+  '/funcionarios',
+  '/funcionarios/cadastro',
+  '/pedidos',
+  '/categorias',
+  '/categorias/cadastro',
+  '/ingredientes',
+  '/ingredientes/cadastro',
+  '/personalizacoes',
+  '/personalizacoes/cadastro',
+  '/produtos',
+  '/produtos/cadastro',
+  '/produtos/editar',
+  '/cardapio',
+  '/cardapio/sacola',
+];
+
+const ROTAS_NAO_GERENTE = ['/pedidos', '/cardapio', '/cardapio/sacola','/perfil'];
 
 function HeaderCondicional() {
   const location = useLocation();
-  if (location.pathname.startsWith('/produtos')) return null;
+  if (location.pathname === '/login') return null;
   if (location.pathname.startsWith('/personalizacoes/cadastro')) return null;
   if (location.pathname.startsWith('/categorias/cadastro')) return null;
   if (location.pathname.startsWith('/ingredientes/cadastro')) return null;
   if (location.pathname.startsWith('/funcionarios/cadastro')) return null;
+
   return <Header />;
 }
 
@@ -39,33 +62,74 @@ function LayoutCardapio() {
   );
 }
 
+function PublicRoute({ children }) {
+  const { isAuthenticated, isGerente } = useAuth();
+  const location = useLocation();
+
+  if (isAuthenticated) {
+    return <Navigate to={isGerente ? '/dashboard' : '/cardapio'} replace state={{ from: location }} />;
+  }
+
+  return children;
+}
+
+function isRotaPermitida(pathname, isGerente) {
+  const caminho = pathname.split('?')[0];
+
+  if (isGerente) {
+    return ROTAS_GERENTE.some((rota) => caminho === rota || caminho.startsWith(`${rota}/`));
+  }
+
+  return ROTAS_NAO_GERENTE.some((rota) => caminho === rota || caminho.startsWith(`${rota}/`));
+}
+
+function PrivateRoute({ children }) {
+  const { isAuthenticated, isGerente } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (!isGerente && !isRotaPermitida(location.pathname, false)) {
+    return <Navigate to="/cardapio" replace />;
+  }
+
+  return children;
+}
+
 function App() {
   return (
-    <BrowserRouter>
-      <VLibras />
-      <HeaderCondicional />
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/funcionarios/cadastro" element={<CadastroFuncionario />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/funcionarios" element={<Funcionarios />} />
-        <Route path="/pedidos" element={<Pedidos />} />
-        <Route path="/categorias" element={<Categorias />} />
-        <Route path="/categorias/cadastro" element={<CadastroCategoria />} />
-        <Route path="/ingredientes" element={<Ingredientes />} />
-        <Route path="/ingredientes/cadastro" element={<CadastroIngrediente />} />
-        <Route path="/personalizacoes" element={<Personalizacoes />} />
-        <Route path="/personalizacoes/cadastro" element={<CadastroPersonalizacao />} />
-        <Route path="/produtos" element={<TelaListarProdutos />} />
-        <Route path="/produtos/cadastro" element={<TelaCadastrarProduto />} />
-        <Route path="/produtos/editar/:id" element={<TelaEditarProduto />} />
-        <Route element={<LayoutCardapio />}>
-          <Route path="/cardapio" element={<Cardapio />} />
-          <Route path="/cardapio/sacola" element={<Sacola />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <VLibras />
+        <HeaderCondicional />
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/perfil" element={<PrivateRoute><Perfil /></PrivateRoute>} />
+          <Route path="/funcionarios/cadastro" element={<PrivateRoute><CadastroFuncionario /></PrivateRoute>} />
+          <Route path="/funcionarios" element={<PrivateRoute><Funcionarios /></PrivateRoute>} />
+          <Route path="/pedidos" element={<PrivateRoute><Pedidos /></PrivateRoute>} />
+          <Route path="/categorias" element={<PrivateRoute><Categorias /></PrivateRoute>} />
+          <Route path="/categorias/cadastro" element={<PrivateRoute><CadastroCategoria /></PrivateRoute>} />
+          <Route path="/ingredientes" element={<PrivateRoute><Ingredientes /></PrivateRoute>} />
+          <Route path="/ingredientes/cadastro" element={<PrivateRoute><CadastroIngrediente /></PrivateRoute>} />
+          <Route path="/personalizacoes" element={<PrivateRoute><Personalizacoes /></PrivateRoute>} />
+          <Route path="/personalizacoes/cadastro" element={<PrivateRoute><CadastroPersonalizacao /></PrivateRoute>} />
+          <Route path="/produtos" element={<PrivateRoute><TelaListarProdutos /></PrivateRoute>} />
+          <Route path="/produtos/cadastro" element={<PrivateRoute><TelaCadastrarProduto /></PrivateRoute>} />
+          <Route path="/produtos/editar/:id" element={<PrivateRoute><TelaEditarProduto /></PrivateRoute>} />
+
+          <Route element={<LayoutCardapio />}>
+            <Route path="/cardapio" element={<PrivateRoute><Cardapio /></PrivateRoute>} />
+            <Route path="/cardapio/sacola" element={<PrivateRoute><Sacola /></PrivateRoute>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 export default App
