@@ -8,24 +8,49 @@ background-color: var(--color-background);
 
 .card{
 display: flex;
-align-items: center;
-flex-flow: column nowrap;
+flex-flow: row nowrap;
+align-items: stretch;
 background-color: #8D5B42;
-width: 50%;
-padding: 20px;
-border-radius: 30px;
+width: 60%;
+min-height: 500px;
+border-radius: 20px;
 color: #fff;
 font-family: sans-serif;
+overflow: hidden;
 }
-.card>h2{
+
+.imagem{
+  position: relative;
+  flex: 1 1 50%;
+  background-color: #5C3A28;
+  overflow: hidden;
+}
+
+.imagemFoto{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.conteudo{
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column nowrap;
+  padding: 40px 20px;
+}
+
+.conteudo>h2{
     margin-bottom: 20px;
-} 
+    font-size: 28px;
+}
 .alerta_erro{
   display: flex;
   justify-content: flex-end;
-}
-.card-login{
-    height: 55%;
 }
 .card_erro {
   background-color: #fff;
@@ -59,18 +84,24 @@ font-family: sans-serif;
 }
 
 .campo>input {
-  border: 2px solid #EEE5D2;
-  padding: 10px 0px;
-  text-align: center;
-  border-radius: 10px; 
+  border: none;
+  padding: 10px 12px;
+  text-align: left;
+  border-radius: 8px;
   width: 100%;
-  margin-top: 2px;
+  color: #333;
 }
 .campo{
   display: flex;
-  align-items: flex-start;
-  flex-direction: column;
+  align-items: center;
+  flex-direction: row;
+  gap: 16px;
   margin-bottom: 18px;
+}
+.campo>span{
+  width: 60px;
+  flex-shrink: 0;
+  font-size: 16px;
 }
 .campo>a{
   text-decoration: underline;
@@ -84,12 +115,11 @@ font-family: sans-serif;
   font-weight: 600;
   font-size: 18px;
   padding: 10px 15px;
-  color: white;
-  background-color:#EEE5D2;
+  color: #8D5B42;
+  background-color:#fff;
   width: 100%;
   align-self: center;
-  color: #8D5B42;
-  margin-top: 12vh;
+  margin-top: 4vh;
   margin-bottom: 2vh;
   cursor: pointer;
 }

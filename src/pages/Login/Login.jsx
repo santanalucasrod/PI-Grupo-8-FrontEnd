@@ -2,6 +2,7 @@ import styles from './Login.module.css';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider.jsx';
+import Header from '../../components/Header/Header.jsx';
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -70,49 +71,60 @@ function Login() {
     }
 
     return (
-        <main className={styles.main}>
+        <>
+            <Header />
+            <main className={styles.main}>
 
-            <div className={styles.login}>
-                <div className={styles.alerta_erro}>
-                    {   
-                    mostrarErro && (
-                        <div className={styles.card_erro}>
-                            <span>{erro}</span>
-                        </div>
-                    )}
-                </div>
+            <div className={styles.alerta_erro}>
+                {
+                mostrarErro && (
+                    <div className={styles.card_erro}>
+                        <span>{erro}</span>
+                    </div>
+                )}
             </div>
 
             <div className={styles.card}>
-                <h2>Acesso</h2>
+                <div className={styles.imagem}>
+                    <img
+                        src="../public/fundo_cafe.jpg"
+                        alt="Grãos de café"
+                        className={styles.imagemFoto}
+                    />
+                </div>
 
-                <div className={styles.formulario}>
-                    <div className={styles.campo}>
-                        <span>Email:</span>
-                        <input
-                            type="text"
-                            placeholder="meuemail@provedor.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                <div className={styles.conteudo}>
+                    <h2>Acesso</h2>
+
+                    <div className={styles.formulario}>
+                        <div className={styles.campo}>
+                            <span>Email</span>
+                            <input
+                                type="text"
+                                placeholder="meuemail@provedor.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+
+                        <div className={styles.campo}>
+                            <span>Senha</span>
+                            <input
+                                type="password"
+                                placeholder="******"
+                                value={senha}
+                                onChange={(e) => setSenha(e.target.value)}
+                            />
+                        </div>
+
+                        <button className={styles.botao} onClick={login}>
+                            Acessar
+                        </button>
                     </div>
-
-                    <div className={styles.campo}>
-                        <span>Senha:</span>
-                        <input
-                            type="password"
-                            placeholder="******"
-                            value={senha}
-                            onChange={(e) => setSenha(e.target.value)}
-                        />
-                    </div>
-
-                    <button className={styles.botao} onClick={login}>
-                        Acessar
-                    </button>
                 </div>
             </div>
         </main>
+        </>
     );
 }
 
