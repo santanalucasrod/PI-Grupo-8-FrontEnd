@@ -1,14 +1,14 @@
 .main {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: #f5f5f5;
+  background: #f6f0ea;
 }
 
 .card {
-  width: min(420px, 100%);
+  width: min(480px, 100%);
   background: #fff;
   border-radius: 18px;
   padding: 32px 24px;
@@ -16,26 +16,137 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  text-align: left;
+}
+
+.topo {
+  display: flex; 
+  position: relative;
 }
 
 .titulo {
-  margin: 0;
-  font-size: 1.8rem;
+  margin: 0; 
+  font-size: clamp(1.8rem, 4vw, 2.3rem);
   color: #2d2d2d;
 }
 
-.botao {
+.botaoEditar {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
   border: none;
-  border-radius: 12px;
-  background: #c62828;
-  color: #fff;
-  font-weight: 700;
-  padding: 14px 18px;
+  color: #4b7f52;
+  font-size: 1.5rem;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  padding: 6px 8px;
 }
 
-.botao:hover {
-  opacity: 0.95;
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #3a3a3a;
+  font-weight: 600;
+}
+
+.campo span {
+  font-size: 0.95rem;
+}
+
+.labelValor {
+  min-height: 48px;
+  display: flex; 
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #f7f7f7;
+  border: 1px solid #ececec;
+  color: #303030;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.campo input {
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: #4b7f52;
+  box-shadow: 0 0 0 3px rgba(75, 127, 82, 0.12);
+}
+
+.acoes {
+  display: flex;
+  gap: 12px;
+}
+
+.botaoSalvar,
+.botaoCancelar,
+.botaoLogout {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.botaoSalvar {
+  flex: 1;
+  background: #4b7f52;
+  color: #fff;
+}
+
+.botaoCancelar {
+  flex: 1;
+  background: #f1f1f1;
+  color: #333;
+}
+
+.botaoLogout {
+  background: #c62828;
+  color: #fff;
+}
+
+.botaoSalvar:hover,
+.botaoCancelar:hover,
+.botaoLogout:hover {
+  opacity: 0.96;
+  transform: translateY(-1px);
+}
+
+.botaoSalvar:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.alerta_erro {
+  display: flex;
+  justify-content: center;
+}
+
+.card_erro {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff4f4;
+  border: 1px solid #e8b7b7;
+  color: #8a2d2d;
+  font-weight: 600;
+  text-align: center;
 }
