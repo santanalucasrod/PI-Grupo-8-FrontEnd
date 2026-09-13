@@ -87,7 +87,7 @@ function Login() {
             <div className={styles.card}>
                 <div className={styles.imagem}>
                     <img
-                        src="../public/fundo_cafe.jpg"
+                        src="../fundo_cafe.jpg"
                         alt="Grãos de café"
                         className={styles.imagemFoto}
                     />
