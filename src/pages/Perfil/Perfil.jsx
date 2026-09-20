@@ -74,7 +74,7 @@ function Perfil() {
     }
 
     api.put(
-      `/funcionarios/crud/${funcionarioId}`,
+      `/funcionarios/perfil/${funcionarioId}`,
       payload,
       {
         headers: {

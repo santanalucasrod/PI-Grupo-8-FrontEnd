@@ -25,6 +25,7 @@ export function getUsuarioInfo() {
   const idUsuario = usuario.id ?? usuario.funcionarioId ?? idDoStorage;
 
   return {
+    ...usuario,
     id: Number.isFinite(idUsuario) && idUsuario !== 0 ? idUsuario : null,
     nome: usuario.nome ?? usuario.name ?? '',
     email: usuario.email ?? '',
@@ -32,7 +33,6 @@ export function getUsuarioInfo() {
       ? usuario.gerente
       : String(usuario.gerente ?? localStorage.getItem(STORAGE_KEYS.gerente) ?? 'false').toLowerCase() === 'true',
     token: localStorage.getItem(STORAGE_KEYS.token) ?? '',
-    ...usuario,
   };
 }
 

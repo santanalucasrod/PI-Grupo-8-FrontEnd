@@ -40,8 +40,12 @@ function Login() {
             });
             if (resposta.ok) {
                 const json = await resposta.json();
-                const usuario = json?.usuario ?? json?.funcionario ?? json?.user ?? {};
-                const gerente = json?.gerente ?? usuario?.gerente ?? usuario?.isGerente ?? false;
+                const usuario = {
+                    nome: json.nome,
+                    email,
+                    id: json.id,
+                };
+                const gerente = json.gerente ?? false;
 
                 localStorage.setItem("token", json.token);
                 loginAuth({
@@ -49,10 +53,6 @@ function Login() {
                     user: usuario,
                     gerente,
                 });
-
-                if (json.id != null) {
-                    localStorage.setItem("funcionarioId", String(json.id));
-                }
 
                 setTimeout(() => {
                     navigate(gerente ? '/dashboard' : '/cardapio');
