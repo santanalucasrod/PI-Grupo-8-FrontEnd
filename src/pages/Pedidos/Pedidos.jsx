@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
  import axios from "axios";
  import { authHeader } from "../../utils/authHeader";
  import styles from "./Pedidos.module.css";
@@ -6,12 +6,37 @@ import { useState, useEffect, useRef } from "react";
  const API_URL = "http://localhost:8080";
  const INTERVALO_ATUALIZACAO_MS = 5000;
 
+ // Só exibimos 2 pedidos em preparo por vez na tela principal (cards grandes,
+ // pensados pra visualização de longe pelo barista). Os demais continuam em
+ // preparo "por baixo dos panos" e vão aparecendo conforme os 2 primeiros são concluídos.
+ const MAX_CARDS_ATIVOS = 2;
+ const MAX_FILA_EXIBIDA = 6;
+ const STATUS_EXIBIDOS = ["PENDENTE", "EM_PREPARO"];
+
+ // Nome do cliente que fez o pedido (campo "nomeCliente" do PedidoResponse).
+ function nomePedido(pedido) {
+   return pedido.nomeCliente?.trim() || "Cliente sem nome";
+ }
+
+ // Padroniza o status vindo do backend ("Pendente", " em_preparo " etc.) e avisa no
+ // console sobre pedidos com status que esta tela não exibe, pra não sumirem em silêncio.
+ function normalizarPedidos(lista) {
+   return lista.map((pedido) => {
+     const status =
+       typeof pedido.status === "string" ? pedido.status.trim().toUpperCase() : pedido.status;
+     if (!STATUS_EXIBIDOS.includes(status)) {
+       console.warn(`Pedido #${pedido.id} com status "${pedido.status}" não é exibido nesta tela.`);
+     }
+     return { ...pedido, status, itens: pedido.itens ?? [] };
+   });
+ }
+
  const USAR_DADOS_MOCK = false;
 
  const PEDIDOS_MOCK = [
    {
      id: 101,
-     nome: "Ana Beatriz",
+     nomeCliente: "Ana Beatriz",
      status: "EM_PREPARO",
      descricao: "Cliente vai retirar no balcão",
      itens: [
@@ -22,7 +47,7 @@ import { useState, useEffect, useRef } from "react";
    },
    {
      id: 102,
-     nome: "Marcos Vinícius",
+     nomeCliente: "Marcos Vinícius",
      status: "EM_PREPARO",
      descricao: "",
      itens: [
@@ -32,7 +57,7 @@ import { useState, useEffect, useRef } from "react";
    },
    {
      id: 103,
-     nome: "Juliana Prado",
+     nomeCliente: "Juliana Prado",
      status: "EM_PREPARO",
      descricao: "Alergia a lactose",
      itens: [
@@ -41,7 +66,7 @@ import { useState, useEffect, useRef } from "react";
    },
    {
      id: 104,
-     nome: "Pedro Henrique",
+     nomeCliente: "Pedro Henrique",
      status: "PENDENTE",
      descricao: "",
      itens: [
@@ -51,7 +76,7 @@ import { useState, useEffect, useRef } from "react";
    },
    {
      id: 105,
-     nome: "Camila Souza",
+     nomeCliente: "Camila Souza",
      status: "PENDENTE",
      descricao: "",
      itens: [
@@ -60,7 +85,7 @@ import { useState, useEffect, useRef } from "react";
    },
    {
      id: 106,
-     nome: "",
+     nomeCliente: "",
      status: "PENDENTE",
      descricao: "",
      itens: [
@@ -93,7 +118,54 @@ import { useState, useEffect, useRef } from "react";
    const [erro, setErro] = useState("");
    const [popoverAberto, setPopoverAberto] = useState(null); // id do pedido
    const primeiraCargaFeita = useRef(false);
- 
+
+   // Controle de concorrência entre o polling e as atualizações otimistas:
+   //  - versaoMutacao: incrementa a cada mutação; um GET iniciado antes dela é descartado,
+   //    senão a resposta antiga sobrescreveria o clique (item "desmarcando sozinho",
+   //    pedido concluído voltando pra tela).
+   //  - mutacoesEmAndamento: enquanto houver PATCH pendente, o polling fica pausado.
+   //  - controllerAtual: aborta o GET anterior para evitar respostas fora de ordem.
+   const versaoMutacao = useRef(0);
+   const mutacoesEmAndamento = useRef(0);
+   const controllerAtual = useRef(null);
+
+   const carregarPedidos = useCallback(async () => {
+     if (USAR_DADOS_MOCK) return;
+     if (mutacoesEmAndamento.current > 0) return;
+
+     controllerAtual.current?.abort();
+     const controller = new AbortController();
+     controllerAtual.current = controller;
+     const versaoNoInicio = versaoMutacao.current;
+
+     try {
+       const resposta = await axios.get(`${API_URL}/pedidos`, {
+         params: { ativos: true },
+         headers: authHeader(),
+         signal: controller.signal,
+       });
+       if (controller.signal.aborted || versaoNoInicio !== versaoMutacao.current) return;
+       // 204 (nenhum pedido ativo) vem sem corpo
+       const novosPedidos = normalizarPedidos(Array.isArray(resposta.data) ? resposta.data : []);
+       setPedidos(novosPedidos);
+       // se o pedido com o popover aberto saiu da lista, limpa o id órfão
+       setPopoverAberto((aberto) =>
+         novosPedidos.some((p) => p.id === aberto) ? aberto : null
+       );
+       setErro("");
+     } catch (e) {
+       if (axios.isCancel(e)) return;
+       console.log(e);
+       setErro("Não foi possível carregar os pedidos.");
+     } finally {
+       if (controllerAtual.current === controller) {
+         controllerAtual.current = null;
+         setCarregando(false);
+         primeiraCargaFeita.current = true;
+       }
+     }
+   }, []);
+
    useEffect(() => {
      if (USAR_DADOS_MOCK) {
        // simula um pequeno delay de rede pra ver o "Carregando..." também
@@ -105,37 +177,37 @@ import { useState, useEffect, useRef } from "react";
        return () => clearTimeout(timeout);
      }
 
-     let cancelado = false;
- 
-     async function carregarPedidos() {
-       try {
-         const resposta = await axios.get(`${API_URL}/pedidos`, {
-           params: { ativos: true },
-           headers: authHeader(),
-         });
-         if (cancelado) return;
-         setPedidos(resposta.data);
-         setErro("");
-       } catch (e) {
-         console.log(e);
-         if (!cancelado) setErro("Não foi possível carregar os pedidos.");
-       } finally {
-         if (!cancelado) {
-           setCarregando(false);
-           primeiraCargaFeita.current = true;
-         }
-       }
-     }
- 
-     carregarPedidos();
+     const primeiraCarga = setTimeout(carregarPedidos, 0);
      const intervalo = setInterval(carregarPedidos, INTERVALO_ATUALIZACAO_MS);
- 
+
      return () => {
-       cancelado = true;
+       clearTimeout(primeiraCarga);
        clearInterval(intervalo);
+       controllerAtual.current?.abort();
      };
-   }, []);
- 
+   }, [carregarPedidos]);
+
+   // Envolve um PATCH: invalida GETs em voo, pausa o polling durante a requisição
+   // e, se falhar, recarrega o estado real do servidor para desfazer o otimismo.
+   async function executarMutacao(requisicao, mensagemErro) {
+     versaoMutacao.current += 1;
+     mutacoesEmAndamento.current += 1;
+     controllerAtual.current?.abort();
+
+     let falhou = false;
+     try {
+       await requisicao();
+     } catch (e) {
+       console.log(e);
+       falhou = true;
+       setErro(mensagemErro);
+     } finally {
+       mutacoesEmAndamento.current -= 1;
+     }
+
+     if (falhou) carregarPedidos();
+   }
+
    async function alternarItemPronto(itemId, prontoAtual) {
      // atualização otimista: reflete na tela antes da resposta do servidor
      setPedidos((atual) =>
@@ -148,80 +220,62 @@ import { useState, useEffect, useRef } from "react";
      );
 
      if (USAR_DADOS_MOCK) return; // no mock, a atualização otimista já basta
- 
-     try {
-       await axios.patch(`${API_URL}/pedidos/itens/${itemId}/pronto`, {
-         pronto: !prontoAtual,
-       }, { headers: authHeader() });
-     } catch (e) {
-       console.log(e);
-       setErro("Não foi possível atualizar o item. Recarregando...");
-       // desfaz a atualização otimista buscando o estado real do servidor
-       try {
-         const resposta = await axios.get(`${API_URL}/pedidos`, {
-           params: { ativos: true },
-           headers: authHeader(),
-         });
-         setPedidos(resposta.data);
-       } catch (e2) {
-         console.log(e2);
-       }
-     }
-   }
- 
-   async function iniciarPreparo(pedidoId) {
-     let bloqueado = false;
-     setPedidos((atual) => {
-       const totalEmPreparo = atual.filter((p) => p.status === "EM_PREPARO").length;
-       if (totalEmPreparo >= MAX_CARDS_ATIVOS) {
-         bloqueado = true;
-         return atual;
-       }
-       return atual.map((p) => (p.id === pedidoId ? { ...p, status: "EM_PREPARO" } : p));
-     });
 
-     if (bloqueado) return;
-     if (USAR_DADOS_MOCK) return;
- 
-     try {
-       await axios.patch(`${API_URL}/pedidos/${pedidoId}/status`, {
-         status: "EM_PREPARO",
-       }, { headers: authHeader() });
-     } catch (e) {
-       console.log(e);
-       setErro("Não foi possível iniciar o preparo do pedido.");
-     }
+     await executarMutacao(
+       () =>
+         axios.patch(`${API_URL}/pedidos/itens/${itemId}/pronto`, {
+           pronto: !prontoAtual,
+         }, { headers: authHeader() }),
+       "Não foi possível atualizar o item. Recarregando..."
+     );
    }
- 
+
+   async function iniciarPreparo(pedidoId) {
+     // calculado a partir do estado do render, e não dentro do updater do setPedidos
+     // (o React não garante que o updater rode de forma síncrona)
+     const totalEmPreparo = pedidos.filter((p) => p.status === "EM_PREPARO").length;
+     if (totalEmPreparo >= MAX_CARDS_ATIVOS) return;
+
+     setPedidos((atual) =>
+       atual.map((p) => (p.id === pedidoId ? { ...p, status: "EM_PREPARO" } : p))
+     );
+
+     if (USAR_DADOS_MOCK) return;
+
+     await executarMutacao(
+       () =>
+         axios.patch(`${API_URL}/pedidos/${pedidoId}/status`, {
+           status: "EM_PREPARO",
+         }, { headers: authHeader() }),
+       "Não foi possível iniciar o preparo do pedido."
+     );
+   }
+
    async function concluirPedido(pedidoId) {
      if (USAR_DADOS_MOCK) {
        setPedidos((atual) => atual.filter((p) => p.id !== pedidoId));
+       setPopoverAberto((aberto) => (aberto === pedidoId ? null : aberto));
        return;
      }
 
-     try {
+     await executarMutacao(async () => {
        await axios.patch(`${API_URL}/pedidos/${pedidoId}/status`, {
          status: "PRONTO",
        }, { headers: authHeader() });
        setPedidos((atual) => atual.filter((p) => p.id !== pedidoId));
-     } catch (e) {
-       console.log(e);
-       setErro("Não foi possível concluir o pedido.");
-     }
+       setPopoverAberto((aberto) => (aberto === pedidoId ? null : aberto));
+     }, "Não foi possível concluir o pedido.");
    }
- 
-   // Só exibimos 2 pedidos em preparo por vez na tela principal (cards grandes,
-   // pensados pra visualização de longe pelo barista). Os demais continuam em
-   // preparo "por baixo dos panos" e vão aparecendo conforme os 2 primeiros são concluídos.
-   const MAX_CARDS_ATIVOS = 2;
+
    const todosEmPreparo = pedidos.filter((p) => p.status === "EM_PREPARO");
    const emPreparo = todosEmPreparo.slice(0, MAX_CARDS_ATIVOS);
    // Pedidos que já estão "Em preparo" mas não couberam nos cards grandes —
    // ficam visíveis aqui, de forma resumida, até que uma vaga se abra.
    const emPreparoOculto = todosEmPreparo.slice(MAX_CARDS_ATIVOS);
    const pendentes = pedidos.filter((p) => p.status === "PENDENTE");
-   const MAX_FILA_EXIBIDA = 3;
-   const fila = [...emPreparoOculto, ...pendentes].slice(0, MAX_FILA_EXIBIDA);
+   const filaCompleta = [...emPreparoOculto, ...pendentes];
+   const fila = filaCompleta.slice(0, MAX_FILA_EXIBIDA);
+   const restanteNaFila = filaCompleta.length - fila.length;
  
    return (
      <main className={styles.main}>
@@ -268,6 +322,9 @@ import { useState, useEffect, useRef } from "react";
                  onIniciar={() => iniciarPreparo(pedido.id)}
                />
              ))}
+             {restanteNaFila > 0 && (
+               <div className={styles.contadorFila}>+{restanteNaFila} na fila</div>
+             )}
            </section>
          </>
        )}
@@ -301,7 +358,7 @@ import { useState, useEffect, useRef } from "react";
          >
            {tudoPronto && "✓"}
          </button>
-         <span className={styles.nomeCliente}>{pedido.nome || `Pedido #${pedido.id}`}</span>
+         <span className={styles.nomeCliente}>{nomePedido(pedido)}</span>
  
          {temObservacaoGeral && (
            <button
@@ -354,7 +411,7 @@ import { useState, useEffect, useRef } from "react";
              <span className={styles.itemTextos}>
                <span className={item.pronto ? styles.itemFeito : styles.itemNome}>
                  {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
-                 {item.volumeMl && <span className={styles.itemVolume}> · {item.volumeMl}ml</span>}
+                 {item.volumeMl > 0 && <span className={styles.itemVolume}> · {item.volumeMl}ml</span>}
                </span>
                {item.observacao && (
                  <span className={styles.itemObservacao}>⚠ {item.observacao}</span>
@@ -382,12 +439,12 @@ import { useState, useEffect, useRef } from "react";
            : "Iniciar preparo deste pedido"
        }
      >
-       <div className={styles.cardFilaHeader}>{pedido.nome || `Pedido #${pedido.id}`}</div>
+       <div className={styles.cardFilaHeader}>{nomePedido(pedido)}</div>
        <ul className={styles.listaFila}>
          {pedido.itens.map((item) => (
            <li key={item.id}>
              {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
-             {item.volumeMl && <span className={styles.itemVolumeFila}> · {item.volumeMl}ml</span>}
+             {item.volumeMl > 0 && <span className={styles.itemVolumeFila}> · {item.volumeMl}ml</span>}
              {item.observacao && (
                <span className={styles.itemObservacaoFila}> · {item.observacao}</span>
              )}
