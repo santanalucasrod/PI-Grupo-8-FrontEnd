@@ -272,6 +272,49 @@
   background: var(--color-success);
 }
 
+/* ---------- Cancelamento ---------- */
+
+.botaoCancelar {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border: 1px solid #c97a5a;
+  border-radius: 8px;
+  background: #fff;
+  color: #9a3d18;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.botaoCancelar:hover {
+  background: var(--color-danger);
+}
+
+.cardFilaContainer {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardFilaContainer .cardFila {
+  width: 100%;
+}
+
+.botaoCancelarFila {
+  align-self: flex-start;
+  padding: 2px 4px;
+  border: none;
+  background: none;
+  color: #9a3d18;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* ---------- Fila (pedidos ainda não iniciados) ---------- */
 
 .linhaFila {
@@ -419,7 +462,8 @@
     justify-content: center;
   }
 
-  .cardFila {
+  .cardFila,
+  .cardFilaContainer {
     width: 100%;
     max-width: 320px;
   }

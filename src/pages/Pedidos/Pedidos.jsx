@@ -102,6 +102,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
   *  - GET   /pedidos?ativos=true            -> lista pedidos PENDENTE/EM_PREPARO
   *  - PATCH /pedidos/itens/{itemId}/pronto  -> marca/desmarca um item como pronto
   *  - PATCH /pedidos/{id}/status            -> move o pedido entre PENDENTE/EM_PREPARO/PRONTO
+  *  - PATCH /pedidos/{id}/cancelar          -> cancela o pedido (some da fila)
   *
   * Observação sobre o modelo de dados: hoje o backend guarda a observação/preferência
   * ("Sem açúcar", "Leite de aveia" etc.) por PEDIDO (info_adicional), não por item —
@@ -267,6 +268,27 @@ import { useState, useEffect, useRef, useCallback } from "react";
      }, "Não foi possível concluir o pedido.");
    }
 
+   async function cancelarPedido(pedido) {
+     if (!window.confirm(`Cancelar o pedido de ${nomePedido(pedido)}?`)) return;
+
+     const removerDaTela = () => {
+       setPedidos((atual) => atual.filter((p) => p.id !== pedido.id));
+       setPopoverAberto((aberto) => (aberto === pedido.id ? null : aberto));
+     };
+
+     if (USAR_DADOS_MOCK) {
+       removerDaTela();
+       return;
+     }
+
+     await executarMutacao(async () => {
+       await axios.patch(`${API_URL}/pedidos/${pedido.id}/cancelar`, null, {
+         headers: authHeader(),
+       });
+       removerDaTela();
+     }, "Não foi possível cancelar o pedido.");
+   }
+
    const todosEmPreparo = pedidos.filter((p) => p.status === "EM_PREPARO");
    const emPreparo = todosEmPreparo.slice(0, MAX_CARDS_ATIVOS);
    // Pedidos que já estão "Em preparo" mas não couberam nos cards grandes —
@@ -302,6 +324,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                  onFecharPopover={() => setPopoverAberto(null)}
                  onAlternarItem={alternarItemPronto}
                  onConcluir={() => concluirPedido(pedido.id)}
+                 onCancelar={() => cancelarPedido(pedido)}
                />
              ))}
            </section>
@@ -320,6 +343,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                  jaEmPreparo={pedido.status === "EM_PREPARO"}
                  bloqueado={pedido.status === "EM_PREPARO" || todosEmPreparo.length >= MAX_CARDS_ATIVOS}
                  onIniciar={() => iniciarPreparo(pedido.id)}
+                 onCancelar={() => cancelarPedido(pedido)}
                />
              ))}
              {restanteNaFila > 0 && (
@@ -339,6 +363,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
    onFecharPopover,
    onAlternarItem,
    onConcluir,
+   onCancelar,
  }) {
    const total = pedido.itens.length;
    const feitos = pedido.itens.filter((i) => i.pronto).length;
@@ -359,6 +384,15 @@ import { useState, useEffect, useRef, useCallback } from "react";
            {tudoPronto && "✓"}
          </button>
          <span className={styles.nomeCliente}>{nomePedido(pedido)}</span>
+
+         <button
+           type="button"
+           className={styles.botaoCancelar}
+           onClick={onCancelar}
+           title="Cancelar pedido"
+         >
+           Cancelar
+         </button>
  
          {temObservacaoGeral && (
            <button
@@ -424,8 +458,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
    );
  }
  
- function CardPedidoFila({ pedido, bloqueado, jaEmPreparo, onIniciar }) {
+ function CardPedidoFila({ pedido, bloqueado, jaEmPreparo, onIniciar, onCancelar }) {
    return (
+     <div className={styles.cardFilaContainer}>
      <button
        type="button"
        className={`${styles.cardFila} ${bloqueado ? styles.cardFilaBloqueado : ""}`}
@@ -457,6 +492,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
          </div>
        )}
      </button>
+     <button type="button" className={styles.botaoCancelarFila} onClick={onCancelar}>
+       Cancelar pedido
+     </button>
+     </div>
    );
  }
  
