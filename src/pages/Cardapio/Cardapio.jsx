@@ -10,6 +10,7 @@ import {
   buscarIngredientesPorProduto,
   buscarPersonalizacoesPorProduto,
   buscarProdutosAgrupados,
+  buscarTamanhosPorProduto,
   resolverImagemProduto,
 } from './cardapioApi';
 import styles from './Cardapio.module.css';
@@ -70,6 +71,9 @@ export default function Cardapio() {
   const [personalizacoes, setPersonalizacoes] = useState([]);
   const [carregandoPersonalizacoes, setCarregandoPersonalizacoes] = useState(false);
   const [avisoPersonalizacoes, setAvisoPersonalizacoes] = useState('');
+  const [tamanhos, setTamanhos] = useState([]);
+  const [carregandoTamanhos, setCarregandoTamanhos] = useState(false);
+  const [avisoTamanhos, setAvisoTamanhos] = useState('');
   const fecharProduto = useCallback(() => setProdutoSelecionado(null), []);
 
   useEffect(() => {
@@ -122,6 +126,17 @@ export default function Cardapio() {
         if (!controller.signal.aborted) setCarregandoPersonalizacoes(false);
       });
 
+    buscarTamanhosPorProduto(produtoSelecionado.id, controller.signal)
+      .then((dados) => setTamanhos(dados))
+      .catch((erroRequisicao) => {
+        if (erroRequisicao?.code !== 'ERR_CANCELED') {
+          setAvisoTamanhos('Não foi possível carregar os tamanhos deste produto.');
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setCarregandoTamanhos(false);
+      });
+
     return () => controller.abort();
   }, [produtoSelecionado]);
 
@@ -151,19 +166,24 @@ export default function Cardapio() {
     setPersonalizacoes([]);
     setAvisoPersonalizacoes('');
     setCarregandoPersonalizacoes(true);
+    setTamanhos([]);
+    setAvisoTamanhos('');
+    setCarregandoTamanhos(true);
     setProdutoSelecionado(produto);
   }
 
-  function adicionarProduto({ quantidade, personalizacoes }) {
+  function adicionarProduto({ quantidade, personalizacoes, tamanho }) {
     if (!produtoSelecionado) return;
 
+    // Com tamanho escolhido, o preço é o do tamanho (o backend recalcula da mesma forma).
     adicionarItem({
       produtoId: Number(produtoSelecionado.id),
       nome: produtoSelecionado.nome,
       imagem: produtoSelecionado.imagem,
-      precoUnidade: Number(produtoSelecionado.precoUnidade || 0),
+      precoUnidade: Number(tamanho?.precoUnidade ?? produtoSelecionado.precoUnidade ?? 0),
       quantidade,
       personalizacoes,
+      ...(tamanho && { tamanhoId: tamanho.id, tamanhoNome: tamanho.nome }),
     });
 
     setProdutoSelecionado(null);
@@ -222,6 +242,9 @@ export default function Cardapio() {
           personalizacoesDisponiveis={personalizacoes}
           carregandoPersonalizacoes={carregandoPersonalizacoes}
           avisoPersonalizacoes={avisoPersonalizacoes}
+          tamanhos={tamanhos}
+          carregandoTamanhos={carregandoTamanhos}
+          avisoTamanhos={avisoTamanhos}
           onAdicionar={adicionarProduto}
           onFechar={fecharProduto}
         />
