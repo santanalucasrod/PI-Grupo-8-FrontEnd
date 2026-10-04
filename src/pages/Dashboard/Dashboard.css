@@ -23,70 +23,66 @@ body {
   font-family: 'Barlow', sans-serif;
   background-color: var(--cream-bg);
 }
-.dashboard-main{
-  background-image: none;
-}
-
-.dashboard-header {
-  height: 8vh;
-  background-color: var(--brown-dark);
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  gap: 12px;
-}
-
-.dashboard-header .logo-circle {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 2px solid var(--cream);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
-.dashboard-header h1 {
-  color: var(--white);
-  font-family: 'Barlow', sans-serif; font-weight: 800;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
 .dashboard-main {
   min-height: 92vh;
   background-color: var(--cream-bg);
-  padding: 20px 10% 28px;
+  padding: 20px 6% 100px;
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
+/* ---------- Período ---------- */
+
 .periodo-bar {
   background-color: var(--card-bg);
   border-radius: 12px;
-  padding: 14px 28px;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 14px 20px;
   flex-wrap: wrap;
   color: var(--text-dark);
-  font-family: 'Barlow', sans-serif;
   font-size: 15px;
 }
 
 .periodo-bar .label {
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
-  opacity: 0.85;
+}
+
+.periodo-atalhos {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.atalho {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  background-color: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+}
+
+.atalho:hover {
+  border-color: var(--brown-mid);
+}
+
+.atalho-ativo {
+  background-color: var(--brown-dark);
+  border-color: var(--brown-dark);
+  color: var(--white);
 }
 
 .periodo-datas {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
@@ -97,7 +93,6 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-dark);
-  opacity: 0.85;
 }
 
 .periodo-data-campo input[type="date"] {
@@ -106,12 +101,13 @@ body {
   font-weight: 600;
   color: var(--text-dark);
   background-color: var(--white);
-  border: 1px solid rgba(0,0,0,0.15);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 8px;
   padding: 6px 10px;
   cursor: pointer;
 }
 
+.atalho:focus-visible,
 .periodo-data-campo input[type="date"]:focus {
   outline: 2px solid var(--brown-mid);
   outline-offset: 1px;
@@ -123,6 +119,13 @@ body {
   color: #b33c00;
 }
 
+.periodo-comparacao {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
 .periodo-vazio {
   background-color: var(--card-bg);
   border-radius: 12px;
@@ -131,79 +134,125 @@ body {
   color: var(--text-dark);
   font-size: 16px;
   font-weight: 600;
-  opacity: 0.85;
 }
+
+.dash-erro {
+  color: #8a2c00;
+  background-color: #ffe2d6;
+}
+
+.dashboard-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-conteudo.carregando {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ---------- Indicadores ---------- */
 
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  width: 100%;
 }
 
 .kpi-card {
   background-color: var(--card-bg);
   border-radius: 16px;
-  padding: 20px 20px 24px;
+  padding: 18px 20px 20px;
   color: var(--text-dark);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-height: 160px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  gap: 8px;
+  min-height: 150px;
 }
 
 .kpi-card .kpi-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  line-height: 1.3;
-  opacity: 0.95;
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
 
 .kpi-card .kpi-value {
-  font-family: 'Barlow', sans-serif; font-weight: 800;
-  font-size: 42px;
-  font-weight: 700;
-  line-height: 1;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.1;
   margin-top: auto;
-}
-
-.kpi-card .kpi-value.kpi-product {
-  font-size: 26px;
-  margin-top: auto;
+  color: var(--text-brown);
 }
 
 .kpi-card .kpi-sub {
-  font-size: 12px;
-  opacity: 0.7;
+  font-size: 13px;
   font-weight: 600;
+  opacity: 0.75;
 }
+
+.kpi-variacao {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.kpi-variacao.positiva { color: #2f7a3a; }
+.kpi-variacao.negativa { color: #b33c00; }
+.kpi-variacao.neutra { color: rgba(58, 58, 58, 0.6); }
+
+/* ---------- Alerta de equipe ---------- */
+
+.alerta-capacidade {
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text-dark);
+  border-left: 6px solid;
+}
+
+.alerta-capacidade.atencao {
+  background-color: #fbeadb;
+  border-color: #D9822B;
+}
+
+.alerta-capacidade.ok {
+  background-color: #e6f2e7;
+  border-color: #6EB277;
+}
+
+.alerta-horas {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------- Gráficos ---------- */
 
 .charts-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  flex: 1;
-  width: 100%;
-  height: 100px;
+}
+
+.charts-row.uma-coluna {
+  grid-template-columns: 1fr;
+}
+
+.charts-row.tres-colunas {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .chart-card {
   background-color: var(--card-bg);
   border-radius: 16px;
-  padding: 20px;
+  padding: 18px 20px;
   color: var(--text-dark);
   display: flex;
   flex-direction: column;
-  gap: 16px; 
-  min-width: 180px;
+  gap: 12px;
+  min-width: 0;
 }
 
 .chart-card .chart-title {
@@ -211,114 +260,25 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  opacity: 0.95;
 }
 
-.chart-area {
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  padding-top: 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding-bottom: 8px;
-}
-
-/* Bar chart */
-.bar-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  flex: 1;
-}
-
-.bar-wrap {
-  display: flex;
-  gap: 3px;
-  align-items: flex-end;
-  height: 120px;
-}
-
-.bar {
-  width: 14px;
-  border-radius: 4px 4px 0 0;
-  transition: height 0.6s cubic-bezier(.34,1.56,.64,1);
-}
-
-.bar.faturamento {
-  background-color: var(--cream);
-}
-
-.bar.pedidos {
-  background-color: rgba(255,255,255,0.4);
-}
-
-.bar-label {
-  font-size: 10px;
+.chart-card .chart-subtitle {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
   opacity: 0.7;
-  font-weight: 600;
 }
 
-.chart-legend {
-  display: flex;
-  gap: 14px;
+.chartjs-wrap {
+  position: relative;
+  height: 260px;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  opacity: 0.85;
+.chartjs-wrap.alto {
+  height: 320px;
 }
 
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-}
-
-.legend-dot.cream { background-color: var(--cream); }
-.legend-dot.muted { background-color: rgba(255,255,255,0.4); }
-
-.cat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-  justify-content: center;
-}
-
-.cat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.cat-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  font-weight: 700;
-  opacity: 0.9;
-}
-
-.cat-bar-bg {
-  width: 100%;
-  height: 8px;
-  background-color: rgba(255,255,255,0.15);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.cat-bar-fill {
-  height: 100%;
-  background-color: var(--cream);
-  border-radius: 4px;
-  transition: width 0.8s cubic-bezier(.34,1.56,.64,1);
-}
+/* ---------- Atalho para pedidos ---------- */
 
 .pedidos-fab {
   position: fixed;
@@ -326,16 +286,13 @@ body {
   right: 32px;
   background-color: var(--cream-bg);
   color: var(--brown-dark);
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 32px;
-  padding: 18px 34px;
+  padding: 16px 30px;
   font-family: 'Barlow', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -345,183 +302,47 @@ body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
+/* ---------- Responsividade (tablet e celular) ---------- */
+
+@media (max-width: 1200px) {
+  .charts-row.tres-colunas {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 900px) {
+  .dashboard-main {
+    padding: 16px 16px 100px;
+  }
   .kpi-row {
     grid-template-columns: repeat(2, 1fr);
   }
-  .charts-row {
+  .charts-row,
+  .charts-row.tres-colunas {
     grid-template-columns: 1fr;
   }
-  .dashboard-main {
-    padding: 16px 18px 90px;
+  .periodo-comparacao {
+    margin-left: 0;
   }
 }
 
 @media (max-width: 540px) {
-  .dashboard-header {
-    height: 56px;
-    padding: 0 16px;
-  }
-  .dashboard-header h1 {
-    font-size: 17px;
-  }
-  .dashboard-header .logo-circle {
-    width: 32px;
-    height: 32px;
-    font-size: 15px;
-  }
-
-  .dashboard-main {
-    padding: 12px 12px 100px;
-    gap: 12px;
-    min-height: calc(100svh - 56px);
-  }
-
-  .periodo-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 12px 16px;
-    border-radius: 10px;
-  }
-  .periodo-bar .label {
-    font-size: 13px;
-  }
-
-  .periodo-datas {
-    width: 100%;
-    gap: 10px;
-  }
-
-  .periodo-data-campo {
-    font-size: 13px;
-    flex: 1;
-    min-width: 130px;
-  }
-
-  .periodo-data-campo input[type="date"] {
-    font-size: 13px;
-    padding: 5px 8px;
-    width: 100%;
-  }
-
   .kpi-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr;
   }
   .kpi-card {
-    min-height: 120px;
-    padding: 14px 14px 16px;
-    gap: 6px;
-    border-radius: 12px;
-  }
-  .kpi-card .kpi-title {
-    font-size: 11px;
-    letter-spacing: 0.2px;
+    min-height: 0;
   }
   .kpi-card .kpi-value {
     font-size: 28px;
   }
-  .kpi-card .kpi-value.kpi-product {
-    font-size: 20px;
+  .chartjs-wrap {
+    height: 230px;
   }
-  .kpi-card .kpi-sub {
-    font-size: 10px;
-  }
-
-  .charts-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .chart-card {
-    min-height: 220px;
-    padding: 14px;
-    border-radius: 12px;
-    gap: 12px;
-  }
-  .chart-card .chart-title {
-    font-size: 12px;
-  }
-  .bar-wrap {
-    height: 90px;
-  }
-  .bar {
-    width: 10px;
-  }
-  .bar-label {
-    font-size: 9px;
-  }
-  .cat-header {
-    font-size: 11px;
-  }
-  .cat-bar-bg {
-    height: 7px;
-  }
-
-  /* FAB */
   .pedidos-fab {
     bottom: 16px;
     right: 16px;
-    font-size: 16px;
     padding: 12px 22px;
-  }
-}
-
-/* Celulares bem estreitos (ex.: iPhone SE, ~375px e abaixo): 2 colunas de
-   KPI ainda ficam apertadas pra caber valores como "R$ 32.400,00", então
-   aqui os KPIs passam a ocupar a largura toda, em coluna única. */
-@media (max-width: 380px) {
-  .dashboard-main {
-    padding: 10px 10px 96px;
-  }
-
-  .periodo-datas {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .periodo-data-campo {
-    min-width: 0;
-  }
-
-  .kpi-row {
-    grid-template-columns: 1fr;
-  }
-
-  .kpi-card {
-    min-height: auto;
-    padding: 12px 14px 14px;
-  }
-
-  .kpi-card .kpi-value {
-    font-size: 26px;
-  }
-
-  .kpi-card .kpi-value.kpi-product {
-    font-size: 19px;
-  }
-}
-
-.chartjs-wrap {
-  flex: 1;
-  position: relative; 
-  max-height: 100%;
-}
-
-.chartjs-wrap.donut {
-}
-
-.chart-area, .bar-group, .bar-wrap, .bar,
-.bar-label, .chart-legend, .legend-item, .legend-dot,
-.cat-list, .cat-item, .cat-header, .cat-bar-bg, .cat-bar-fill {
-  display: none;
-}
-
-@media (max-width: 540px) {
-  .chartjs-wrap {
-    min-height: 160px;
-  }
-  .chartjs-wrap.donut {
-    min-height: 200px;
+    font-size: 16px;
   }
 }
