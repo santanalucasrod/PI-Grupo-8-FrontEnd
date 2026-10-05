@@ -1,23 +1,25 @@
 import styles from './AbasCategoria.module.css';
 
-const ABAS = [
-  { chave: 'todos', rotulo: 'Todos' },
-  { chave: 'quentes', rotulo: 'Quentes' },
-  { chave: 'gelados', rotulo: 'Gelados' },
-];
-
-export default function AbasCategoria({ abaAtiva, onSelecionar }) {
+export default function AbasCategoria({ categorias, abaAtiva, onSelecionar }) {
   return (
-    <nav className={styles.abas} aria-label="Filtrar cardápio por temperatura">
-      {ABAS.map((aba) => (
+    <nav className={styles.abas} aria-label="Filtrar produtos por categoria">
+      <button
+        type="button"
+        className={`${styles.aba} ${abaAtiva === null ? styles.abaAtiva : ''}`}
+        onClick={() => onSelecionar(null)}
+        aria-pressed={abaAtiva === null}
+      >
+        Todos
+      </button>
+      {categorias.map((categoria) => (
         <button
-          key={aba.chave}
+          key={categoria}
           type="button"
-          className={`${styles.aba} ${abaAtiva === aba.chave ? styles.abaAtiva : ''}`}
-          onClick={() => onSelecionar(aba.chave)}
-          aria-pressed={abaAtiva === aba.chave}
+          className={`${styles.aba} ${abaAtiva === categoria ? styles.abaAtiva : ''}`}
+          onClick={() => onSelecionar(categoria)}
+          aria-pressed={abaAtiva === categoria}
         >
-          {aba.rotulo}
+          {categoria}
         </button>
       ))}
     </nav>

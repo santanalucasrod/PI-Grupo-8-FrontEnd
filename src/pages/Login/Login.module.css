@@ -80,7 +80,8 @@ overflow: hidden;
 .formulario {
   display: flex;
   flex-direction: column;
-  width: 75%;
+  width: 100%;
+  max-width: 360px;
 }
 
 .campo>input {
@@ -89,6 +90,7 @@ overflow: hidden;
   text-align: left;
   border-radius: 8px;
   width: 100%;
+  min-width: 0;
   color: #333;
 }
 .campo{
@@ -122,6 +124,12 @@ overflow: hidden;
   margin-top: 4vh;
   margin-bottom: 2vh;
   cursor: pointer;
+}
+
+@media (min-width: 701px) and (max-width: 1024px) {
+  .card {
+    width: calc(100% - 48px);
+  }
 }
 
 /* ---------- Mobile: layout mais simples, sem a imagem decorativa ---------- */

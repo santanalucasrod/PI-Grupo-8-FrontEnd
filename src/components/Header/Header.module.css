@@ -1,13 +1,19 @@
 .header {
-  height: 8vh;
-  min-height: 56px;
-  background-color: #8d5b42;
-  display: flex;
-  flex-flow: row nowrap;
+  min-height: 72px;
+  background-color: var(--color-brown);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgb(92 58 34 / 0.12);
   width: 100%;
+  padding: 12px 24px;
+  box-sizing: border-box;
+}
+
+.conteudo {
+  display: flex;
+  width: min(100%, 960px);
+  margin: 0 auto;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
   gap: 12px;
   box-sizing: border-box;
 }
@@ -17,28 +23,43 @@
   flex-direction: row;
   align-items: center;
   min-width: 0;
+  text-decoration: none;
+  gap: 12px;
 }
 
 .logoCircle {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 2px solid var(--cream);
+  border: 2px solid var(--cream, #eee5d2);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  margin-right: 10px;
   flex-shrink: 0;
-  color: white;
+  color: var(--cream, #eee5d2);
+  font-weight: 700;
 }
 
 .companyName {
   color: white;
-  font-size: 18px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.paginaAtual {
+  margin-left: auto;
+  color: var(--cream, #eee5d2);
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ---------- Botão hambúrguer ---------- */
@@ -49,13 +70,29 @@
   justify-content: center;
   align-items: center;
   gap: 5px;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   background: rgba(255, 255, 255, 0.14);
-  border: none;
+  border: 1px solid rgb(255 255 255 / 0.25);
   border-radius: 8px;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+.botaoMenu:hover {
+  background: rgb(255 255 255 / 0.24);
+}
+
+.botaoMenu:focus-visible,
+.logo:focus-visible,
+.botaoFechar:focus-visible {
+  outline: 2px solid var(--cream, #eee5d2);
+  outline-offset: 3px;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-brown);
+  outline-offset: -3px;
 }
 
 .linhaHamburguer {
@@ -85,6 +122,8 @@
   display: flex;
   flex-direction: column;
   animation: deslizarDaDireita 0.2s ease-out;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @keyframes deslizarDaDireita {
@@ -101,8 +140,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
-  background: #8d5b42;
+  background: var(--color-brown);
   flex-shrink: 0;
+  gap: 12px;
 }
 
 .drawerTitulo {
@@ -118,16 +158,23 @@
   font-size: 30px;
   line-height: 1;
   cursor: pointer;
-  padding: 0 4px;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.navegacao {
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .listaLinks {
   list-style: none;
   margin: 0;
-  padding: 8px 0;
+  padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  gap: 4px;
 }
 
 .link {
@@ -137,19 +184,24 @@
   font-size: 18px;
   font-weight: 600;
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  overflow-wrap: anywhere;
+}
+
+.link:hover {
+  background: var(--color-background);
 }
 
 .linkAtivo {
   color: #8d5b42;
   background: rgba(141, 91, 66, 0.08);
+  border-left-color: var(--color-brown);
 }
 
-/* ---------- Tablet: o menu ocupa MENOS de 25% da largura da tela ---------- */
 @media (min-width: 601px) {
   .drawer {
-    width: 24vw;
-    max-width: 320px;
+    width: min(360px, 100%);
   }
 
   .drawerTitulo {
@@ -159,6 +211,27 @@
   .link {
     font-size: 15px;
     padding: 14px 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    min-height: 64px;
+    padding: 10px 16px;
+  }
+
+  .paginaAtual {
+    display: none;
+  }
+
+  .companyName {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer {
+    animation: none;
   }
 }
 

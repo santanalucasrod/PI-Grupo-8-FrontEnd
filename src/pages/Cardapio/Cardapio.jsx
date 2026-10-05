@@ -6,6 +6,7 @@ import FooterCardapio from '../../components/Cardapio/FooterCardapio';
 import ModalProdutoCardapio from '../../components/Cardapio/ModalProdutoCardapio';
 import SecaoProdutos from '../../components/Cardapio/SecaoProdutos';
 import { useCart } from '../../providers/CartContext';
+import { normalizarTexto } from '../../utils/pesquisa';
 import {
   buscarIngredientesPorProduto,
   buscarPersonalizacoesPorProduto,
@@ -13,34 +14,6 @@ import {
   resolverImagemProduto,
 } from './cardapioApi';
 import styles from './Cardapio.module.css';
-
-function normalizarTexto(valor) {
-  return String(valor || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim()
-    .toLocaleLowerCase('pt-BR');
-}
-
-function classificarTemperatura(nomeCategoria) {
-  const palavras = normalizarTexto(nomeCategoria).split(/[^a-z]+/).filter(Boolean);
-
-  if (palavras.some((palavra) => ['quente', 'quentes'].includes(palavra))) {
-    return 'quentes';
-  }
-
-  if (
-    palavras.some((palavra) =>
-      ['frio', 'frios', 'fria', 'frias', 'gelado', 'gelados', 'gelada', 'geladas'].includes(
-        palavra
-      )
-    )
-  ) {
-    return 'gelados';
-  }
-
-  return 'outros';
-}
 
 function mapearProduto(produto, nomeCategoria) {
   const precoUnidade = Number(produto?.precoUnidade);
@@ -62,7 +35,7 @@ export default function Cardapio() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [termo, setTermo] = useState('');
-  const [abaAtiva, setAbaAtiva] = useState('todos');
+  const [abaAtiva, setAbaAtiva] = useState(null);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const [ingredientes, setIngredientes] = useState([]);
   const [carregandoIngredientes, setCarregandoIngredientes] = useState(false);
@@ -125,6 +98,10 @@ export default function Cardapio() {
     return () => controller.abort();
   }, [produtoSelecionado]);
 
+  const categorias = Object.keys(produtosAgrupados)
+    .filter((nome) => Array.isArray(produtosAgrupados[nome]) && produtosAgrupados[nome].length > 0)
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
   const secoes = useMemo(() => {
     const busca = normalizarTexto(termo);
 
@@ -132,7 +109,6 @@ export default function Cardapio() {
       .filter(([, produtos]) => Array.isArray(produtos))
       .map(([nomeCategoria, produtos]) => ({
         nomeCategoria,
-        temperatura: classificarTemperatura(nomeCategoria),
         produtos: produtos
           .map((produto) => mapearProduto(produto, nomeCategoria))
           .filter((produto) => produto.id != null)
@@ -140,7 +116,7 @@ export default function Cardapio() {
             normalizarTexto(produto.nome).includes(busca)
           ),
       }))
-      .filter((secao) => abaAtiva === 'todos' || secao.temperatura === abaAtiva)
+      .filter((secao) => abaAtiva === null || secao.nomeCategoria === abaAtiva)
       .filter((secao) => secao.produtos.length > 0);
   }, [abaAtiva, produtosAgrupados, termo]);
 
@@ -185,7 +161,7 @@ export default function Cardapio() {
             />
           </div>
 
-          <AbasCategoria abaAtiva={abaAtiva} onSelecionar={setAbaAtiva} />
+          <AbasCategoria categorias={categorias} abaAtiva={abaAtiva} onSelecionar={setAbaAtiva} />
 
           <div className={styles.listaSecoes} aria-live="polite">
             {carregando && <p className={styles.mensagem}>Carregando cardápio...</p>}

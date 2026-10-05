@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
  import axios from "axios";
  import { authHeader } from "../../utils/authHeader";
+ import { api } from "../../providers/axiosClient";
  import styles from "./Pedidos.module.css";
  
- const API_URL = "http://localhost:8080";
  const INTERVALO_ATUALIZACAO_MS = 5000;
 
  // Só exibimos 2 pedidos em preparo por vez na tela principal (cards grandes,
@@ -103,19 +103,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
   *  - PATCH /pedidos/itens/{itemId}/pronto  -> marca/desmarca um item como pronto
   *  - PATCH /pedidos/{id}/status            -> move o pedido entre PENDENTE/EM_PREPARO/PRONTO
   *
-  * Observação sobre o modelo de dados: hoje o backend guarda a observação/preferência
-  * ("Sem açúcar", "Leite de aveia" etc.) por PEDIDO (info_adicional), não por item —
-  * mas isso obriga o barista a adivinhar qual produto a modificação afeta. Por isso,
-  * nesta tela, exibimos a preferência específica de produto junto ao item (usando um
-  * campo "observacao" no próprio item). Se necessário, isso ainda depende de o backend
-  * passar a associar essa informação ao item do pedido, e não só ao pedido como um todo.
-  * O ícone no cabeçalho do card continua existindo só para observações GERAIS do pedido
-  * (ex.: "Cliente vai retirar no balcão", alergias, etc.), que não são de um produto específico.
+  * ItemResponse retorna personalizacoes (lista de nomes) e observacao por item.
+  * PedidoResponse.descricao contém as observações gerais do pedido.
   */
  function Pedidos() {
    const [pedidos, setPedidos] = useState([]);
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState("");
+   const [atualizando, setAtualizando] = useState(false);
    const [popoverAberto, setPopoverAberto] = useState(null); // id do pedido
    const primeiraCargaFeita = useRef(false);
 
@@ -139,7 +134,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
      const versaoNoInicio = versaoMutacao.current;
 
      try {
-       const resposta = await axios.get(`${API_URL}/pedidos`, {
+       const resposta = await api.get('/pedidos', {
          params: { ativos: true },
          headers: authHeader(),
          signal: controller.signal,
@@ -155,7 +150,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
        setErro("");
      } catch (e) {
        if (axios.isCancel(e)) return;
-       console.log(e);
        setErro("Não foi possível carregar os pedidos.");
      } finally {
        if (controllerAtual.current === controller) {
@@ -190,25 +184,31 @@ import { useState, useEffect, useRef, useCallback } from "react";
    // Envolve um PATCH: invalida GETs em voo, pausa o polling durante a requisição
    // e, se falhar, recarrega o estado real do servidor para desfazer o otimismo.
    async function executarMutacao(requisicao, mensagemErro) {
+     if (mutacoesEmAndamento.current > 0) return;
      versaoMutacao.current += 1;
      mutacoesEmAndamento.current += 1;
+     setAtualizando(true);
      controllerAtual.current?.abort();
 
      let falhou = false;
      try {
        await requisicao();
-     } catch (e) {
-       console.log(e);
+       setErro("");
+     } catch {
        falhou = true;
-       setErro(mensagemErro);
      } finally {
        mutacoesEmAndamento.current -= 1;
      }
 
-     if (falhou) carregarPedidos();
+     if (falhou) {
+       await carregarPedidos();
+       setErro(mensagemErro);
+     }
+     setAtualizando(false);
    }
 
    async function alternarItemPronto(itemId, prontoAtual) {
+     if (mutacoesEmAndamento.current > 0) return;
      // atualização otimista: reflete na tela antes da resposta do servidor
      setPedidos((atual) =>
        atual.map((pedido) => ({
@@ -223,7 +223,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
      await executarMutacao(
        () =>
-         axios.patch(`${API_URL}/pedidos/itens/${itemId}/pronto`, {
+         api.patch(`/pedidos/itens/${itemId}/pronto`, {
            pronto: !prontoAtual,
          }, { headers: authHeader() }),
        "Não foi possível atualizar o item. Recarregando..."
@@ -231,6 +231,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
    }
 
    async function iniciarPreparo(pedidoId) {
+     if (mutacoesEmAndamento.current > 0) return;
      // calculado a partir do estado do render, e não dentro do updater do setPedidos
      // (o React não garante que o updater rode de forma síncrona)
      const totalEmPreparo = pedidos.filter((p) => p.status === "EM_PREPARO").length;
@@ -244,7 +245,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
      await executarMutacao(
        () =>
-         axios.patch(`${API_URL}/pedidos/${pedidoId}/status`, {
+         api.patch(`/pedidos/${pedidoId}/status`, {
            status: "EM_PREPARO",
          }, { headers: authHeader() }),
        "Não foi possível iniciar o preparo do pedido."
@@ -252,6 +253,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
    }
 
    async function concluirPedido(pedidoId) {
+     if (mutacoesEmAndamento.current > 0) return;
      if (USAR_DADOS_MOCK) {
        setPedidos((atual) => atual.filter((p) => p.id !== pedidoId));
        setPopoverAberto((aberto) => (aberto === pedidoId ? null : aberto));
@@ -259,12 +261,33 @@ import { useState, useEffect, useRef, useCallback } from "react";
      }
 
      await executarMutacao(async () => {
-       await axios.patch(`${API_URL}/pedidos/${pedidoId}/status`, {
+       await api.patch(`/pedidos/${pedidoId}/status`, {
          status: "PRONTO",
        }, { headers: authHeader() });
        setPedidos((atual) => atual.filter((p) => p.id !== pedidoId));
        setPopoverAberto((aberto) => (aberto === pedidoId ? null : aberto));
      }, "Não foi possível concluir o pedido.");
+   }
+
+   async function devolverParaFila(pedidoId) {
+     if (mutacoesEmAndamento.current > 0) return;
+     if (USAR_DADOS_MOCK) {
+       setPedidos((atual) => atual.map((pedido) =>
+         pedido.id === pedidoId ? { ...pedido, status: 'PENDENTE' } : pedido
+       ));
+       return;
+     }
+
+     await executarMutacao(async () => {
+       const resposta = await api.patch(`/pedidos/${pedidoId}/status`, {
+         status: 'PENDENTE',
+       }, { headers: authHeader() });
+       const [pedidoAtualizado] = normalizarPedidos([resposta.data]);
+       setPedidos((atual) => atual.map((pedido) =>
+         pedido.id === pedidoId ? pedidoAtualizado : pedido
+       ));
+       setPopoverAberto((aberto) => aberto === pedidoId ? null : aberto);
+     }, 'Não foi possível devolver o pedido para a fila.');
    }
 
    const todosEmPreparo = pedidos.filter((p) => p.status === "EM_PREPARO");
@@ -279,55 +302,61 @@ import { useState, useEffect, useRef, useCallback } from "react";
  
    return (
      <main className={styles.main}>
-       <h2 className={styles.titulo}>Gestão e controle de pedidos</h2>
+       <div className={styles.conteudo}>
+         <h2 className={styles.titulo}>Gestão e controle de pedidos</h2>
  
-       {erro && <div className={styles.avisoErro}>{erro}</div>}
+         {erro && <div className={styles.avisoErro} role="alert">{erro}</div>}
  
-       {carregando ? (
-         <p className={styles.vazio}>Carregando pedidos...</p>
-       ) : (
-         <>
-           <section className={styles.linhaAtivos}>
-             {emPreparo.length === 0 && (
-               <p className={styles.vazio}>Nenhum pedido em preparo no momento.</p>
-             )}
-             {emPreparo.map((pedido) => (
-               <CardPedidoAtivo
-                 key={pedido.id}
-                 pedido={pedido}
-                 popoverAberto={popoverAberto === pedido.id}
-                 onAbrirPopover={() =>
-                   setPopoverAberto(popoverAberto === pedido.id ? null : pedido.id)
-                 }
-                 onFecharPopover={() => setPopoverAberto(null)}
-                 onAlternarItem={alternarItemPronto}
-                 onConcluir={() => concluirPedido(pedido.id)}
-               />
-             ))}
-           </section>
+         {carregando ? (
+           <p className={styles.vazio}>Carregando pedidos...</p>
+         ) : (
+           <>
+             <section className={styles.linhaAtivos}>
+               {emPreparo.length === 0 && (
+                 <p className={styles.vazio}>Nenhum pedido em preparo no momento.</p>
+               )}
+               {emPreparo.map((pedido) => (
+                 <CardPedidoAtivo
+                   key={pedido.id}
+                   pedido={pedido}
+                   popoverAberto={popoverAberto === pedido.id}
+                   onAbrirPopover={() =>
+                     setPopoverAberto(popoverAberto === pedido.id ? null : pedido.id)
+                   }
+                   onFecharPopover={() => setPopoverAberto(null)}
+                   onAlternarItem={alternarItemPronto}
+                   onConcluir={() => concluirPedido(pedido.id)}
+                   onDevolver={() => devolverParaFila(pedido.id)}
+                   atualizando={atualizando}
+                 />
+               ))}
+             </section>
  
-           <h3 className={styles.subtitulo}>Próximos na fila</h3>
-           <section className={styles.linhaFila}>
-             {fila.length === 0 && (
-               <p className={styles.vazio}>Nenhum pedido aguardando na fila.</p>
-             )}
-             {fila.map((pedido) => (
-               <CardPedidoFila
-                 key={pedido.id}
-                 pedido={pedido}
-                 // pedidos "Em preparo" escondidos já estão ativos: não têm ação de
-                 // iniciar, só aguardam vaga nos cards grandes.
-                 jaEmPreparo={pedido.status === "EM_PREPARO"}
-                 bloqueado={pedido.status === "EM_PREPARO" || todosEmPreparo.length >= MAX_CARDS_ATIVOS}
-                 onIniciar={() => iniciarPreparo(pedido.id)}
-               />
-             ))}
-             {restanteNaFila > 0 && (
-               <div className={styles.contadorFila}>+{restanteNaFila} na fila</div>
-             )}
-           </section>
-         </>
-       )}
+             <h3 className={styles.subtitulo}>Próximos na fila</h3>
+             <section className={styles.linhaFila}>
+               {fila.length === 0 && (
+                 <p className={styles.vazio}>Nenhum pedido aguardando na fila.</p>
+               )}
+               {fila.map((pedido) => (
+                 <CardPedidoFila
+                   key={pedido.id}
+                   pedido={pedido}
+                   // pedidos "Em preparo" escondidos já estão ativos: não têm ação de
+                   // iniciar, só aguardam vaga nos cards grandes.
+                   jaEmPreparo={pedido.status === "EM_PREPARO"}
+                   bloqueado={atualizando || pedido.status === "EM_PREPARO" || todosEmPreparo.length >= MAX_CARDS_ATIVOS}
+                   onIniciar={() => iniciarPreparo(pedido.id)}
+                   onDevolver={() => devolverParaFila(pedido.id)}
+                   atualizando={atualizando}
+                 />
+               ))}
+               {restanteNaFila > 0 && (
+                 <div className={styles.contadorFila}>+{restanteNaFila} na fila</div>
+               )}
+             </section>
+           </>
+         )}
+       </div>
      </main>
    );
  }
@@ -339,6 +368,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
    onFecharPopover,
    onAlternarItem,
    onConcluir,
+   onDevolver,
+   atualizando,
  }) {
    const total = pedido.itens.length;
    const feitos = pedido.itens.filter((i) => i.pronto).length;
@@ -353,7 +384,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
            type="button"
            className={`${styles.checkGrande} ${tudoPronto ? styles.checkGrandeAtivo : ""}`}
            title={tudoPronto ? "Concluir pedido" : "Finalize todos os itens para concluir"}
-           disabled={!tudoPronto}
+           disabled={atualizando || !tudoPronto}
+           aria-label="Concluir pedido"
            onClick={onConcluir}
          >
            {tudoPronto && "✓"}
@@ -404,6 +436,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
                type="button"
                className={`${styles.checkbox} ${item.pronto ? styles.checkboxMarcado : ""}`}
                onClick={() => onAlternarItem(item.id, item.pronto)}
+               disabled={atualizando}
+               aria-pressed={Boolean(item.pronto)}
                aria-label={item.pronto ? "Desmarcar item" : "Marcar item como pronto"}
              >
                {item.pronto && "✓"}
@@ -413,6 +447,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
                  {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
                  {item.volumeMl > 0 && <span className={styles.itemVolume}> · {item.volumeMl}ml</span>}
                </span>
+               {item.personalizacoes?.length > 0 && (
+                 <span className={styles.itemPersonalizacoes}>Personalizações: {item.personalizacoes.join(', ')}</span>
+               )}
                {item.observacao && (
                  <span className={styles.itemObservacao}>⚠ {item.observacao}</span>
                )}
@@ -420,43 +457,56 @@ import { useState, useEffect, useRef, useCallback } from "react";
            </li>
          ))}
        </ul>
+       <button type="button" className={styles.botaoDevolver} onClick={onDevolver} disabled={atualizando}>
+         Voltar para a fila
+       </button>
      </div>
    );
  }
  
- function CardPedidoFila({ pedido, bloqueado, jaEmPreparo, onIniciar }) {
+ function CardPedidoFila({ pedido, bloqueado, jaEmPreparo, onIniciar, onDevolver, atualizando }) {
    return (
-     <button
-       type="button"
-       className={`${styles.cardFila} ${bloqueado ? styles.cardFilaBloqueado : ""}`}
-       onClick={jaEmPreparo ? undefined : onIniciar}
-       disabled={bloqueado}
-       title={
-         jaEmPreparo
-           ? "Pedido já em preparo, aguardando vaga nos cards ativos"
-           : bloqueado
-           ? "Conclua um pedido em preparo para liberar espaço"
-           : "Iniciar preparo deste pedido"
-       }
-     >
-       <div className={styles.cardFilaHeader}>{nomePedido(pedido)}</div>
-       <ul className={styles.listaFila}>
-         {pedido.itens.map((item) => (
-           <li key={item.id}>
-             {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
-             {item.volumeMl > 0 && <span className={styles.itemVolumeFila}> · {item.volumeMl}ml</span>}
-             {item.observacao && (
-               <span className={styles.itemObservacaoFila}> · {item.observacao}</span>
-             )}
-           </li>
-         ))}
-       </ul>
-       {bloqueado && (
-         <div className={styles.cardFilaAvisoBloqueio}>
-           {jaEmPreparo ? "☕ Em preparo · aguardando vaga" : "🔒 Aguardando vaga"}
-         </div>
+     <div className={styles.cardFila}>
+       <button
+         type="button"
+         className={`${styles.iniciarFila} ${bloqueado ? styles.cardFilaBloqueado : ""}`}
+         onClick={jaEmPreparo ? undefined : onIniciar}
+         disabled={bloqueado}
+         title={
+           jaEmPreparo
+             ? "Pedido já em preparo, aguardando vaga nos cards ativos"
+             : bloqueado
+             ? "Conclua um pedido em preparo para liberar espaço"
+             : "Iniciar preparo deste pedido"
+         }
+       >
+         <div className={styles.cardFilaHeader}>{nomePedido(pedido)}</div>
+         <ul className={styles.listaFila}>
+           {pedido.itens.map((item) => (
+             <li key={item.id}>
+               {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
+               {item.volumeMl > 0 && <span className={styles.itemVolumeFila}> · {item.volumeMl}ml</span>}
+               {item.personalizacoes?.length > 0 && (
+                 <span className={styles.itemPersonalizacoes}>Personalizações: {item.personalizacoes.join(', ')}</span>
+               )}
+               {item.observacao && (
+                 <span className={styles.itemObservacaoFila}> · {item.observacao}</span>
+               )}
+             </li>
+           ))}
+         </ul>
+         {bloqueado && (
+           <div className={styles.cardFilaAvisoBloqueio}>
+             {jaEmPreparo ? "☕ Em preparo · aguardando vaga" : "🔒 Aguardando vaga"}
+           </div>
+         )}
+       </button>
+       {jaEmPreparo && (
+         <button type="button" className={styles.botaoDevolver} onClick={onDevolver} disabled={atualizando}>
+           Voltar para a fila
+         </button>
        )}
-     </button>
+     </div>
    );
  }
  

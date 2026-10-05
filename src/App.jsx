@@ -50,8 +50,10 @@ function HeaderCondicional() {
   if (location.pathname.startsWith('/categorias/cadastro')) return null;
   if (location.pathname.startsWith('/ingredientes/cadastro')) return null;
   if (location.pathname.startsWith('/funcionarios/cadastro')) return null;
+  if (location.pathname.startsWith('/produtos/cadastro')) return null;
+  if (location.pathname.startsWith('/produtos/editar')) return null;
 
-  return <Header />;
+  return <Header key={location.pathname} />;
 }
 
 function LayoutCardapio() {

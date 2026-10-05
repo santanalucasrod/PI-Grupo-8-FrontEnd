@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../providers/axiosClient';
 import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa'; 
+import { normalizarTexto } from '../../utils/pesquisa';
+import { authHeader } from '../../utils/authHeader';
 import Footer from '../../components/ListarProdutos/FooterListarProdutos';
 import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Personalizacoes.module.css';
@@ -17,32 +19,34 @@ function Personalizacoes() {
     const [personalizacaoExcluir, setPersonalizacaoExcluir] = useState(null);
     const navigate = useNavigate();
 
-    function configuracao() {
-        return { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-    }
-
-    function carregarPersonalizacoes() {
-        return api.get('/personalizacoes', configuracao())
-            .then((resposta) => setPersonalizacoes(resposta.data))
-            .catch(() => setErro('Nao foi possivel carregar as personalizacoes.'))
+    const carregarPersonalizacoes = useCallback(() => {
+        return api.get('/personalizacoes', { headers: authHeader() })
+            .then((resposta) => {
+                setPersonalizacoes(Array.isArray(resposta.data) ? resposta.data : []);
+                setErro('');
+            })
+            .catch(() => setErro('Não foi possível carregar as personalizações.'))
             .finally(() => setCarregando(false));
-    }
+    }, []);
 
     useEffect(() => {
         carregarPersonalizacoes();
-    }, []);
+    }, [carregarPersonalizacoes]);
 
     function confirmarExclusaoPersonalizacao() {
         if (!personalizacaoExcluir?.id) return;
 
-        api.delete(`/personalizacoes/${personalizacaoExcluir.id}`, configuracao())
+        api.delete(`/personalizacoes/${personalizacaoExcluir.id}`, { headers: authHeader() })
             .then(() => {
                 setPersonalizacaoExcluir(null);
                 carregarPersonalizacoes();
             })
-            .catch(() => setErro('Nao foi possivel excluir a personalizacao.'));
+            .catch(() => setErro('Não foi possível excluir a personalização.'));
     }
 
+    const personalizacoesFiltradas = personalizacoes.filter((personalizacao) =>
+        normalizarTexto(personalizacao.nome).includes(normalizarTexto(termo))
+    );
 
     const colunas = [
         { chave: 'nome', titulo: 'Nome' },
@@ -73,11 +77,14 @@ function Personalizacoes() {
                     <div className={styles.cabecalho}>
                         <div>
                             <p className={styles.eyebrow}>Gerenciamento</p>
-                            <h2 className={styles.titulo}>Personalizacoes</h2>
+                            <h2 className={styles.titulo}>Personalizações</h2>
                         </div>
                         <Pesquisa valor={termo} aoPesquisar={setTermo} />
                     </div>
-                    {erro ? <p className={styles.erro}>{erro}</p> : <ListaItens itens={personalizacoes} colunas={colunas} carregando={carregando} />}
+                    {erro ? <p className={styles.erro}>{erro}</p> : (
+                        <ListaItens itens={personalizacoesFiltradas} colunas={colunas} carregando={carregando}
+                            mensagemVazia={normalizarTexto(termo) ? 'Nenhuma personalização encontrada para esta pesquisa.' : 'Nenhuma personalização cadastrada.'} />
+                    )}
                 </section>
             </main>
             <Footer onClickAdd={() => navigate('/personalizacoes/cadastro')} texto="Adicionar Personalização" />

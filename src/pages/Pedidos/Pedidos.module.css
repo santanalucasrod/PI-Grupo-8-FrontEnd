@@ -1,7 +1,13 @@
 .main {
   padding: 32px 40px;
   background: var(--color-background);
-  min-height: calc(100vh - 80px);
+  flex: 1;
+  min-width: 0;
+}
+
+.conteudo {
+  width: min(100%, 960px);
+  margin: 0 auto;
 }
 
 .titulo {
@@ -88,6 +94,8 @@
   font-weight: 700;
   color: #1f1f1f;
   flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .iconeObs {
@@ -121,6 +129,9 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   padding: 16px;
   z-index: 10;
+  max-width: calc(100% - 32px);
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
 }
 
 .popoverHeader {
@@ -230,6 +241,43 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.itemPersonalizacoes {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-brown);
+  overflow-wrap: anywhere;
+}
+
+.botaoDevolver {
+  display: block;
+  width: calc(100% - 40px);
+  min-height: 44px;
+  margin: 0 20px 20px;
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--color-brown);
+  border: 1px solid var(--color-brown);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.botaoDevolver:hover {
+  background: var(--color-background);
+}
+
+.botaoDevolver:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 .itemObservacao {
@@ -290,6 +338,24 @@
   text-align: left;
   font-family: inherit;
   transition: background 0.15s ease;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.iniciarFila {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.cardFila .botaoDevolver {
+  width: 100%;
+  margin: 12px 0 0;
 }
 
 .cardFila:hover {
