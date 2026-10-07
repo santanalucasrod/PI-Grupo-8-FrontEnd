@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../providers/AuthProvider.jsx";
 import styles from "./Header.module.css";
@@ -9,7 +9,7 @@ const LINKS_GERENTE = [
   { to: "/produtos", label: "Produtos" },
   { to: "/cardapio", label: "Cardápio" },
   { to: "/categorias", label: "Categorias" },
-  { to: "/funcionarios", label: "Funcionarios" },
+  { to: "/funcionarios", label: "Funcionários" },
   { to: "/ingredientes", label: "Ingredientes" },
   { to: "/personalizacoes", label: "Personalizações" },
   { to: "/perfil", label: "Perfil" },
@@ -21,67 +21,86 @@ const LINKS_FUNCIONARIO = [
   { to: "/perfil", label: "Perfil" },
 ];
 
-/**
- * Header com menu hambúrguer.
- *
- * O site é pensado só para tablet e mobile (sem versão desktop), então o menu
- * hambúrguer é usado em qualquer largura de tela — não existe uma barra de
- * navegação horizontal alternativa para telas grandes.
- *
- * Comportamento do painel (drawer):
- *  - No mobile (até 600px de largura): ocupa a tela inteira.
- *  - No tablet (acima de 600px): ocupa uma faixa lateral com menos de 25% da
- *    largura da tela (ver .drawer no Header.module.css), com o restante da
- *    tela escurecido (overlay) e clicável para fechar o menu.
- */
 function Header() {
   const [menuAberto, setMenuAberto] = useState(false);
+  const botaoMenuRef = useRef(null);
+  const drawerRef = useRef(null);
   const location = useLocation();
   const { isGerente, isAuthenticated } = useAuth();
-  const links = isGerente ? LINKS_GERENTE : LINKS_FUNCIONARIO;
+  const links = isAuthenticated
+    ? (isGerente ? LINKS_GERENTE : LINKS_FUNCIONARIO)
+    : [{ to: '/login', label: 'Login' }];
+  const paginaAtual = links.find((link) => location.pathname === link.to || location.pathname.startsWith(`${link.to}/`));
 
-  // fecha o menu automaticamente ao navegar para outra tela
   useEffect(() => {
-    setMenuAberto(false);
-  }, [location.pathname]);
+    if (!menuAberto) return undefined;
 
-  // permite fechar o menu com a tecla Esc
-  useEffect(() => {
+    const botaoMenu = botaoMenuRef.current;
+    const overflowAnterior = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    drawerRef.current?.querySelector('button')?.focus();
+
     function aoPressionarTecla(evento) {
       if (evento.key === "Escape") setMenuAberto(false);
+      if (evento.key !== 'Tab') return;
+      const elementos = drawerRef.current?.querySelectorAll('button, a[href]');
+      if (!elementos?.length) return;
+      const primeiro = elementos[0];
+      const ultimo = elementos[elementos.length - 1];
+      if (evento.shiftKey && document.activeElement === primeiro) {
+        evento.preventDefault();
+        ultimo.focus();
+      } else if (!evento.shiftKey && document.activeElement === ultimo) {
+        evento.preventDefault();
+        primeiro.focus();
+      }
     }
     document.addEventListener("keydown", aoPressionarTecla);
-    return () => document.removeEventListener("keydown", aoPressionarTecla);
-  }, []);
+    return () => {
+      document.removeEventListener("keydown", aoPressionarTecla);
+      document.body.style.overflow = overflowAnterior;
+      botaoMenu?.focus();
+    };
+  }, [menuAberto]);
 
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>
-        <div className={styles.logoCircle}>K</div>
-        <h1 className={styles.companyName}>Kento Café</h1>
-      </div>
+      <div className={styles.conteudo}>
+        <Link to={isAuthenticated ? (isGerente ? '/dashboard' : '/cardapio') : '/login'} className={styles.logo}>
+          <div className={styles.logoCircle} aria-hidden="true">K</div>
+          <h1 className={styles.companyName}>Kento Café</h1>
+        </Link>
 
-      <button
-        type="button"
-        className={styles.botaoMenu}
-        onClick={() => setMenuAberto(true)}
-        aria-label="Abrir menu de navegação"
-        aria-expanded={menuAberto}
-      >
-        <span className={styles.linhaHamburguer} />
-        <span className={styles.linhaHamburguer} />
-        <span className={styles.linhaHamburguer} />
-      </button>
+        <span className={styles.paginaAtual}>{paginaAtual?.label}</span>
+
+        <button
+          type="button"
+          className={styles.botaoMenu}
+          ref={botaoMenuRef}
+          onClick={() => setMenuAberto(true)}
+          aria-label="Abrir menu de navegação"
+          aria-expanded={menuAberto}
+          aria-controls={menuAberto ? 'menu-navegacao' : undefined}
+        >
+          <span className={styles.linhaHamburguer} />
+          <span className={styles.linhaHamburguer} />
+          <span className={styles.linhaHamburguer} />
+        </button>
+      </div>
 
       {menuAberto && (
         <div className={styles.overlay} onClick={() => setMenuAberto(false)}>
-          <nav
+          <div
+            id="menu-navegacao"
             className={styles.drawer}
+            ref={drawerRef}
+            role="dialog"
+            aria-modal="true"
             aria-label="Menu de navegação"
             onClick={(evento) => evento.stopPropagation()}
           >
             <div className={styles.drawerHeader}>
-              <span className={styles.drawerTitulo}>Menu</span>
+              <span className={styles.drawerTitulo}>Kento Café · Menu</span>
               <button
                 type="button"
                 className={styles.botaoFechar}
@@ -92,29 +111,26 @@ function Header() {
               </button>
             </div>
 
-            <ul className={styles.listaLinks}>
-              {links.map((link) => (
-                <li key={link.to}>
-                  <Link
-                    to={link.to}
-                    className={`${styles.link} ${
-                      location.pathname === link.to ? styles.linkAtivo : ""
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+            <nav aria-label="Páginas da aplicação" className={styles.navegacao}>
+              <ul className={styles.listaLinks}>
+                {links.map((link) => (
+                  <li key={link.to}>
+                    <Link
+                      to={link.to}
+                      onClick={() => setMenuAberto(false)}
+                      aria-current={paginaAtual?.to === link.to ? 'page' : undefined}
+                      className={`${styles.link} ${
+                        paginaAtual?.to === link.to ? styles.linkAtivo : ""
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
 
-              {!isAuthenticated && (
-                <li>
-                  <Link to="/login" className={`${styles.link} ${location.pathname === '/login' ? styles.linkAtivo : ''}`}>
-                    Login
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </nav>
+              </ul>
+            </nav>
+          </div>
         </div>
       )}
     </header>

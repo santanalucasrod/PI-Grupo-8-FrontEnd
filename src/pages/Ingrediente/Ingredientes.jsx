@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../providers/axiosClient';
 import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa';
+import { normalizarTexto } from '../../utils/pesquisa';
+import { authHeader } from '../../utils/authHeader';
 import Footer from '../../components/ListarProdutos/FooterListarProdutos';
 import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Ingredientes.module.css';
@@ -17,31 +19,34 @@ function Ingredientes() {
     const [ingredienteExcluir, setIngredienteExcluir] = useState(null);
     const navigate = useNavigate();
 
-    function configuracao() {
-        return { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-    }
-
-    function carregarIngredientes() {
-        return api.get('/ingredientes', configuracao())
-            .then((resposta) => setIngredientes(resposta.data))
-            .catch(() => setErro('Nao foi possivel carregar os ingredientes.'))
+    const carregarIngredientes = useCallback(() => {
+        return api.get('/ingredientes', { headers: authHeader() })
+            .then((resposta) => {
+                setIngredientes(Array.isArray(resposta.data) ? resposta.data : []);
+                setErro('');
+            })
+            .catch(() => setErro('Não foi possível carregar os ingredientes.'))
             .finally(() => setCarregando(false));
-    }
+    }, []);
 
     useEffect(() => {
         carregarIngredientes();
-    }, []);
+    }, [carregarIngredientes]);
 
     function confirmarExclusaoIngrediente() {
         if (!ingredienteExcluir?.id) return;
 
-        api.delete(`/ingredientes/${ingredienteExcluir.id}`, configuracao())
+        api.delete(`/ingredientes/${ingredienteExcluir.id}`, { headers: authHeader() })
             .then(() => {
                 setIngredienteExcluir(null);
                 carregarIngredientes();
             })
-            .catch(() => setErro('Nao foi possivel excluir o ingrediente.'));
+            .catch(() => setErro('Não foi possível excluir o ingrediente.'));
     }
+
+    const ingredientesFiltrados = ingredientes.filter((ingrediente) =>
+        normalizarTexto(ingrediente.nome).includes(normalizarTexto(termo))
+    );
 
     const colunas = [
         { chave: 'nome', titulo: 'Nome' },
@@ -76,7 +81,10 @@ function Ingredientes() {
                         </div>
                         <Pesquisa valor={termo} aoPesquisar={setTermo} />
                     </div>
-                    {erro ? <p className={styles.erro}>{erro}</p> : <ListaItens itens={ingredientes} colunas={colunas} carregando={carregando} />}
+                    {erro ? <p className={styles.erro}>{erro}</p> : (
+                        <ListaItens itens={ingredientesFiltrados} colunas={colunas} carregando={carregando}
+                            mensagemVazia={normalizarTexto(termo) ? 'Nenhum ingrediente encontrado para esta pesquisa.' : 'Nenhum ingrediente cadastrado.'} />
+                    )}
                 </section>
             </main>
             <Footer onClickAdd={() => navigate('/ingredientes/cadastro')} texto="Adicionar Ingrediente" />

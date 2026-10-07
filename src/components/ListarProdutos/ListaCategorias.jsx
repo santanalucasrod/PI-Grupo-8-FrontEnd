@@ -21,7 +21,7 @@ export default function ListaCategorias({ titulo, produtos, onProductClick }) {
       
       <div className={styles.wrapper_trilho}>
         
-        <button className={`${styles.seta} ${styles.seta_esquerda}`} onClick={() => rolar('esquerda')}>
+        <button type="button" aria-label={`Ver produtos anteriores de ${titulo}`} className={`${styles.seta} ${styles.seta_esquerda}`} onClick={() => rolar('esquerda')}>
           &#10094;
         </button>
 
@@ -32,12 +32,11 @@ export default function ListaCategorias({ titulo, produtos, onProductClick }) {
               imagem={produto.imagem}
               nome={produto.nome}
               preco={produto.preco}
-              selecionado={produto.selecionado}
               onClick={() => onProductClick && onProductClick(produto)}
             />
           ))}
         </div>
-        <button className={`${styles.seta} ${styles.seta_direita}`} onClick={() => rolar('direita')}>
+        <button type="button" aria-label={`Ver próximos produtos de ${titulo}`} className={`${styles.seta} ${styles.seta_direita}`} onClick={() => rolar('direita')}>
           &#10095;
         </button>
 

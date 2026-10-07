@@ -35,13 +35,13 @@ function CadastroPersonalizacao() {
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )
                 .then(() => {
-                    setErro('Personalizacao atualizada com sucesso!');
+                    setErro('Personalização atualizada com sucesso!');
                     setMostrarErro(true);
 
                     setTimeout(() => navigate('/personalizacoes'), 1000);
                 })
                 .catch(() => {
-                    setErro('Erro ao atualizar personalizacao.');
+                    setErro('Erro ao atualizar personalização.');
                     setMostrarErro(true);
 
                     setTimeout(() => {
@@ -56,13 +56,13 @@ function CadastroPersonalizacao() {
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             )
                 .then(() => {
-                    setErro('Personalizacao cadastrada com sucesso!');
+                    setErro('Personalização cadastrada com sucesso!');
                     setMostrarErro(true);
 
                     setTimeout(() => navigate('/personalizacoes'), 1000);
                 })
                 .catch(() => {
-                    setErro('Erro ao cadastrar personalizacao.');
+                    setErro('Erro ao cadastrar personalização.');
                     setMostrarErro(true);
 
                     setTimeout(() => {
@@ -83,7 +83,7 @@ function CadastroPersonalizacao() {
         }
     ];
 
-    const titulo = estaEditando ? 'Editar Personalizacao' : 'Adicionar Personalizacao';
+    const titulo = estaEditando ? 'Editar Personalização' : 'Adicionar Personalização';
 
     return (
         <>

@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../providers/axiosClient';
 import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa';
+import { normalizarTexto } from '../../utils/pesquisa';
+import { authHeader } from '../../utils/authHeader';
 import Footer from '../../components/ListarProdutos/FooterListarProdutos';
 import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Categorias.module.css';
@@ -17,31 +19,34 @@ function Categorias() {
     const [categoriaExcluir, setCategoriaExcluir] = useState(null);
     const navigate = useNavigate();
 
-    function configuracao() {
-        return { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } };
-    }
-
-    function carregarCategorias() {
-        return api.get('/categorias', configuracao())
-            .then((resposta) => setCategorias(resposta.data))
-            .catch(() => setErro('Nao foi possivel carregar as categorias.'))
+    const carregarCategorias = useCallback(() => {
+        return api.get('/categorias', { headers: authHeader() })
+            .then((resposta) => {
+                setCategorias(Array.isArray(resposta.data) ? resposta.data : []);
+                setErro('');
+            })
+            .catch(() => setErro('Não foi possível carregar as categorias.'))
             .finally(() => setCarregando(false));
-    }
+    }, []);
 
     useEffect(() => {
         carregarCategorias();
-    }, []);
+    }, [carregarCategorias]);
 
     function confirmarExclusaoCategoria() {
         if (!categoriaExcluir?.id) return;
 
-        api.delete(`/categorias/${categoriaExcluir.id}`, configuracao())
+        api.delete(`/categorias/${categoriaExcluir.id}`, { headers: authHeader() })
             .then(() => {
                 setCategoriaExcluir(null);
                 carregarCategorias();
             })
-            .catch(() => setErro('Nao foi possivel excluir a categoria.'));
+            .catch(() => setErro('Não foi possível excluir a categoria.'));
     }
+
+    const categoriasFiltradas = categorias.filter((categoria) =>
+        normalizarTexto(categoria.nome).includes(normalizarTexto(termo))
+    );
 
     const colunas = [
         { chave: 'nome', titulo: 'Nome' },
@@ -76,7 +81,10 @@ function Categorias() {
                         </div>
                         <Pesquisa valor={termo} aoPesquisar={setTermo} />
                     </div>
-                    {erro ? <p className={styles.erro}>{erro}</p> : <ListaItens itens={categorias} colunas={colunas} carregando={carregando} />}
+                    {erro ? <p className={styles.erro}>{erro}</p> : (
+                        <ListaItens itens={categoriasFiltradas} colunas={colunas} carregando={carregando}
+                            mensagemVazia={normalizarTexto(termo) ? 'Nenhuma categoria encontrada para esta pesquisa.' : 'Nenhuma categoria cadastrada.'} />
+                    )}
                 </section>
             </main>
             <Footer onClickAdd={() => navigate('/categorias/cadastro')} texto="Adicionar Categoria" />

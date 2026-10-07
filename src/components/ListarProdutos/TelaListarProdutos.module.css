@@ -1,0 +1,63 @@
+.pagina {
+  flex: 1;
+  background: var(--color-background);
+}
+
+.main {
+  padding: 48px 24px calc(112px + env(safe-area-inset-bottom));
+}
+
+.conteudo {
+  width: min(100%, 960px);
+  margin: 0 auto;
+  text-align: left;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--color-brown);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.titulo {
+  margin: 0;
+  color: #333;
+  font-size: 28px;
+}
+
+.mensagem {
+  padding: 32px 16px;
+  text-align: center;
+  color: #777;
+}
+
+.erro {
+  padding: 16px;
+  color: #9b2c2c;
+  background: #fff5f5;
+  border: 1px solid #f1caca;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: 32px 16px calc(104px + env(safe-area-inset-bottom));
+  }
+
+  .cabecalho {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

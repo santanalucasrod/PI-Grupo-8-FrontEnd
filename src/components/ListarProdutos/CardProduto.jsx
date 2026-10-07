@@ -1,9 +1,9 @@
 import styles from './CardProduto.module.css';
 import ImagemPadrao from '../../assets/img-cafe.png';
 
-export default function CardProduto({ imagem, nome, preco, selecionado, onClick }) {
+export default function CardProduto({ imagem, nome, preco, onClick }) {
   return (
-    <div className={styles.card} onClick={onClick}>
+    <button type="button" className={styles.card} onClick={onClick}>
       <div className={styles.container_img}>
         <img
           src={imagem || ImagemPadrao}
@@ -13,6 +13,6 @@ export default function CardProduto({ imagem, nome, preco, selecionado, onClick 
       </div>
       <p className={styles.nome}>{nome}</p>
       <p className={styles.preco}>R${preco}</p>
-    </div>
+    </button>
   );
 }
