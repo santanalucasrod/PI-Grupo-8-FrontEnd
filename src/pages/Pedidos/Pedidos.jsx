@@ -102,6 +102,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
   *  - GET   /pedidos?ativos=true            -> lista pedidos PENDENTE/EM_PREPARO
   *  - PATCH /pedidos/itens/{itemId}/pronto  -> marca/desmarca um item como pronto
   *  - PATCH /pedidos/{id}/status            -> move o pedido entre PENDENTE/EM_PREPARO/PRONTO
+  *  - PATCH /pedidos/{id}/cancelar          -> cancela o pedido (some da fila)
   *
   * ItemResponse retorna personalizacoes (lista de nomes) e observacao por item.
   * PedidoResponse.descricao contém as observações gerais do pedido.
@@ -269,6 +270,28 @@ import { useState, useEffect, useRef, useCallback } from "react";
      }, "Não foi possível concluir o pedido.");
    }
 
+   async function cancelarPedido(pedido) {
+     if (mutacoesEmAndamento.current > 0) return;
+     if (!window.confirm(`Cancelar o pedido de ${nomePedido(pedido)}?`)) return;
+
+     const removerDaTela = () => {
+       setPedidos((atual) => atual.filter((p) => p.id !== pedido.id));
+       setPopoverAberto((aberto) => (aberto === pedido.id ? null : aberto));
+     };
+
+     if (USAR_DADOS_MOCK) {
+       removerDaTela();
+       return;
+     }
+
+     await executarMutacao(async () => {
+       await api.patch(`/pedidos/${pedido.id}/cancelar`, null, {
+         headers: authHeader(),
+       });
+       removerDaTela();
+     }, "Não foi possível cancelar o pedido.");
+   }
+
    async function devolverParaFila(pedidoId) {
      if (mutacoesEmAndamento.current > 0) return;
      if (USAR_DADOS_MOCK) {
@@ -326,6 +349,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                    onFecharPopover={() => setPopoverAberto(null)}
                    onAlternarItem={alternarItemPronto}
                    onConcluir={() => concluirPedido(pedido.id)}
+                   onCancelar={() => cancelarPedido(pedido)}
                    onDevolver={() => devolverParaFila(pedido.id)}
                    atualizando={atualizando}
                  />
@@ -346,6 +370,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
                    jaEmPreparo={pedido.status === "EM_PREPARO"}
                    bloqueado={atualizando || pedido.status === "EM_PREPARO" || todosEmPreparo.length >= MAX_CARDS_ATIVOS}
                    onIniciar={() => iniciarPreparo(pedido.id)}
+                   onCancelar={() => cancelarPedido(pedido)}
                    onDevolver={() => devolverParaFila(pedido.id)}
                    atualizando={atualizando}
                  />
@@ -368,6 +393,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
    onFecharPopover,
    onAlternarItem,
    onConcluir,
+   onCancelar,
    onDevolver,
    atualizando,
  }) {
@@ -391,6 +417,16 @@ import { useState, useEffect, useRef, useCallback } from "react";
            {tudoPronto && "✓"}
          </button>
          <span className={styles.nomeCliente}>{nomePedido(pedido)}</span>
+
+         <button
+           type="button"
+           className={styles.botaoCancelar}
+           onClick={onCancelar}
+           disabled={atualizando}
+           title="Cancelar pedido"
+         >
+           Cancelar
+         </button>
  
          {temObservacaoGeral && (
            <button
@@ -464,7 +500,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
    );
  }
  
- function CardPedidoFila({ pedido, bloqueado, jaEmPreparo, onIniciar, onDevolver, atualizando }) {
+ function CardPedidoFila({ pedido, bloqueado, jaEmPreparo, onIniciar, onCancelar, onDevolver, atualizando }) {
    return (
      <div className={styles.cardFila}>
        <button
@@ -500,6 +536,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
              {jaEmPreparo ? "☕ Em preparo · aguardando vaga" : "🔒 Aguardando vaga"}
            </div>
          )}
+       </button>
+       <button type="button" className={styles.botaoCancelarFila} onClick={onCancelar} disabled={atualizando}>
+         Cancelar pedido
        </button>
        {jaEmPreparo && (
          <button type="button" className={styles.botaoDevolver} onClick={onDevolver} disabled={atualizando}>

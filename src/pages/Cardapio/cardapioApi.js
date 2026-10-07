@@ -69,6 +69,23 @@ export async function buscarPersonalizacoesPorProduto(id, signal) {
     .map((item) => ({ id: Number(item.id), nome: String(item.nome).trim() }));
 }
 
+export async function buscarTamanhosPorProduto(id, signal) {
+  const produtoId = inteiroPositivo(id);
+  if (!produtoId) throw new Error('Produto inválido.');
+
+  const resposta = await api.get(`/produtos/${produtoId}/tamanhos`, configuracao(signal));
+
+  return (Array.isArray(resposta.data) ? resposta.data : [])
+    .filter((item) => inteiroPositivo(item?.tamanhoId) && Number.isFinite(Number(item?.precoUnidade)))
+    .map((item) => ({
+      id: Number(item.tamanhoId),
+      nome: String(item.nomeTamanho || '').trim(),
+      volumeMl: Number(item.volumeMl) || null,
+      precoUnidade: Number(item.precoUnidade),
+    }))
+    .sort((a, b) => (a.volumeMl ?? 0) - (b.volumeMl ?? 0));
+}
+
 export function resolverImagemProduto(pathFt) {
   const caminho = String(pathFt || '').trim();
   if (!caminho) return null;

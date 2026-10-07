@@ -58,7 +58,10 @@ export default function Sacola() {
               {itens.map((item) => (
                 <li key={item.cartItemId} className={styles.item}>
                   <div className={styles.itemDescricao}>
-                    <strong>{item.nome}</strong>
+                    <strong>
+                      {item.nome}
+                      {item.tamanhoNome ? ` · ${item.tamanhoNome}` : ''}
+                    </strong>
                     {item.personalizacoes?.length > 0 && (
                       <span>
                         {item.personalizacoes

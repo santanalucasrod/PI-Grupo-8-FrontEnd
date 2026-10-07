@@ -15,12 +15,22 @@ export default function ModalProdutoCardapio({
   personalizacoesDisponiveis = [],
   carregandoPersonalizacoes,
   avisoPersonalizacoes,
+  tamanhos = [],
+  carregandoTamanhos,
+  avisoTamanhos,
   onAdicionar,
   onFechar,
 }) {
   const painelRef = useRef(null);
   const [quantidade, setQuantidade] = useState(1);
   const [quantidadesPersonalizacoes, setQuantidadesPersonalizacoes] = useState({});
+  const [tamanhoId, setTamanhoId] = useState(null);
+
+  const tamanhoSelecionado = tamanhos.find((tamanho) => tamanho.id === tamanhoId) || null;
+  // Produto com tamanhos cadastrados só pode ir para a sacola com um tamanho escolhido.
+  const exigeTamanho = tamanhos.length > 0;
+  const podeAdicionar = !carregandoTamanhos && (!exigeTamanho || tamanhoSelecionado);
+  const precoExibido = tamanhoSelecionado ? tamanhoSelecionado.precoUnidade : produto.precoUnidade;
 
   useEffect(() => {
     const elementoAnterior = document.activeElement;
@@ -63,6 +73,8 @@ export default function ModalProdutoCardapio({
   }
 
   function adicionarNaSacola() {
+    if (!podeAdicionar) return;
+
     const personalizacoes = personalizacoesDisponiveis
       .map((item) => ({
         ...item,
@@ -73,6 +85,7 @@ export default function ModalProdutoCardapio({
     onAdicionar({
       quantidade,
       personalizacoes,
+      tamanho: tamanhoSelecionado,
     });
   }
 
@@ -126,7 +139,11 @@ export default function ModalProdutoCardapio({
               </div>
               <div className={styles.linhaDado}>
                 <dt>Preço</dt>
-                <dd>R$ {formatarPreco(produto.precoUnidade)}</dd>
+                <dd>
+                  {exigeTamanho && !tamanhoSelecionado
+                    ? `a partir de R$ ${formatarPreco(Math.min(...tamanhos.map((t) => t.precoUnidade)))}`
+                    : `R$ ${formatarPreco(precoExibido)}`}
+                </dd>
               </div>
             </dl>
 
@@ -134,6 +151,36 @@ export default function ModalProdutoCardapio({
               <h3>Descrição</h3>
               <p>{produto.descricao || 'Sem descrição.'}</p>
             </div>
+
+            {(carregandoTamanhos || avisoTamanhos || exigeTamanho) && (
+              <section className={styles.tamanhos}>
+                <h3>Tamanho</h3>
+                {carregandoTamanhos && <p>Carregando tamanhos...</p>}
+                {!carregandoTamanhos && avisoTamanhos && (
+                  <p className={styles.aviso}>{avisoTamanhos}</p>
+                )}
+                {!carregandoTamanhos && exigeTamanho && (
+                  <div className={styles.opcoesTamanho} role="radiogroup" aria-label="Tamanho">
+                    {tamanhos.map((tamanho) => (
+                      <button
+                        key={tamanho.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={tamanho.id === tamanhoId}
+                        className={`${styles.opcaoTamanho} ${
+                          tamanho.id === tamanhoId ? styles.opcaoTamanhoAtiva : ''
+                        }`}
+                        onClick={() => setTamanhoId(tamanho.id)}
+                      >
+                        <strong>{tamanho.nome}</strong>
+                        {tamanho.volumeMl && <span>{tamanho.volumeMl} ml</span>}
+                        <span>R$ {formatarPreco(tamanho.precoUnidade)}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
 
             <div className={styles.linhaControle}>
               <span>Quantidade</span>
@@ -191,8 +238,14 @@ export default function ModalProdutoCardapio({
               })}
             </section>
 
-            <button type="button" className={styles.adicionar} onClick={adicionarNaSacola}>
-              Adicionar à sacola
+            <button
+              type="button"
+              className={styles.adicionar}
+              onClick={adicionarNaSacola}
+              disabled={!podeAdicionar}
+              title={podeAdicionar ? undefined : 'Escolha um tamanho'}
+            >
+              {exigeTamanho && !tamanhoSelecionado ? 'Escolha um tamanho' : 'Adicionar à sacola'}
             </button>
           </div>
         </div>
