@@ -263,7 +263,7 @@ export default function TelaCadastrarProduto() {
         return;
       }
 
-      navigate('/produtos');
+      navigate('/produtos', { state: { produtoCriado: produtoAtual } });
     } catch (err) {
       console.error('Erro ao cadastrar produto:', err);
       setErroSalvar('Não foi possível cadastrar o produto. Tente novamente.');

@@ -68,6 +68,59 @@
     border-radius: 4px;
 }
 
+.paginacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 16px;
+    border-top: 1px solid #ededed;
+}
+
+.botaoPagina {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    min-height: 40px;
+    padding: 4px 10px;
+    border: 1px solid #8b6a52;
+    border-radius: 4px;
+    color: #4b3527;
+    background: #f5f0ec;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.botaoPagina:focus-visible {
+    outline: 3px solid #8b6a52;
+    outline-offset: 2px;
+}
+
+.botaoPagina:hover:not(:disabled),
+.paginaAtual {
+    border-color: #4b3527;
+    color: #fff;
+    background: #4b3527;
+}
+
+.botaoPagina:disabled {
+    border-color: #c6bdb7;
+    color: #857c76;
+    background: #f0eeec;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.statusPagina {
+    color: #333;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
 @media screen and (max-width: 700px) {
     .tabela th,
     .tabela td {
@@ -100,5 +153,21 @@
 
     .scrollSuperiorConteudo {
         height: 1px;
+    }
+
+    .paginacao {
+        gap: 8px;
+        padding: 12px 6px;
+    }
+
+    .botaoPagina {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 4px 8px;
+        font-size: 21px;
+    }
+
+    .statusPagina {
+        font-size: 13px;
     }
 }

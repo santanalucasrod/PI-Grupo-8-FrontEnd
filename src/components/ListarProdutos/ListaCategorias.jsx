@@ -28,6 +28,7 @@ export default function ListaCategorias({ titulo, produtos, onProductClick }) {
         <div className={styles.trilho_produtos} ref={trilhoRef}>
           {produtos.map((produto) => (
             <CardProduto 
+              id={produto.id}
               key={produto.id}
               imagem={produto.imagem}
               nome={produto.nome}

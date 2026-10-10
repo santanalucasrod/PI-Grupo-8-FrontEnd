@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../providers/axiosClient';
 import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa';
+import { interpretarRespostaPaginada } from '../../utils/respostaPaginada';
 import Footer from '../../components/ListarProdutos/FooterListarProdutos';
 import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Funcionarios.module.css';
@@ -11,6 +12,8 @@ import deletarIcone from '../../assets/lixeiraicon.png';
 
 function Funcionarios() {
     const [funcionarios, setFuncionarios] = useState([]);
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(null);
     const [termo, setTermo] = useState('');
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
@@ -27,13 +30,24 @@ function Funcionarios() {
 
     function carregarFuncionarios() {
 
-        return api.get('/funcionarios/crud', configuracao())
+        setCarregando(true);
+        return api.get('/funcionarios/crud', {
+            ...configuracao(),
+            params: { page: paginaAtual, size: 7 }
+        })
             .then((resposta) => {
-                const funcionariosAtivos = resposta.data.filter(
+                const pagina = interpretarRespostaPaginada(resposta.data);
+                const funcionariosAtivos = pagina.itens.filter(
                     (funcionario) => funcionario.ativo === true
                 );
 
                 setFuncionarios(funcionariosAtivos);
+                setTotalPaginas(pagina.totalPaginas);
+                if (pagina.totalPaginas !== null) {
+                    const ultimaPagina = Math.max(pagina.totalPaginas - 1, 0);
+                    const paginaValida = Math.min(pagina.paginaAtual, ultimaPagina);
+                    if (paginaValida !== paginaAtual) setPaginaAtual(paginaValida);
+                }
             })
             .catch(() => {
                 setErro('Nao foi possivel carregar os funcionarios.');
@@ -45,7 +59,7 @@ function Funcionarios() {
 
     useEffect(() => {
         carregarFuncionarios();
-    }, []);
+    }, [paginaAtual]);
 
     function editarFuncionario(funcionario) {
         navigate('/funcionarios/cadastro', { state: { editar: true, funcionario } });
@@ -97,10 +111,24 @@ function Funcionarios() {
                         <p className={styles.eyebrow}>Gerenciamento</p>
                         <h2 className={styles.titulo}>Funcionarios</h2>
                     </div>
-                    <Pesquisa valor={termo} aoPesquisar={setTermo} />
+                    <Pesquisa
+                        valor={termo}
+                        aoPesquisar={(valor) => {
+                            setTermo(valor);
+                            setPaginaAtual(0);
+                        }}
+                    />
                 </div>
                 {erro ? <p className={styles.erro}>{erro}</p> : (
-                    <ListaItens itens={funcionariosFiltrados} colunas={colunas} carregando={carregando} />
+                    <ListaItens
+                        key={termo}
+                        itens={funcionariosFiltrados}
+                        colunas={colunas}
+                        carregando={carregando}
+                        paginaAtualExterna={paginaAtual}
+                        totalPaginasExterno={totalPaginas}
+                        aoMudarPagina={setPaginaAtual}
+                    />
                 )}
             </section>
         </main>

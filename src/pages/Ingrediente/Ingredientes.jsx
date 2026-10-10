@@ -5,6 +5,7 @@ import ListaItens from '../../components/ListaItens/ListaItens';
 import Pesquisa from '../../components/Pesquisa/Pesquisa';
 import { normalizarTexto } from '../../utils/pesquisa';
 import { authHeader } from '../../utils/authHeader';
+import { interpretarRespostaPaginada } from '../../utils/respostaPaginada';
 import Footer from '../../components/ListarProdutos/FooterListarProdutos';
 import ModalExcluir from '../../components/Modais/ModalExcluir';
 import styles from './Ingredientes.module.css';
@@ -13,6 +14,8 @@ import deletarIcone from '../../assets/lixeiraicon.png';
 
 function Ingredientes() {
     const [ingredientes, setIngredientes] = useState([]);
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(null);
     const [termo, setTermo] = useState('');
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
@@ -20,14 +23,25 @@ function Ingredientes() {
     const navigate = useNavigate();
 
     const carregarIngredientes = useCallback(() => {
-        return api.get('/ingredientes', { headers: authHeader() })
+        setCarregando(true);
+        return api.get('/ingredientes', {
+            headers: authHeader(),
+            params: { page: paginaAtual, size: 7 }
+        })
             .then((resposta) => {
-                setIngredientes(Array.isArray(resposta.data) ? resposta.data : []);
+                const pagina = interpretarRespostaPaginada(resposta.data);
+                setIngredientes(pagina.itens);
+                setTotalPaginas(pagina.totalPaginas);
+                if (pagina.totalPaginas !== null) {
+                    const ultimaPagina = Math.max(pagina.totalPaginas - 1, 0);
+                    const paginaValida = Math.min(pagina.paginaAtual, ultimaPagina);
+                    if (paginaValida !== paginaAtual) setPaginaAtual(paginaValida);
+                }
                 setErro('');
             })
             .catch(() => setErro('Não foi possível carregar os ingredientes.'))
             .finally(() => setCarregando(false));
-    }, []);
+    }, [paginaAtual]);
 
     useEffect(() => {
         carregarIngredientes();
@@ -79,10 +93,23 @@ function Ingredientes() {
                             <p className={styles.eyebrow}>Gerenciamento</p>
                             <h2 className={styles.titulo}>Ingredientes</h2>
                         </div>
-                        <Pesquisa valor={termo} aoPesquisar={setTermo} />
+                        <Pesquisa
+                            valor={termo}
+                            aoPesquisar={(valor) => {
+                                setTermo(valor);
+                                setPaginaAtual(0);
+                            }}
+                        />
                     </div>
                     {erro ? <p className={styles.erro}>{erro}</p> : (
-                        <ListaItens itens={ingredientesFiltrados} colunas={colunas} carregando={carregando}
+                        <ListaItens
+                            key={termo}
+                            itens={ingredientesFiltrados}
+                            colunas={colunas}
+                            carregando={carregando}
+                            paginaAtualExterna={paginaAtual}
+                            totalPaginasExterno={totalPaginas}
+                            aoMudarPagina={setPaginaAtual}
                             mensagemVazia={normalizarTexto(termo) ? 'Nenhum ingrediente encontrado para esta pesquisa.' : 'Nenhum ingrediente cadastrado.'} />
                     )}
                 </section>

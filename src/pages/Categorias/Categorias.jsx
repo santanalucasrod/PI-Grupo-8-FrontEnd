@@ -20,6 +20,7 @@ function Categorias() {
     const navigate = useNavigate();
 
     const carregarCategorias = useCallback(() => {
+        setCarregando(true);
         return api.get('/categorias', { headers: authHeader() })
             .then((resposta) => {
                 setCategorias(Array.isArray(resposta.data) ? resposta.data : []);
@@ -79,10 +80,17 @@ function Categorias() {
                             <p className={styles.eyebrow}>Gerenciamento</p>
                             <h2 className={styles.titulo}>Categorias</h2>
                         </div>
-                        <Pesquisa valor={termo} aoPesquisar={setTermo} />
+                        <Pesquisa
+                            valor={termo}
+                            aoPesquisar={setTermo}
+                        />
                     </div>
                     {erro ? <p className={styles.erro}>{erro}</p> : (
-                        <ListaItens itens={categoriasFiltradas} colunas={colunas} carregando={carregando}
+                        <ListaItens
+                            key={termo}
+                            itens={categoriasFiltradas}
+                            colunas={colunas}
+                            carregando={carregando}
                             mensagemVazia={normalizarTexto(termo) ? 'Nenhuma categoria encontrada para esta pesquisa.' : 'Nenhuma categoria cadastrada.'} />
                     )}
                 </section>

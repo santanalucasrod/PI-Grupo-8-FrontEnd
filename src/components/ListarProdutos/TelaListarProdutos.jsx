@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FooterListarProdutos from './FooterListarProdutos';
 import ImagemProduto from '../../assets/img-cafe.png';
 import ListaCategorias from './ListaCategorias';
@@ -26,8 +26,11 @@ function mapearProduto(produto, nomeCategoria) {
 
 export default function TelaListarProdutos() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+  const [produtoCriado, setProdutoCriado] = useState(null);
+  const [produtoParaFocar, setProdutoParaFocar] = useState(null);
   const [mostrarModalExcluir, setMostrarModalExcluir] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
   const [erroExcluir, setErroExcluir] = useState(null);
@@ -37,6 +40,13 @@ export default function TelaListarProdutos() {
   const [erro, setErro] = useState(null);
   const [termo, setTermo] = useState('');
   const [categoriaAtiva, setCategoriaAtiva] = useState(null);
+
+  useEffect(() => {
+    if (!location.state?.produtoCriado) return;
+
+    setProdutoCriado(location.state.produtoCriado);
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.pathname, location.state, navigate]);
 
   const buscarProdutos = useCallback(async (signal) => {
     try {
@@ -60,6 +70,34 @@ export default function TelaListarProdutos() {
       controller.abort();
     };
   }, [buscarProdutos]);
+
+  useEffect(() => {
+    if (!produtoParaFocar) return undefined;
+
+    const frame = requestAnimationFrame(() => {
+      const card = document.getElementById(`produto-${produtoParaFocar}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        card.focus({ preventScroll: true });
+        setProdutoParaFocar(null);
+      }
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [produtoParaFocar, produtosAgrupados, categoriaAtiva, termo]);
+
+  const handleVerProdutoCriado = () => {
+    if (!produtoCriado?.id) return;
+
+    const categoriaEncontrada = Object.entries(produtosAgrupados).find(([, produtos]) =>
+      Array.isArray(produtos) && produtos.some((produto) => String(produto.id) === String(produtoCriado.id))
+    )?.[0];
+
+    setTermo('');
+    setCategoriaAtiva(categoriaEncontrada || produtoCriado.categoria?.nome || null);
+    setProdutoParaFocar(String(produtoCriado.id));
+    setProdutoCriado(null);
+  };
 
   const handleCardClick = (produto) => {
     setProdutoSelecionado(produto);
@@ -129,6 +167,14 @@ export default function TelaListarProdutos() {
             </div>
             <Pesquisa valor={termo} aoPesquisar={setTermo} placeholder="Pesquisar produto" />
           </div>
+          {produtoCriado && (
+            <div className={styles.sucessoCadastro} role="status">
+              <span>Produto “{produtoCriado.nome}” cadastrado com sucesso.</span>
+              <button type="button" onClick={handleVerProdutoCriado}>
+                Ver na lista
+              </button>
+            </div>
+          )}
           <AbasCategoria categorias={categorias} abaAtiva={categoriaAtiva} onSelecionar={setCategoriaAtiva} />
           <div aria-live="polite">
             {carregando && (
