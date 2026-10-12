@@ -53,7 +53,7 @@ function Perfil() {
     }
 
     const usuarioAtual = getUsuarioInfo();
-    const funcionarioId = usuarioAtual.id ?? usuario?.id ?? Number(localStorage.getItem('funcionarioId')) ?? null;
+    const funcionarioId = usuarioAtual.id ?? usuario?.id ?? null;
 
     if (!funcionarioId) {
       setErro('Não foi possível identificar o usuário logado.');

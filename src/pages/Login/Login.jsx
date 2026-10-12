@@ -47,7 +47,6 @@ function Login() {
                 };
                 const gerente = json.gerente ?? false;
 
-                localStorage.setItem("token", json.token);
                 loginAuth({
                     token: json.token,
                     user: usuario,

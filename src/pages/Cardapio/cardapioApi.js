@@ -1,5 +1,6 @@
 import { api } from '../../providers/axiosClient';
 import { authHeader } from '../../utils/authHeader';
+import { getUsuarioInfo } from '../../utils/userSession.js';
 
 export const API_BASE_URL = String(api.defaults.baseURL || '').replace(/\/$/, '');
 
@@ -95,7 +96,7 @@ export function resolverImagemProduto(pathFt) {
 
 export async function criarPedido({ nomeCliente, funcionarioId, itens }) {
   const funcionarioIdResolvido = inteiroPositivo(
-    funcionarioId ?? localStorage.getItem('funcionarioId')
+    funcionarioId ?? getUsuarioInfo().id
   );
 
   if (!funcionarioIdResolvido) {
