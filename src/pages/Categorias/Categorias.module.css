@@ -25,7 +25,7 @@
 
 .eyebrow {
     margin: 0 0 6px;
-    color: #8d5b42;
+    color: var(--theme-accent, #8d5b42);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: .08em;
@@ -34,22 +34,22 @@
 
 .titulo {
     margin: 0;
-    color: #333;
+    color: var(--theme-text, #333);
     font-size: 28px
 }
 
 .erro {
     margin: 0;
     padding: 16px;
-    color: #9b2c2c;
-    background: #fff5f5;
-    border: 1px solid #f1caca;
+    color: var(--theme-danger-text, #9b2c2c);
+    background: var(--theme-danger-surface, #fff5f5);
+    border: 1px solid var(--theme-danger-text, #f1caca);
     border-radius: 4px
 }
 
 .acao {
     padding: 4px 8px;
-    color: #8d5b42;
+    color: var(--theme-accent, #8d5b42);
     font-size: 20px;
     line-height: 1;
     background: transparent;
@@ -58,11 +58,11 @@
 }
 
 .acao:hover {
-    color: #5f3b2b
+    color: var(--theme-accent, #5f3b2b)
 }
 
 .acao.excluir {
-    color: #a33a3a
+    color: var(--theme-danger-text, #a33a3a)
 }
 
 .imagem {
@@ -98,4 +98,7 @@
 
 .botaoAdicionar:hover {
     background: #5f3b2b
+}
+:global(:root[data-theme='dark']) .imagem {
+  filter: brightness(0) invert(0.9);
 }

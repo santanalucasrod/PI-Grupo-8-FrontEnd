@@ -5,7 +5,7 @@
     left: 0;
     width: 100%;
     height: 60px;
-    background-color: #8D5B42;
+    background-color: var(--theme-chrome, #8D5B42);
     color: #FFFFFF;
     display: flex;
     align-items: center;
@@ -32,4 +32,10 @@
     flex-grow: 1;
     text-align: center;
     font-family: 'Poppins', sans-serif;
+}
+
+:global(:root[data-theme='dark']) .header {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

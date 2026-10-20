@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   background: var(--color-background, #f9f9f9);
-  color: #333;
+  color: var(--theme-text, #333);
 }
 
 .main {
@@ -31,7 +31,7 @@
 
 .eyebrow {
   margin: 0 0 6px;
-  color: var(--color-brown, #8d5b42);
+  color: var(--theme-accent, var(--color-brown, #8d5b42));
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -40,7 +40,7 @@
 
 .titulo {
   margin: 0;
-  color: #333;
+  color: var(--theme-text, #333);
   font-size: 28px;
 }
 
@@ -53,15 +53,15 @@
   margin: 0;
   padding: 48px 16px;
   text-align: center;
-  color: #555;
+  color: var(--theme-muted, #555);
   font-size: 14px;
 }
 
 .mensagemErro {
   padding: 16px;
-  color: #9b2c2c;
-  background: #fff5f5;
-  border: 1px solid #f1caca;
+  color: var(--theme-danger-text, #9b2c2c);
+  background: var(--theme-danger-surface, #fff5f5);
+  border: 1px solid var(--theme-danger-text, #f1caca);
   border-radius: 4px;
 }
 

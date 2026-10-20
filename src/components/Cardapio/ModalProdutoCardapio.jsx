@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import ImagemProduto from '../../assets/img-cafe.png';
+import ImagemProduto from '../ImagemProduto';
 import Stepper from './Stepper';
 import styles from './ModalProdutoCardapio.module.css';
 
@@ -121,14 +121,7 @@ export default function ModalProdutoCardapio({
 
         <div className={styles.corpo}>
           <div className={styles.imagemContainer}>
-            <img
-              src={produto.imagem || ImagemProduto}
-              alt={produto.nome}
-              onError={(evento) => {
-                evento.currentTarget.onerror = null;
-                evento.currentTarget.src = ImagemProduto;
-              }}
-            />
+            <ImagemProduto produtoId={produto.id} pathFt={produto.pathFt} alt={produto.nome} />
           </div>
 
           <div className={styles.informacoes}>

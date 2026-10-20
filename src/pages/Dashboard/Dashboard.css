@@ -62,8 +62,8 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-dark);
-  background-color: var(--white);
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: var(--theme-surface, var(--white));
+  border: 1px solid var(--theme-border, rgba(0, 0, 0, 0.15));
   border-radius: 999px;
   padding: 5px 14px;
   cursor: pointer;
@@ -100,8 +100,8 @@ body {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-dark);
-  background-color: var(--white);
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: var(--theme-surface, var(--white));
+  border: 1px solid var(--theme-border, rgba(0, 0, 0, 0.15));
   border-radius: 8px;
   padding: 6px 10px;
   cursor: pointer;
@@ -116,7 +116,7 @@ body {
 .periodo-erro {
   font-size: 13px;
   font-weight: 600;
-  color: #b33c00;
+  color: var(--theme-danger-text, #b33c00);
 }
 
 .periodo-comparacao {
@@ -137,8 +137,8 @@ body {
 }
 
 .dash-erro {
-  color: #8a2c00;
-  background-color: #ffe2d6;
+  color: var(--theme-danger-text, #8a2c00);
+  background-color: var(--theme-danger-surface, #ffe2d6);
 }
 
 .dashboard-conteudo {
@@ -198,9 +198,9 @@ body {
   font-weight: 700;
 }
 
-.kpi-variacao.positiva { color: #2f7a3a; }
-.kpi-variacao.negativa { color: #b33c00; }
-.kpi-variacao.neutra { color: rgba(58, 58, 58, 0.6); }
+.kpi-variacao.positiva { color: var(--theme-success-text, #2f7a3a); }
+.kpi-variacao.negativa { color: var(--theme-danger-text, #b33c00); }
+.kpi-variacao.neutra { color: var(--theme-muted, rgba(58, 58, 58, 0.6)); }
 
 /* ---------- Alerta de equipe ---------- */
 
@@ -214,13 +214,13 @@ body {
 }
 
 .alerta-capacidade.atencao {
-  background-color: #fbeadb;
-  border-color: #D9822B;
+  background-color: var(--theme-danger-surface, #fbeadb);
+  border-color: var(--theme-border, #D9822B);
 }
 
 .alerta-capacidade.ok {
-  background-color: #e6f2e7;
-  border-color: #6EB277;
+  background-color: var(--theme-success-surface, #e6f2e7);
+  border-color: var(--theme-border, #6EB277);
 }
 
 .alerta-horas {
@@ -285,8 +285,8 @@ body {
   bottom: 28px;
   right: 32px;
   background-color: var(--cream-bg);
-  color: var(--brown-dark);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--theme-accent, var(--brown-dark));
+  border: 1px solid var(--theme-border, rgba(0, 0, 0, 0.1));
   border-radius: 32px;
   padding: 16px 30px;
   font-family: 'Barlow', sans-serif;
@@ -345,4 +345,12 @@ body {
     padding: 12px 22px;
     font-size: 16px;
   }
+}
+
+:root[data-theme='dark'] .periodo-bar,
+:root[data-theme='dark'] .kpi-card,
+:root[data-theme='dark'] .chart-card {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

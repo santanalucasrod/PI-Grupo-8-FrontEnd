@@ -87,13 +87,6 @@ export async function buscarTamanhosPorProduto(id, signal) {
     .sort((a, b) => (a.volumeMl ?? 0) - (b.volumeMl ?? 0));
 }
 
-export function resolverImagemProduto(pathFt) {
-  const caminho = String(pathFt || '').trim();
-  if (!caminho) return null;
-  if (/^https?:\/\//i.test(caminho)) return caminho;
-  return `${API_BASE_URL}/imagens/${caminho.replace(/^\/+/, '')}`;
-}
-
 export async function criarPedido({ nomeCliente, funcionarioId, itens }) {
   const funcionarioIdResolvido = inteiroPositivo(
     funcionarioId ?? getUsuarioInfo().id

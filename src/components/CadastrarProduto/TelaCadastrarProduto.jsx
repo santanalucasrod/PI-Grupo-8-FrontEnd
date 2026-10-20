@@ -22,7 +22,7 @@ export default function TelaCadastrarProduto() {
   const [nome, setNome] = useState('');
   const [preco, setPreco] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [imagem, setImagem] = useState('https://images.unsplash.com/photo-1559525839-b184a4d698c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80');
+  const [imagem, setImagem] = useState('');
   const [arquivoImagem, setArquivoImagem] = useState(null);
 
   const [opcoesCategoria, setOpcoesCategoria] = useState([]);
@@ -138,11 +138,6 @@ export default function TelaCadastrarProduto() {
       nome,
       precoUnidade: Number(preco) || 0,
       descricao,
-      // O backend exige pathFt não-vazio (@NotBlank). Nesse momento ainda não temos o id
-      // real do produto pra montar o nome definitivo da imagem, então mandamos um
-      // placeholder — se o usuário escolheu uma foto, ele é substituído pelo nome real
-      // logo depois, quando enviamos a imagem pra POST /produtos/{id}/imagem.
-      pathFt: 'sem-imagem.jpg',
       categoria: categoriaSelecionada
         ? { id: categoriaSelecionada.id, nome: categoriaSelecionada.nome }
         : { id: 0, nome: categoria },
@@ -193,7 +188,7 @@ export default function TelaCadastrarProduto() {
         categoria: produtoAtual.categoria ?? payload.categoria,
         precoUnidade: produtoAtual.precoUnidade ?? payload.precoUnidade,
         descricao: produtoAtual.descricao ?? payload.descricao,
-        pathFt: produtoAtual.pathFt ?? payload.pathFt,
+        pathFt: produtoAtual.pathFt,
       };
 
       const resultados = await Promise.allSettled(
@@ -390,12 +385,16 @@ export default function TelaCadastrarProduto() {
     setImagem(URL.createObjectURL(arquivo)); // preview local, antes de enviar pro backend
   };
 
+  useEffect(() => () => {
+    if (imagem) URL.revokeObjectURL(imagem);
+  }, [imagem]);
+
   return (
     <div className={styles.container}>
       <Header title="Produtos" onCancel={() => navigate('/produtos')} />
 
       <main className={styles.mainContent}>
-        {erroSalvar && <p style={{ textAlign: 'center', color: '#B00020' }}>{erroSalvar}</p>}
+        {erroSalvar && <p style={{ textAlign: 'center', color: 'var(--theme-danger-text, #B00020)' }}>{erroSalvar}</p>}
 
         <ImageUpload imageSrc={imagem} onFileSelect={handleSelecionarImagem} />
 

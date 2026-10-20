@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../providers/AuthProvider.jsx";
 import styles from "./Header.module.css";
+import ThemeToggle from '../ThemeToggle';
 
 const LINKS_GERENTE = [
   { to: "/dashboard", label: "Dashboard" },
@@ -72,6 +73,8 @@ function Header() {
         </Link>
 
         <span className={styles.paginaAtual}>{paginaAtual?.label}</span>
+
+        <ThemeToggle />
 
         <button
           type="button"

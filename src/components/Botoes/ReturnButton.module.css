@@ -9,3 +9,7 @@
     height: 30px;
     object-fit: contain;
 }
+
+:global(:root[data-theme='dark']) .btn3 img {
+  filter: brightness(0) invert(0.9);
+}

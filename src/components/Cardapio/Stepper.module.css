@@ -28,7 +28,7 @@
 }
 
 .botao:focus-visible {
-  outline: 2px solid #111;
+  outline: 2px solid var(--theme-border, #111);
   outline-offset: 2px;
 }
 

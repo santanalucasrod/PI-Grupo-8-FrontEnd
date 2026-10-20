@@ -4,9 +4,64 @@
   --color-background: #f9f9f9;
   --color-white: #ffffff;
 
-  --color-text: #0000; 
+  --color-text: #333;
 
   --color-success: #6EB277;
   --color-danger: #FFBA9F;
  
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-background: #1c1613;
+  --color-text: #f4e9df;
+  --color-success: #416e48;
+  --color-danger: #56362d;
+  --theme-text: #f4e9df;
+  --theme-muted: #cbb9aa;
+  --theme-accent: #e4b391;
+  --theme-surface: rgb(52 41 34 / 0.86);
+  --theme-surface-muted: rgb(68 53 44 / 0.75);
+  --theme-border: #776052;
+  --theme-chrome: rgb(64 42 31 / 0.88);
+  --theme-danger-text: #ffb7a5;
+  --theme-danger-surface: #503028;
+  --theme-success-text: #b0d7ad;
+  --theme-success-surface: #293f2c;
+  --theme-success-fill: #416e48;
+  --theme-link: #c9c4ff;
+  --theme-blur: blur(16px);
+  --theme-glass-edge: rgb(232 195 165 / 0.16);
+  --theme-chart-grid: rgb(232 195 165 / 0.15);
+  --theme-chart-brown: #d1a07e;
+  --theme-chart-brown-dark: #c69776;
+  /* Tokens já utilizados pelo dashboard. */
+  --cream-bg: #1c1613;
+  --card-bg: var(--theme-surface);
+  --text-dark: var(--theme-text);
+  --text-brown: var(--theme-accent);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* Campos sem fundo explícito também acompanham o tema do navegador. */
+:root[data-theme='dark'] :is(input, textarea, select) {
+  color: var(--theme-text);
+  background-color: #2a211c;
+}
+
+:root[data-theme='dark'] :is(input, textarea)::placeholder {
+  color: var(--theme-muted);
+  opacity: 1;
+}
+
+:root[data-theme='dark'] :focus-visible {
+  outline-color: var(--theme-accent);
 }

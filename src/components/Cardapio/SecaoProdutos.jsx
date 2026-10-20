@@ -1,4 +1,4 @@
-import ImagemPadrao from '../../assets/img-cafe.png';
+import ImagemProduto from '../ImagemProduto';
 import styles from './SecaoProdutos.module.css';
 
 function formatarPreco(valor) {
@@ -21,14 +21,7 @@ export default function SecaoProdutos({ titulo, produtos, onProdutoClick }) {
             aria-label={`${produto.nome}, R$ ${formatarPreco(produto.precoUnidade)}`}
           >
             <span className={styles.imagemContainer}>
-              <img
-                src={produto.imagem || ImagemPadrao}
-                alt=""
-                onError={(evento) => {
-                  evento.currentTarget.onerror = null;
-                  evento.currentTarget.src = ImagemPadrao;
-                }}
-              />
+              <ImagemProduto produtoId={produto.id} pathFt={produto.pathFt} />
             </span>
             <span className={styles.nome}>{produto.nome}</span>
             <span className={styles.preco}>R$ {formatarPreco(produto.precoUnidade)}</span>

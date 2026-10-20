@@ -16,7 +16,7 @@ export default function ModalProduto(props){
                 </div>
 
                 <div className={styles.produto_img}>
-                    <ImagemProdutoModal imagem={props.imagem}></ImagemProdutoModal>
+                    <ImagemProdutoModal produtoId={props.produtoId} pathFt={props.pathFt} nome={props.nome_produto} />
                     <p>{props.nome_produto}</p>
                 </div>
 

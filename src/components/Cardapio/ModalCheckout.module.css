@@ -14,8 +14,8 @@
   max-height: calc(100dvh - 40px);
   padding: 32px 20px 22px;
   border-radius: 6px;
-  background: #fff;
-  color: #111;
+  background: var(--theme-surface, #fff);
+  color: var(--theme-text, #111);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -43,10 +43,10 @@
   width: 100%;
   height: 34px;
   padding: 4px 8px;
-  border: 1px solid #444;
+  border: 1px solid var(--theme-border, #444);
   border-radius: 6px;
-  background: #fff;
-  color: #111;
+  background: var(--theme-surface, #fff);
+  color: var(--theme-text, #111);
   font: 13px Arial, sans-serif;
   box-sizing: border-box;
 }
@@ -54,13 +54,13 @@
 .input:focus-visible,
 .botao:focus-visible,
 .botaoSecundario:focus-visible {
-  outline: 1px solid #111;
+  outline: 1px solid var(--theme-border, #111);
   outline-offset: 1px;
 }
 
 .erro {
   margin: -14px 0 0;
-  color: #a31515;
+  color: var(--theme-danger-text, #a31515);
   font-size: 11px;
 }
 
@@ -87,8 +87,8 @@
 
 .botaoSecundario {
   border: 1px solid var(--color-brown, #8d5b42);
-  background: #fff;
-  color: var(--color-brown, #8d5b42);
+  background: var(--theme-surface, #fff);
+  color: var(--theme-accent, var(--color-brown, #8d5b42));
 }
 
 .botao:disabled {
@@ -120,4 +120,10 @@
   .acoes {
     flex-direction: column-reverse;
   }
+}
+
+:global(:root[data-theme='dark']) .painel {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

@@ -1,35 +1,57 @@
+import { api } from '../../providers/axiosClient';
 import { authHeader } from '../../utils/authHeader';
 
-const API_BASE_URL = '/api';
+// Compartilha inclusive requisições em andamento entre cards, modais e edição.
+// Só guarda blobs em memória; URLs assinadas e credenciais não são persistidas.
+const cache = new Map();
+const VALIDADE = 5 * 60 * 1000;
+const VALIDADE_FALHA = 60 * 1000;
+let autorizacaoAtual;
 
-// Envia a imagem do produto (multipart/form-data) e retorna o produto atualizado (com o novo pathFt)
-export async function enviarImagemProduto(produtoId, arquivo) {
-  const formData = new FormData();
-  formData.append('imagem', arquivo); // nome do campo esperado pelo @RequestParam("imagem") no backend
+export async function carregarImagemProduto(produtoId, pathFt) {
+  const id = Number(produtoId);
+  if (!Number.isSafeInteger(id) || id <= 0 || !String(pathFt || '').trim()) return null;
 
-  const resposta = await fetch(`${API_BASE_URL}/produtos/${produtoId}/imagem`, {
-    method: 'POST',
-    headers: {
-      accept: '*/*',
-      ...authHeader(),
-      // Sem "Content-Type" manual: o browser define o boundary do multipart sozinho.
-    },
-    body: formData,
-  });
-
-  if (!resposta.ok) {
-    let detalhe = '';
-    try {
-      detalhe = await resposta.text();
-    } catch {
-      // ignora falha ao ler o corpo do erro
-    }
-    console.error(
-      `POST ${API_BASE_URL}/produtos/${produtoId}/imagem falhou (${resposta.status}):`,
-      detalhe
-    );
-    throw new Error(`Erro ${resposta.status} ao enviar imagem do produto`);
+  const headers = authHeader();
+  if (autorizacaoAtual !== headers.Authorization) {
+    cache.clear();
+    autorizacaoAtual = headers.Authorization;
   }
 
-  return resposta.json();
+  const chave = JSON.stringify([id, pathFt]);
+  const agora = Date.now();
+  for (const [chaveAntiga, entrada] of cache) {
+    if (entrada.expira <= agora) cache.delete(chaveAntiga);
+  }
+  if (cache.has(chave)) return cache.get(chave).promessa;
+
+  const entrada = { expira: Infinity };
+  entrada.promessa = api.get(`/produtos/${id}/imagem`, {
+    headers,
+    responseType: 'blob',
+    timeout: 15000,
+  }).then(({ data }) => {
+    // GET retorna 302 para o S3; o navegador segue o redirecionamento.
+    if (!(data instanceof Blob) || !data.type.startsWith('image/')) {
+      throw new Error('Resposta de imagem inválida.');
+    }
+    entrada.expira = Date.now() + VALIDADE;
+    return data;
+  }).catch(() => {
+    // Inclui 404, falhas de rede e CORS: sem ciclos automáticos de tentativa.
+    entrada.expira = Date.now() + VALIDADE_FALHA;
+    return null;
+  });
+  cache.set(chave, entrada);
+  return entrada.promessa;
+}
+
+export async function enviarImagemProduto(produtoId, arquivo) {
+  const formData = new FormData();
+  formData.append('arquivo', arquivo);
+  const resposta = await api.post(`/produtos/${produtoId}/imagem`, formData, {
+    headers: authHeader(),
+  });
+  cache.clear();
+  return resposta.data;
 }

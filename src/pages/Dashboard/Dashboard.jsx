@@ -31,6 +31,33 @@ Chart.register(
 Chart.defaults.font.family = "Barlow, sans-serif";
 Chart.defaults.color = "rgba(58,58,58,0.8)";
 
+// Mantém textos e grades dos canvases legíveis, inclusive ao trocar o tema.
+function aplicarTemaGrafico(chart) {
+  const escuro = document.documentElement.dataset.theme === 'dark';
+  const tokens = getComputedStyle(document.documentElement);
+  const cor = tokens.getPropertyValue('--theme-muted').trim() || 'rgba(58,58,58,0.8)';
+  chart.options.color = cor;
+  if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = cor;
+  for (const eixo of Object.values(chart.options.scales || {})) {
+    eixo.ticks.color = cor;
+    eixo.grid.color = tokens.getPropertyValue('--theme-chart-grid').trim() || 'rgba(0,0,0,0.06)';
+  }
+  const paleta = [
+    ['#8D5B42', tokens.getPropertyValue('--theme-chart-brown').trim() || '#d1a07e'],
+    ['#5C3A22', tokens.getPropertyValue('--theme-chart-brown-dark').trim() || '#c69776'],
+  ];
+  function ajustarCor(valor) {
+    const par = paleta.find((cores) => cores.includes(valor));
+    return par ? par[escuro ? 1 : 0] : valor;
+  }
+  for (const dataset of chart.data.datasets) {
+    dataset.backgroundColor = Array.isArray(dataset.backgroundColor)
+      ? dataset.backgroundColor.map(ajustarCor) : ajustarCor(dataset.backgroundColor);
+  }
+}
+
+Chart.register({ id: 'temaKento', beforeUpdate: aplicarTemaGrafico });
+
 const CORES = {
   marrom: "#8D5B42",
   marromEscuro: "#5C3A22",
@@ -347,6 +374,14 @@ function Painel() {
   // Guarda a última resposta junto com o período a que ela se refere: enquanto o período
   // escolhido for diferente do carregado, a tela mostra os dados antigos esmaecidos.
   const [resultado, setResultado] = useState({ chave: null, dados: null, erro: "" });
+
+  useEffect(() => {
+    const observador = new MutationObserver(() => {
+      for (const grafico of Object.values(Chart.instances)) grafico.update('none');
+    });
+    observador.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observador.disconnect();
+  }, []);
 
   const intervaloValido = Boolean(dataInicio && dataFim && dataFim >= dataInicio);
   const chave = `${dataInicio}_${dataFim}`;

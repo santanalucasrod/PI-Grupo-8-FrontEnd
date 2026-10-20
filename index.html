@@ -2,6 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (() => {
+        let tema;
+        try { tema = localStorage.getItem('kentocafe_tema'); } catch { /* usa o sistema */ }
+        document.documentElement.dataset.theme = tema === 'dark' || tema === 'light'
+          ? tema : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KentoCafe</title>

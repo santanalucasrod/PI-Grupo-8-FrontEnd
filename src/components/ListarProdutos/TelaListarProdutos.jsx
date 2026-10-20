@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FooterListarProdutos from './FooterListarProdutos';
-import ImagemProduto from '../../assets/img-cafe.png';
 import ListaCategorias from './ListaCategorias';
 import ModalProduto from '../Modais/ModalProduto';
 import ModalExcluir from '../Modais/ModalExcluir';
@@ -9,7 +8,7 @@ import { authHeader } from '../../utils/authHeader';
 import { api } from '../../providers/axiosClient';
 import Pesquisa from '../Pesquisa/Pesquisa';
 import AbasCategoria from '../Cardapio/AbasCategoria';
-import { buscarProdutosAgrupados, resolverImagemProduto } from '../../pages/Cardapio/cardapioApi';
+import { buscarProdutosAgrupados } from '../../pages/Cardapio/cardapioApi';
 import { normalizarTexto } from '../../utils/pesquisa';
 import styles from './TelaListarProdutos.module.css';
 
@@ -20,7 +19,7 @@ function mapearProduto(produto, nomeCategoria) {
     preco: Number(produto.precoUnidade).toFixed(2).replace('.', ','),
     descricao: produto.descricao,
     categoriaNome: produto.categoria?.nome || nomeCategoria,
-    imagem: resolverImagemProduto(produto.pathFt) || ImagemProduto,
+    pathFt: produto.pathFt,
   };
 }
 
@@ -217,7 +216,8 @@ export default function TelaListarProdutos() {
           onClose={handleCloseModalProduto}
           onExcluir={handleExcluirClick}
           onEditar={handleEditarClick}
-          imagem={produtoSelecionado.imagem}
+          produtoId={produtoSelecionado.id}
+          pathFt={produtoSelecionado.pathFt}
         />
       )}
 

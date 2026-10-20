@@ -14,10 +14,10 @@
   max-height: calc(100dvh - 40px);
   overflow-y: auto;
   padding: 24px;
-  border: 1px solid #eee8e5;
+  border: 1px solid var(--theme-border, #eee8e5);
   border-radius: 8px;
-  background: #fff;
-  color: #333;
+  background: var(--theme-surface, #fff);
+  color: var(--theme-text, #333);
   box-shadow: 0 18px 48px rgb(0 0 0 / 0.22);
   text-align: left;
   box-sizing: border-box;
@@ -37,7 +37,7 @@
 
 .eyebrow {
   margin: 0 0 4px;
-  color: var(--color-brown, #8d5b42);
+  color: var(--theme-accent, var(--color-brown, #8d5b42));
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -46,7 +46,7 @@
 
 .nome {
   margin: 0;
-  color: #333;
+  color: var(--theme-text, #333);
   font-size: clamp(21px, 3vw, 28px);
   overflow-wrap: anywhere;
 }
@@ -56,10 +56,10 @@
   height: 38px;
   flex: 0 0 auto;
   padding: 0 0 3px;
-  border: 1px solid #dfd6d1;
+  border: 1px solid var(--theme-border, #dfd6d1);
   border-radius: 4px;
-  background: #fff;
-  color: #555;
+  background: var(--theme-surface, #fff);
+  color: var(--theme-muted, #555);
   font-size: 27px;
   line-height: 1;
   cursor: pointer;
@@ -78,7 +78,7 @@
   place-items: center;
   overflow: hidden;
   border-radius: 8px;
-  background: #faf8f7;
+  background: var(--theme-surface, #faf8f7);
 }
 
 .imagemContainer img {
@@ -108,14 +108,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border-bottom: 1px solid #eee8e5;
+  border-bottom: 1px solid var(--theme-border, #eee8e5);
 }
 
 .linhaDado dt,
 .linhaControle > span,
 .linhaPersonalizacao > span {
   min-width: 0;
-  color: #555;
+  color: var(--theme-muted, #555);
   font-size: 13px;
   overflow-wrap: anywhere;
 }
@@ -138,14 +138,14 @@
 .ingredientes p,
 .personalizacoes p {
   margin: 0;
-  color: #666;
+  color: var(--theme-muted, #666);
   font-size: 12px;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
 
 .aviso {
-  color: #9b2c2c !important;
+  color: var(--theme-danger-text, #9b2c2c) !important;
 }
 
 .listaIngredientes {
@@ -159,10 +159,10 @@
 
 .listaIngredientes li {
   padding: 5px 8px;
-  border: 1px solid #e5ddd9;
+  border: 1px solid var(--theme-border, #e5ddd9);
   border-radius: 4px;
-  background: #faf8f7;
-  color: #555;
+  background: var(--theme-surface, #faf8f7);
+  color: var(--theme-muted, #555);
   font-size: 12px;
 }
 
@@ -178,7 +178,7 @@
 
 .tamanhos p {
   margin: 0;
-  color: #666;
+  color: var(--theme-muted, #666);
   font-size: 12px;
 }
 
@@ -194,22 +194,22 @@
   align-items: center;
   gap: 2px;
   padding: 8px 6px;
-  border: 1px solid #e5ddd9;
+  border: 1px solid var(--theme-border, #e5ddd9);
   border-radius: 4px;
-  background: #faf8f7;
-  color: #555;
+  background: var(--theme-surface, #faf8f7);
+  color: var(--theme-muted, #555);
   font: 12px Arial, sans-serif;
   cursor: pointer;
 }
 
 .opcaoTamanho strong {
-  color: #333;
+  color: var(--theme-text, #333);
   font-size: 13px;
 }
 
 .opcaoTamanhoAtiva {
   border-color: var(--color-brown, #8d5b42);
-  background: #f3ebe6;
+  background: var(--theme-surface-muted, #f3ebe6);
   box-shadow: inset 0 0 0 1px var(--color-brown, #8d5b42);
 }
 
@@ -296,4 +296,10 @@
   .linhaPersonalizacao {
     gap: 8px;
   }
+}
+
+:global(:root[data-theme='dark']) .painel {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

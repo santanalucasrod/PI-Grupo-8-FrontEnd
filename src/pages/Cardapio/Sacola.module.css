@@ -3,7 +3,7 @@
   flex: 1;
   padding: 40px 24px;
   background: var(--color-background, #f9f9f9);
-  color: #333;
+  color: var(--theme-text, #333);
   box-sizing: border-box;
 }
 
@@ -23,7 +23,7 @@
 
 .eyebrow {
   margin: 0 0 6px;
-  color: var(--color-brown, #8d5b42);
+  color: var(--theme-accent, var(--color-brown, #8d5b42));
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -50,15 +50,15 @@
 .voltar,
 .alterar {
   border: 1px solid var(--color-brown, #8d5b42);
-  background: #fff;
-  color: var(--color-brown, #8d5b42);
+  background: var(--theme-surface, #fff);
+  color: var(--theme-accent, var(--color-brown, #8d5b42));
 }
 
 .painel {
   padding: 28px;
-  border: 1px solid #eee8e5;
+  border: 1px solid var(--theme-border, #eee8e5);
   border-radius: 8px;
-  background: #fff;
+  background: var(--theme-surface, #fff);
   box-shadow: 0 4px 14px rgb(76 53 42 / 0.06);
   box-sizing: border-box;
 }
@@ -76,7 +76,7 @@
   align-items: center;
   gap: 20px;
   padding: 18px 0;
-  border-bottom: 1px solid #eee8e5;
+  border-bottom: 1px solid var(--theme-border, #eee8e5);
 }
 
 .item:first-child {
@@ -96,7 +96,7 @@
 }
 
 .itemDescricao span {
-  color: #666;
+  color: var(--theme-muted, #666);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -110,9 +110,9 @@
 .remover {
   min-height: 34px;
   padding: 7px 10px;
-  border: 1px solid #e1aaa0;
-  background: #fff6f3;
-  color: #9b2c2c;
+  border: 1px solid var(--theme-danger-text, #e1aaa0);
+  background: var(--theme-danger-surface, #fff6f3);
+  color: var(--theme-danger-text, #9b2c2c);
   font-size: 12px;
 }
 
@@ -123,7 +123,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  color: #555;
+  color: var(--theme-muted, #555);
   text-align: center;
 }
 
@@ -153,7 +153,7 @@
 }
 
 .resumo span {
-  color: #666;
+  color: var(--theme-muted, #666);
   font-size: 12px;
 }
 
@@ -235,4 +235,10 @@
   .finalizar {
     width: 100%;
   }
+}
+
+:global(:root[data-theme='dark']) .painel {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

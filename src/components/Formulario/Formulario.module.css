@@ -2,11 +2,11 @@
 display: flex;
 align-items: center;
 flex-flow: column nowrap;
-background-color: white;
+background-color: var(--theme-surface, white);
 padding: 20px;
-border: 2px solid #000000;
+border: 2px solid var(--theme-border, #000000);
 border-radius: 30px;
-color: black;
+color: var(--theme-text, black);
 font-family: sans-serif;
 width: 80%;
 max-width: 960px;
@@ -24,12 +24,12 @@ min-width: 0;
     height: 55%;
 }
 .card_erro {
-  background-color: #fff;
-  color: black;
+  background-color: var(--theme-surface, #fff);
+  color: var(--theme-text, black);
   width: 230px;
   position: fixed;
   border-radius: 4px;
-  border: #ED145B 3px solid;
+  border: var(--theme-danger-text, #ED145B) 3px solid;
   padding: 10px;
   margin-right: 10%;
   top: 100px;
@@ -56,7 +56,7 @@ min-width: 0;
 }
 
 .campo>input {
-  border: 2px solid #000000;
+  border: 2px solid var(--theme-border, #000000);
   padding: 10px 0px;
   text-align: center;
   border-radius: 10px; 
@@ -71,7 +71,7 @@ min-width: 0;
 }
 .campo>a{
   text-decoration: underline;
-  color: rgb(119, 119, 255);
+  color: var(--theme-link, rgb(119, 119, 255));
 }
 
 .formulario>.botao {
@@ -79,14 +79,14 @@ min-width: 0;
   border: 0;
   border-radius: 15px;
   border: 2px solid ;
-  border-color: #000;
+  border-color: var(--theme-border, #000);
   font-weight: 600;
   font-size: 18px;
   padding: 10px 15px;
-  background-color: #fff;
+  background-color: var(--theme-surface, #fff);
   width: 100%;
   align-self: center;
-  color: #000000;
+  color: var(--theme-text, #000000);
   margin-top: 8vh;
 }
 
@@ -99,4 +99,10 @@ min-width: 0;
 .loading-div img {
   height: 50px;
   width: 50px;
+}
+
+:global(:root[data-theme='dark']) .card {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

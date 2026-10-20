@@ -1,5 +1,6 @@
 import styles from './Header.module.css';
 import setaBranca from '../../assets/seta-esquerda-branca.png';
+import ThemeToggle from '../ThemeToggle';
 
 export default function Header({ title, onCancel }) {
   return (
@@ -9,6 +10,7 @@ export default function Header({ title, onCancel }) {
           <img src={setaBranca} alt="" />
         </button>
         <h1 className={styles.title}>{title}</h1>
+        <ThemeToggle />
       </div>
     </header>
   );

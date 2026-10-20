@@ -13,25 +13,25 @@
 .titulo {
   font-size: 30px;
   font-weight: 700;
-  color: #1f1f1f;
+  color: var(--theme-text, #1f1f1f);
   margin-bottom: 24px;
 }
 
 .subtitulo {
   font-size: 22px;
   font-weight: 600;
-  color: #3d3d3d;
+  color: var(--theme-text, #3d3d3d);
   margin: 32px 0 16px;
 }
 
 .vazio {
-  color: #555;
+  color: var(--theme-muted, #555);
   font-size: 18px;
 }
 
 .avisoErro {
   background: var(--color-danger);
-  color: #5a2200;
+  color: var(--theme-danger-text, #5a2200);
   padding: 12px 18px;
   border-radius: 8px;
   margin-bottom: 16px;
@@ -51,7 +51,7 @@
 .card {
   position: relative;
   width: 440px;
-  background: #ffffff;
+  background: var(--theme-surface, #ffffff);
   border-radius: 16px;
   overflow: visible;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #ececec;
+  background: var(--theme-surface-muted, #ececec);
   padding: 22px 24px;
   border-radius: 16px 16px 0 0;
 }
@@ -71,9 +71,9 @@
   width: 32px;
   height: 32px;
   padding: 0;
-  border: 2px solid #b0b0b0;
+  border: 2px solid var(--theme-border, #b0b0b0);
   border-radius: 8px;
-  background: #fff;
+  background: var(--theme-surface, #fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,7 +92,7 @@
 .nomeCliente {
   font-size: 26px;
   font-weight: 700;
-  color: #1f1f1f;
+  color: var(--theme-text, #1f1f1f);
   flex: 1;
   min-width: 0;
   overflow-wrap: anywhere;
@@ -124,7 +124,7 @@
   top: 60px;
   right: 16px;
   width: 250px;
-  background: #fff;
+  background: var(--theme-surface, #fff);
   border-radius: 10px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   padding: 16px;
@@ -140,7 +140,7 @@
   align-items: center;
   margin-bottom: 8px;
   font-size: 16px;
-  color: #1f1f1f;
+  color: var(--theme-text, #1f1f1f);
 }
 
 .popoverFechar {
@@ -148,22 +148,22 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #555;
+  color: var(--theme-muted, #555);
 }
 
 .popover p {
   margin: 4px 0;
   font-size: 16px;
-  color: #333;
+  color: var(--theme-text, #333);
 }
 
 .itemObservacaoFila {
   font-style: italic;
-  color: #8a5a3a;
+  color: var(--theme-accent, #8a5a3a);
 }
 
 .itemVolumeFila {
-  color: #7a7a7a;
+  color: var(--theme-muted, #7a7a7a);
 }
 
 .barraProgresso {
@@ -194,7 +194,7 @@
   left: 13px;
   width: 2px;
   height: 17px;
-  background: #d9d9d9;
+  background: var(--theme-surface-muted, #d9d9d9);
 }
 
 .checkbox {
@@ -202,9 +202,9 @@
   height: 26px;
   min-width: 26px;
   padding: 0;
-  border: 2px solid #c9c9c9;
+  border: 2px solid var(--theme-border, #c9c9c9);
   border-radius: 7px;
-  background: #fff;
+  background: var(--theme-surface, #fff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -221,20 +221,20 @@
 .itemNome {
   font-size: 20px;
   font-weight: 500;
-  color: #1f1f1f;
+  color: var(--theme-text, #1f1f1f);
 }
 
 .itemFeito {
   font-size: 20px;
   font-weight: 500;
-  color: #7a7a7a;
+  color: var(--theme-muted, #7a7a7a);
   text-decoration: line-through;
 }
 
 .itemVolume {
   font-size: 16px;
   font-weight: 500;
-  color: #7a7a7a;
+  color: var(--theme-muted, #7a7a7a);
 }
 
 .itemTextos {
@@ -250,7 +250,7 @@
   margin-top: 4px;
   font-size: 14px;
   line-height: 1.4;
-  color: var(--color-brown);
+  color: var(--theme-accent, var(--color-brown));
   overflow-wrap: anywhere;
 }
 
@@ -260,8 +260,8 @@
   min-height: 44px;
   margin: 0 20px 20px;
   padding: 10px 12px;
-  background: #fff;
-  color: var(--color-brown);
+  background: var(--theme-surface, #fff);
+  color: var(--theme-accent, var(--color-brown));
   border: 1px solid var(--color-brown);
   border-radius: 8px;
   font: inherit;
@@ -287,8 +287,8 @@
   gap: 4px;
   font-size: 14px;
   font-weight: 700;
-  color: #7a3300;
-  background: #FFBA9F;
+  color: var(--theme-danger-text, #7a3300);
+  background: var(--theme-danger-surface, #FFBA9F);
   padding: 3px 10px;
   border-radius: 999px;
 }
@@ -305,12 +305,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fff;
+  background: var(--theme-surface, #fff);
   border: 1px solid var(--color-success);
   border-radius: 20px;
   padding: 8px 16px;
   font-size: 14px;
-  color: #2c2c2c;
+  color: var(--theme-text, #2c2c2c);
 }
 
 .pontoVerde {
@@ -325,10 +325,10 @@
 .botaoCancelar {
   flex-shrink: 0;
   padding: 6px 12px;
-  border: 1px solid #c97a5a;
+  border: 1px solid var(--theme-border, #c97a5a);
   border-radius: 8px;
-  background: #fff;
-  color: #9a3d18;
+  background: var(--theme-surface, #fff);
+  color: var(--theme-danger-text, #9a3d18);
   font-family: inherit;
   font-size: 14px;
   font-weight: 700;
@@ -355,7 +355,7 @@
   padding: 2px 4px;
   border: none;
   background: none;
-  color: #9a3d18;
+  color: var(--theme-danger-text, #9a3d18);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -373,7 +373,7 @@
 
 .cardFila {
   width: 200px;
-  background: #ececec;
+  background: var(--theme-surface-muted, #ececec);
   border: none;
   border-radius: 10px;
   padding: 16px;
@@ -402,7 +402,7 @@
 }
 
 .cardFila:hover {
-  background: #e0e0e0;
+  background: var(--theme-surface-muted, #e0e0e0);
 }
 
 .cardFilaBloqueado {
@@ -411,20 +411,20 @@
 }
 
 .cardFilaBloqueado:hover {
-  background: #ececec;
+  background: var(--theme-surface-muted, #ececec);
 }
 
 .cardFilaAvisoBloqueio {
   margin-top: 10px;
   font-size: 13px;
   font-weight: 700;
-  color: #6b6b6b;
+  color: var(--theme-muted, #6b6b6b);
 }
 
 .cardFilaHeader {
   font-size: 19px;
   font-weight: 700;
-  color: #262626;
+  color: var(--theme-text, #262626);
   margin-bottom: 12px;
 }
 
@@ -440,7 +440,7 @@
 .listaFila li {
   font-size: 16px;
   font-weight: 500;
-  color: #454545;
+  color: var(--theme-text, #454545);
   padding-left: 14px;
   position: relative;
 }
@@ -449,7 +449,7 @@
   content: "•";
   position: absolute;
   left: 0;
-  color: #b0b0b0;
+  color: var(--theme-muted, #b0b0b0);
 }
 
 /* =====================================================================
@@ -537,4 +537,10 @@
   .popover {
     width: 220px;
   }
+}
+
+:global(:root[data-theme='dark']) .card {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

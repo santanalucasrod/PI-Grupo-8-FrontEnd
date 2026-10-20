@@ -1,6 +1,6 @@
 .header {
   min-height: 72px;
-  background-color: var(--color-brown);
+  background-color: var(--theme-chrome, var(--color-brown));
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgb(92 58 34 / 0.12);
   width: 100%;
@@ -73,7 +73,7 @@
   width: 44px;
   height: 44px;
   background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgb(255 255 255 / 0.25);
+  border: 1px solid var(--theme-border, rgb(255 255 255 / 0.25));
   border-radius: 8px;
   cursor: pointer;
   flex-shrink: 0;
@@ -117,7 +117,7 @@
 .drawer {
   height: 100%;
   width: 100%;
-  background: #fff;
+  background: var(--theme-surface, #fff);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
@@ -140,7 +140,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
-  background: var(--color-brown);
+  background: var(--theme-chrome, var(--color-brown));
   flex-shrink: 0;
   gap: 12px;
 }
@@ -180,7 +180,7 @@
 .link {
   display: block;
   text-decoration: none;
-  color: #2c2c2c;
+  color: var(--theme-text, #2c2c2c);
   font-size: 18px;
   font-weight: 600;
   padding: 16px 24px;
@@ -194,7 +194,7 @@
 }
 
 .linkAtivo {
-  color: #8d5b42;
+  color: var(--theme-accent, #8d5b42);
   background: rgba(141, 91, 66, 0.08);
   border-left-color: var(--color-brown);
 }
@@ -248,4 +248,10 @@
     height: 32px;
     font-size: 15px;
   }
+}
+
+:global(:root[data-theme='dark']) .drawer {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

@@ -30,7 +30,7 @@ export default function TelaEditarProduto() {
   const [opcoesCategoria, setOpcoesCategoria] = useState([]);
   const [categoria, setCategoria] = useState('');
   const [categoriasApi, setCategoriasApi] = useState([]); // lista completa {id, nome} vinda da API
-  const [pathFt, setPathFt] = useState(''); // nome do arquivo da foto, mantido ao salvar
+  const [pathFt, setPathFt] = useState(''); // chave da imagem vinculada pelo backend
 
   const [opcoesIngrediente, setOpcoesIngrediente] = useState([]);
   const [ingredienteAtual, setIngredienteAtual] = useState('');
@@ -179,9 +179,6 @@ export default function TelaEditarProduto() {
         }
 
         setPathFt(dados.pathFt || '');
-        if (dados.pathFt) {
-          setImagem(`${API_BASE_URL}/imagens/${dados.pathFt}`);
-        }
       } catch (err) {
         console.error('Erro ao buscar produto:', err);
         setErro('Não foi possível carregar os dados do produto. Verifique se a API está rodando em ' + API_BASE_URL);
@@ -288,7 +285,6 @@ export default function TelaEditarProduto() {
       nome,
       precoUnidade: Number(preco) || 0,
       descricao,
-      pathFt,
       categoria: categoriaSelecionada
         ? { id: categoriaSelecionada.id, nome: categoriaSelecionada.nome }
         : { id: 0, nome: categoria },
@@ -319,7 +315,7 @@ export default function TelaEditarProduto() {
         throw new Error(`Erro ${resposta.status} ao salvar produto`);
       }
 
-      let pathFtAtual = payload.pathFt;
+      let pathFtAtual = pathFt;
 
       // Se o usuário escolheu uma foto nova, envia agora que o produto já está salvo
       const falhasImagem = [];
@@ -619,18 +615,24 @@ export default function TelaEditarProduto() {
     setImagem(URL.createObjectURL(arquivo)); // preview local, antes de enviar pro backend
   };
 
+  useEffect(() => () => {
+    if (imagem) URL.revokeObjectURL(imagem);
+  }, [imagem]);
+
   return (
     <div className={styles.container}>
       <Header title="Produtos" onCancel={() => navigate('/produtos')} />
 
       <main className={styles.mainContent}>
         {carregando && <p style={{ textAlign: 'center' }}>Carregando produto...</p>}
-        {!carregando && erro && <p style={{ textAlign: 'center', color: '#B00020' }}>{erro}</p>}
-        {erroSalvar && <p style={{ textAlign: 'center', color: '#B00020' }}>{erroSalvar}</p>}
+        {!carregando && erro && <p style={{ textAlign: 'center', color: 'var(--theme-danger-text, #B00020)' }}>{erro}</p>}
+        {erroSalvar && <p style={{ textAlign: 'center', color: 'var(--theme-danger-text, #B00020)' }}>{erroSalvar}</p>}
 
         <ImageUpload
           title="Editar produtos"
-          imageSrc={imagem || "https://images.unsplash.com/photo-1559525839-b184a4d698c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"}
+          imageSrc={imagem}
+          produtoId={produtoId}
+          pathFt={pathFt}
           onFileSelect={handleSelecionarImagem}
         />
 

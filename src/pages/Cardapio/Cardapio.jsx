@@ -12,7 +12,6 @@ import {
   buscarPersonalizacoesPorProduto,
   buscarProdutosAgrupados,
   buscarTamanhosPorProduto,
-  resolverImagemProduto,
 } from './cardapioApi';
 import styles from './Cardapio.module.css';
 
@@ -25,7 +24,7 @@ function mapearProduto(produto, nomeCategoria) {
     precoUnidade: Number.isFinite(precoUnidade) ? precoUnidade : 0,
     descricao: String(produto?.descricao || ''),
     categoriaNome: produto?.categoria?.nome || nomeCategoria,
-    imagem: resolverImagemProduto(produto?.pathFt),
+    pathFt: produto?.pathFt,
   };
 }
 
@@ -155,7 +154,7 @@ export default function Cardapio() {
     adicionarItem({
       produtoId: Number(produtoSelecionado.id),
       nome: produtoSelecionado.nome,
-      imagem: produtoSelecionado.imagem,
+      pathFt: produtoSelecionado.pathFt,
       precoUnidade: Number(tamanho?.precoUnidade ?? produtoSelecionado.precoUnidade ?? 0),
       quantidade,
       personalizacoes,

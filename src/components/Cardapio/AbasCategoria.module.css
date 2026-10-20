@@ -6,7 +6,7 @@
   margin: 0 0 28px;
   padding: 0 0 12px;
   overflow-x: auto;
-  border-bottom: 1px solid #ded8d4;
+  border-bottom: 1px solid var(--theme-border, #ded8d4);
   box-sizing: border-box;
   scrollbar-width: thin;
 }
@@ -14,9 +14,9 @@
 .aba {
   min-height: 38px;
   flex: 0 0 auto;
-  border: 1px solid #d8ceca;
-  background: #fff;
-  color: #4b3b34;
+  border: 1px solid var(--theme-border, #d8ceca);
+  background: var(--theme-surface, #fff);
+  color: var(--theme-accent, #4b3b34);
   border-radius: 4px;
   padding: 8px 18px;
   font: 600 14px/1 Arial, sans-serif;

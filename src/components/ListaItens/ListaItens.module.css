@@ -1,7 +1,7 @@
 .componente {
     width: 100%;
-    background: #fff;
-    border: 1px solid #e5e5e5;
+    background: var(--theme-surface, #fff);
+    border: 1px solid var(--theme-border, #e5e5e5);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -23,7 +23,7 @@
 .tabela {
     width: 100%;
     border-collapse: collapse;
-    color: #333;
+    color: var(--theme-text, #333);
     font-size: 14px;
     text-align: left;
     table-layout: fixed;
@@ -32,7 +32,7 @@
 .tabela th,
 .tabela td {
     padding: 13px 16px;
-    border-bottom: 1px solid #ededed;
+    border-bottom: 1px solid var(--theme-border, #ededed);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -48,10 +48,10 @@
 }
 
 .tabela th {
-    color: #3a3a3a;
+    color: var(--theme-text, #3a3a3a);
     font-weight: 600;
     font-family: sans-serif;
-    background: #e6e5e5;
+    background: var(--theme-surface-muted, #e6e5e5);
 }
 
 .tabela tbody tr:last-child td {
@@ -61,10 +61,10 @@
 .estado {
     margin: 0;
     padding: 32px 16px;
-    color: #777;
+    color: var(--theme-muted, #777);
     text-align: center;
-    background: #fff;
-    border: 1px solid #e5e5e5;
+    background: var(--theme-surface, #fff);
+    border: 1px solid var(--theme-border, #e5e5e5);
     border-radius: 4px;
 }
 
@@ -75,7 +75,7 @@
     flex-wrap: nowrap;
     gap: 10px;
     padding: 16px;
-    border-top: 1px solid #ededed;
+    border-top: 1px solid var(--theme-border, #ededed);
 }
 
 .botaoPagina {
@@ -85,10 +85,10 @@
     min-width: 42px;
     min-height: 40px;
     padding: 4px 10px;
-    border: 1px solid #8b6a52;
+    border: 1px solid var(--theme-accent, #8b6a52);
     border-radius: 4px;
-    color: #4b3527;
-    background: #f5f0ec;
+    color: var(--theme-accent, #4b3527);
+    background: var(--theme-surface-muted, #f5f0ec);
     cursor: pointer;
     font-size: 20px;
     font-weight: 700;
@@ -96,27 +96,27 @@
 }
 
 .botaoPagina:focus-visible {
-    outline: 3px solid #8b6a52;
+    outline: 3px solid var(--theme-accent, #8b6a52);
     outline-offset: 2px;
 }
 
 .botaoPagina:hover:not(:disabled),
 .paginaAtual {
-    border-color: #4b3527;
+    border-color: var(--theme-border, #4b3527);
     color: #fff;
     background: #4b3527;
 }
 
 .botaoPagina:disabled {
-    border-color: #c6bdb7;
-    color: #857c76;
-    background: #f0eeec;
+    border-color: var(--theme-border, #c6bdb7);
+    color: var(--theme-muted, #857c76);
+    background: var(--theme-surface-muted, #f0eeec);
     cursor: not-allowed;
     opacity: 1;
 }
 
 .statusPagina {
-    color: #333;
+    color: var(--theme-text, #333);
     font-size: 14px;
     white-space: nowrap;
 }

@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import styles from './ImageUpload.module.css';
+import ImagemProduto from '../ImagemProduto';
 
-export default function ImageUpload({ imageSrc, title = "Cadastrar produtos", onFileSelect }) {
+export default function ImageUpload({ imageSrc, produtoId, pathFt, title = "Cadastrar produtos", onFileSelect }) {
   const inputRef = useRef(null);
 
   const handleClick = () => {
@@ -21,13 +22,7 @@ export default function ImageUpload({ imageSrc, title = "Cadastrar produtos", on
       <h2 className={styles.title}>{title}</h2>
       <div className={styles.uploadArea}>
         <div className={styles.imageWrapper}>
-          {imageSrc ? (
-            <img src={imageSrc} alt="Produto" className={styles.image} />
-          ) : (
-            <div className={styles.placeholder}>
-              {/* Fallback space if no image */}
-            </div>
-          )}
+          <ImagemProduto produtoId={produtoId} pathFt={pathFt} preview={imageSrc} alt="Produto" className={styles.image} />
         </div>
 
         {onFileSelect && (

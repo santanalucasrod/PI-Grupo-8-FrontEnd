@@ -7,18 +7,18 @@
     min-height: 40px;
     padding: 0 12px;
     box-sizing: border-box;
-    background: #fff;
-    border: 1px solid #e5e5e5;
+    background: var(--theme-surface, #fff);
+    border: 1px solid var(--theme-border, #e5e5e5);
     border-radius: 4px;
 }
 
 .container:focus-within {
     border-color: var(--color-brown);
-    outline: 2px solid rgb(141 91 66 / 0.15);
+    outline: 2px solid var(--theme-border, rgb(141 91 66 / 0.15));
 }
 
 .icone {
-    color: #777;
+    color: var(--theme-muted, #777);
     font-size: 14px;
 }
 
@@ -27,14 +27,18 @@
     min-width: 0;
     border: 0;
     outline: 0;
-    color: #333;
+    color: var(--theme-text, #333);
     font: inherit;
     background: transparent;
 }
 
 .input::placeholder {
-    color: #999;
+    color: var(--theme-muted, #999);
 }
 .imagem{
     max-width: 14px;
+}
+
+:global(:root[data-theme='dark']) .imagem {
+  filter: brightness(0) invert(0.9);
 }

@@ -10,7 +10,7 @@ background-color: var(--color-background);
 display: flex;
 flex-flow: row nowrap;
 align-items: stretch;
-background-color: #8D5B42;
+background-color: var(--theme-chrome, #8D5B42);
 width: 60%;
 min-height: 500px;
 border-radius: 20px;
@@ -22,7 +22,7 @@ overflow: hidden;
 .imagem{
   position: relative;
   flex: 1 1 50%;
-  background-color: #5C3A28;
+  background-color: var(--theme-chrome, #5C3A28);
   overflow: hidden;
 }
 
@@ -53,12 +53,12 @@ overflow: hidden;
   justify-content: flex-end;
 }
 .card_erro {
-  background-color: #fff;
-  color: black;
+  background-color: var(--theme-surface, #fff);
+  color: var(--theme-text, black);
   width: 230px;
   position: fixed;
   border-radius: 4px;
-  border: #ED145B 3px solid;
+  border: var(--theme-danger-text, #ED145B) 3px solid;
   padding: 10px;
   margin-right: 10%;
   top: 100px;
@@ -91,7 +91,7 @@ overflow: hidden;
   border-radius: 8px;
   width: 100%;
   min-width: 0;
-  color: #333;
+  color: var(--theme-text, #333);
 }
 .campo{
   display: flex;
@@ -107,7 +107,7 @@ overflow: hidden;
 }
 .campo>a{
   text-decoration: underline;
-  color: rgb(119, 119, 255);
+  color: var(--theme-link, rgb(119, 119, 255));
 }
 
 .formulario>.botao {
@@ -117,8 +117,8 @@ overflow: hidden;
   font-weight: 600;
   font-size: 18px;
   padding: 10px 15px;
-  color: #8D5B42;
-  background-color:#fff;
+  color: var(--theme-accent, #8D5B42);
+  background-color:var(--theme-surface, #fff);
   width: 100%;
   align-self: center;
   margin-top: 4vh;
@@ -185,4 +185,10 @@ overflow: hidden;
     padding: 14px;
     margin-top: 24px;
   }
+}
+
+:global(:root[data-theme='dark']) .card {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
 }

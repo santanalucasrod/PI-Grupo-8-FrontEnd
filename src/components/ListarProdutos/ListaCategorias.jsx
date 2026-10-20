@@ -30,7 +30,7 @@ export default function ListaCategorias({ titulo, produtos, onProductClick }) {
             <CardProduto 
               id={produto.id}
               key={produto.id}
-              imagem={produto.imagem}
+              pathFt={produto.pathFt}
               nome={produto.nome}
               preco={produto.preco}
               onClick={() => onProductClick && onProductClick(produto)}

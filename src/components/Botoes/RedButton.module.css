@@ -6,8 +6,8 @@
     width: 100%;
     border-radius: 6px;
     cursor: pointer;
-    background-color: #FFBA9F;
-    border: 1px solid #D31F1F;
+    background-color: var(--theme-danger-surface, #FFBA9F);
+    border: 1px solid var(--theme-danger-text, #D31F1F);
 }
 
 .btn2 p {
@@ -27,4 +27,8 @@
     background-color: #D31F1F;
     color: #F9F9F9;
     transition: 0.5s;
+}
+
+:global(:root[data-theme='dark']) .btn2 img {
+  filter: brightness(0) invert(0.9);
 }

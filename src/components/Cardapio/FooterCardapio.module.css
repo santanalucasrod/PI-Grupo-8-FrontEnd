@@ -6,7 +6,7 @@
   width: min(100%, 960px);
   min-height: 68px;
   margin: 0 auto;
-  background: var(--color-brown, #8d5b42);
+  background: var(--theme-chrome, var(--color-brown, #8d5b42));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -25,7 +25,7 @@
 }
 
 .rotulo {
-  color: rgb(255 255 255 / 0.8);
+  color: var(--theme-muted, rgb(255 255 255 / 0.8));
   font: 11px/1.2 Arial, sans-serif;
 }
 
@@ -41,10 +41,10 @@
   min-width: 146px;
   min-height: 42px;
   padding: 8px 14px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid var(--theme-border, #cfcfcf);
   border-radius: 5px;
-  background: #fff;
-  color: #333;
+  background: var(--theme-surface, #fff);
+  color: var(--theme-text, #333);
   font-family: Arial, sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -62,7 +62,7 @@
 }
 
 .botaoFinalizar:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--theme-border, #fff);
   outline-offset: 2px;
 }
 
@@ -78,4 +78,14 @@
   .rotulo {
     display: none;
   }
+}
+
+:global(:root[data-theme='dark']) .footer {
+  backdrop-filter: var(--theme-blur, none);
+  -webkit-backdrop-filter: var(--theme-blur, none);
+  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
+}
+
+:global(:root[data-theme='dark']) .botaoFinalizar img {
+  filter: brightness(0) invert(0.9);
 }

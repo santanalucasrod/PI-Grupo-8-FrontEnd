@@ -1,15 +1,11 @@
 import styles from './CardProduto.module.css';
-import ImagemPadrao from '../../assets/img-cafe.png';
+import ImagemProduto from '../ImagemProduto';
 
-export default function CardProduto({ id, imagem, nome, preco, onClick }) {
+export default function CardProduto({ id, pathFt, nome, preco, onClick }) {
   return (
     <button type="button" id={`produto-${id}`} className={styles.card} onClick={onClick}>
       <div className={styles.container_img}>
-        <img
-          src={imagem || ImagemPadrao}
-          alt={nome}
-          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = ImagemPadrao; }}
-        />
+        <ImagemProduto produtoId={id} pathFt={pathFt} alt={nome} />
       </div>
       <p className={styles.nome}>{nome}</p>
       <p className={styles.preco}>R${preco}</p>

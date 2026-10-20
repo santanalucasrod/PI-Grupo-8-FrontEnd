@@ -1,14 +1,10 @@
 import styles from './Modal.module.css';
-import img from '../../assets/img-cafe.png'
+import ImagemProduto from '../ImagemProduto';
 
 export default function ImagemProdutoModal(props){
     return(
         <div className={styles.imagem_modal}>
-            <img
-                src={props.imagem || img}
-                alt="Imagem do produto"
-                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = img; }}
-            />
+            <ImagemProduto produtoId={props.produtoId} pathFt={props.pathFt} alt={props.nome} />
         </div>
     );
 }
