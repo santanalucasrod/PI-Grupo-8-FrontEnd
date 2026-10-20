@@ -347,10 +347,11 @@ body {
   }
 }
 
-:root[data-theme='dark'] .periodo-bar,
-:root[data-theme='dark'] .kpi-card,
-:root[data-theme='dark'] .chart-card {
+:root[data-theme] .periodo-bar,
+:root[data-theme] .kpi-card,
+:root[data-theme] .chart-card {
   backdrop-filter: var(--theme-blur, none);
   -webkit-backdrop-filter: var(--theme-blur, none);
-  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
+  background-image: var(--theme-glass-sheen, none);
+  box-shadow: var(--theme-glass-shadow);
 }

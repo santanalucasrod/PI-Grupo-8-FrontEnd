@@ -18,6 +18,20 @@ import { useState, useEffect, useRef, useCallback } from "react";
    return pedido.nomeCliente?.trim() || "Cliente sem nome";
  }
 
+ function ComplementosItem({ item }) {
+   const complementos = (Array.isArray(item.personalizacoes) ? item.personalizacoes : [])
+     .filter((nome) => typeof nome === 'string' && nome.trim());
+
+   return (
+     <span className={styles.itemPersonalizacoes}>
+       <span className={styles.complementosLabel}>Complementos:</span>
+       {complementos.length > 0 ? complementos.map((nome, indice) => (
+         <span key={`${nome}-${indice}`} className={styles.complemento}>{nome}</span>
+       )) : <span className={styles.semComplementos}>Sem complementos</span>}
+     </span>
+   );
+ }
+
  // Padroniza o status vindo do backend ("Pendente", " em_preparo " etc.) e avisa no
  // console sobre pedidos com status que esta tela não exibe, pra não sumirem em silêncio.
  function normalizarPedidos(lista) {
@@ -404,7 +418,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
    const tudoPronto = total > 0 && feitos === total;
  
    return (
-     <div className={styles.card}>
+     <article className={styles.card} aria-label={`Pedido ${pedido.id} de ${nomePedido(pedido)}`}>
        <div className={styles.cardHeader}>
          <button
            type="button"
@@ -416,7 +430,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
          >
            {tudoPronto && "✓"}
          </button>
-         <span className={styles.nomeCliente}>{nomePedido(pedido)}</span>
+         <div className={styles.identificacao}>
+           <span className={styles.pedidoNumero}>Pedido #{pedido.id} · Em preparo</span>
+           <span className={styles.nomeCliente}>{nomePedido(pedido)}</span>
+         </div>
 
          <button
            type="button"
@@ -480,12 +497,12 @@ import { useState, useEffect, useRef, useCallback } from "react";
              </button>
              <span className={styles.itemTextos}>
                <span className={item.pronto ? styles.itemFeito : styles.itemNome}>
-                 {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
-                 {item.volumeMl > 0 && <span className={styles.itemVolume}> · {item.volumeMl}ml</span>}
+                 <span className={styles.itemQuantidade}>{item.quantidade}×</span> {item.nomeProduto}
                </span>
-               {item.personalizacoes?.length > 0 && (
-                 <span className={styles.itemPersonalizacoes}>Personalizações: {item.personalizacoes.join(', ')}</span>
+               {(item.tamanho || item.volumeMl > 0) && (
+                 <span className={styles.itemVolume}>{[item.tamanho, item.volumeMl > 0 ? `${item.volumeMl} ml` : null].filter(Boolean).join(' · ')}</span>
                )}
+               <ComplementosItem item={item} />
                {item.observacao && (
                  <span className={styles.itemObservacao}>⚠ {item.observacao}</span>
                )}
@@ -496,13 +513,13 @@ import { useState, useEffect, useRef, useCallback } from "react";
        <button type="button" className={styles.botaoDevolver} onClick={onDevolver} disabled={atualizando}>
          Voltar para a fila
        </button>
-     </div>
+     </article>
    );
  }
  
  function CardPedidoFila({ pedido, bloqueado, jaEmPreparo, onIniciar, onCancelar, onDevolver, atualizando }) {
    return (
-     <div className={styles.cardFila}>
+     <article className={styles.cardFila} aria-label={`Pedido ${pedido.id} de ${nomePedido(pedido)}`}>
        <button
          type="button"
          className={`${styles.iniciarFila} ${bloqueado ? styles.cardFilaBloqueado : ""}`}
@@ -516,15 +533,16 @@ import { useState, useEffect, useRef, useCallback } from "react";
              : "Iniciar preparo deste pedido"
          }
        >
+         <span className={styles.pedidoNumero}>Pedido #{pedido.id}</span>
          <div className={styles.cardFilaHeader}>{nomePedido(pedido)}</div>
          <ul className={styles.listaFila}>
            {pedido.itens.map((item) => (
              <li key={item.id}>
-               {item.nomeProduto} {item.quantidade > 1 ? `x${item.quantidade}` : ""}
-               {item.volumeMl > 0 && <span className={styles.itemVolumeFila}> · {item.volumeMl}ml</span>}
-               {item.personalizacoes?.length > 0 && (
-                 <span className={styles.itemPersonalizacoes}>Personalizações: {item.personalizacoes.join(', ')}</span>
+               <span className={styles.itemQuantidade}>{item.quantidade}×</span> {item.nomeProduto}
+               {(item.tamanho || item.volumeMl > 0) && (
+                 <span className={styles.itemVolumeFila}> · {[item.tamanho, item.volumeMl > 0 ? `${item.volumeMl} ml` : null].filter(Boolean).join(' · ')}</span>
                )}
+               <ComplementosItem item={item} />
                {item.observacao && (
                  <span className={styles.itemObservacaoFila}> · {item.observacao}</span>
                )}
@@ -545,7 +563,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
            Voltar para a fila
          </button>
        )}
-     </div>
+     </article>
    );
  }
  

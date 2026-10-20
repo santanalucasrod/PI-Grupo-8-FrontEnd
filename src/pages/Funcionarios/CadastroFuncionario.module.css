@@ -106,8 +106,9 @@ font-family: sans-serif;
   width: 50px;
 }
 
-:global(:root[data-theme='dark']) .card {
+:global(:root[data-theme]) .card {
   backdrop-filter: var(--theme-blur, none);
   -webkit-backdrop-filter: var(--theme-blur, none);
-  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
+  background-image: var(--theme-glass-sheen, none);
+  box-shadow: var(--theme-glass-shadow);
 }

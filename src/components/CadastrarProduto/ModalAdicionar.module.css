@@ -102,8 +102,9 @@
   background-color: var(--theme-success-fill, #5c9c64);
 }
 
-:global(:root[data-theme='dark']) .modal {
+:global(:root[data-theme]) .modal {
   backdrop-filter: var(--theme-blur, none);
   -webkit-backdrop-filter: var(--theme-blur, none);
-  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
+  background-image: var(--theme-glass-sheen, none);
+  box-shadow: var(--theme-glass-shadow);
 }

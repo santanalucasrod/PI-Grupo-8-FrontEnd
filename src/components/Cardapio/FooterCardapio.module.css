@@ -25,7 +25,7 @@
 }
 
 .rotulo {
-  color: var(--theme-muted, rgb(255 255 255 / 0.8));
+  color: var(--theme-on-chrome, #fff);
   font: 11px/1.2 Arial, sans-serif;
 }
 
@@ -80,10 +80,11 @@
   }
 }
 
-:global(:root[data-theme='dark']) .footer {
+:global(:root[data-theme]) .footer {
   backdrop-filter: var(--theme-blur, none);
   -webkit-backdrop-filter: var(--theme-blur, none);
-  box-shadow: inset 0 0 0 1px var(--theme-glass-edge, transparent);
+  background-image: var(--theme-chrome-sheen, none);
+  box-shadow: var(--theme-glass-shadow);
 }
 
 :global(:root[data-theme='dark']) .botaoFinalizar img {

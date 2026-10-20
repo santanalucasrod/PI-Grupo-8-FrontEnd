@@ -7,8 +7,9 @@
   border-radius: 8px;
   border: 1px solid var(--theme-border, #d8ceca);
   background: var(--theme-surface, #fff);
+  background-image: var(--theme-glass-sheen, none);
   color: var(--theme-accent, #8d5b42);
-  box-shadow: 0 4px 16px rgb(0 0 0 / 0.18);
+  box-shadow: var(--theme-glass-shadow, 0 4px 16px rgb(0 0 0 / 0.18));
   backdrop-filter: var(--theme-blur, none);
   -webkit-backdrop-filter: var(--theme-blur, none);
   cursor: pointer;

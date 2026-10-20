@@ -29,7 +29,7 @@ export default function ModalProdutoCardapio({
   const tamanhoSelecionado = tamanhos.find((tamanho) => tamanho.id === tamanhoId) || null;
   // Produto com tamanhos cadastrados só pode ir para a sacola com um tamanho escolhido.
   const exigeTamanho = tamanhos.length > 0;
-  const podeAdicionar = !carregandoTamanhos && (!exigeTamanho || tamanhoSelecionado);
+  const podeAdicionar = !carregandoTamanhos && !avisoTamanhos && (!exigeTamanho || tamanhoSelecionado);
   const precoExibido = tamanhoSelecionado ? tamanhoSelecionado.precoUnidade : produto.precoUnidade;
 
   useEffect(() => {
@@ -236,9 +236,9 @@ export default function ModalProdutoCardapio({
               className={styles.adicionar}
               onClick={adicionarNaSacola}
               disabled={!podeAdicionar}
-              title={podeAdicionar ? undefined : 'Escolha um tamanho'}
+              title={avisoTamanhos || (podeAdicionar ? undefined : 'Escolha um tamanho')}
             >
-              {exigeTamanho && !tamanhoSelecionado ? 'Escolha um tamanho' : 'Adicionar à sacola'}
+              {avisoTamanhos ? 'Tamanhos indisponíveis' : exigeTamanho && !tamanhoSelecionado ? 'Escolha um tamanho' : 'Adicionar à sacola'}
             </button>
           </div>
         </div>
