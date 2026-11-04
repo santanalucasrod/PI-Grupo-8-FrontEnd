@@ -104,7 +104,6 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <VLibras />
         <HeaderCondicional />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
