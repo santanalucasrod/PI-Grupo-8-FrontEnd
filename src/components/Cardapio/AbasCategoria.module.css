@@ -24,13 +24,13 @@
 }
 
 .abaAtiva {
-  background: var(--color-brown, #3b2419);
-  border-color: var(--color-brown, #3b2419);
+  background: var(--color-brown, #8d5b42);
+  border-color: var(--color-brown, #8d5b42);
   color: #fff;
 }
 
 .aba:focus-visible {
-  outline: 2px solid var(--color-brown, #3b2419);
+  outline: 2px solid var(--color-brown, #8d5b42);
   outline-offset: 2px;
 }
 

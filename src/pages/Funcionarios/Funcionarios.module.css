@@ -21,7 +21,7 @@
 
 .eyebrow {
     margin: 0 0 6px;
-    color: var(--theme-accent, #3b2419);
+    color: var(--theme-accent, #8d5b42);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -57,7 +57,7 @@
 
 .acao {
     padding: 4px 8px;
-    color: var(--theme-accent, #3b2419);
+    color: var(--theme-accent, #8d5b42);
     font-size: 20px;
     line-height: 1;
     background: transparent;

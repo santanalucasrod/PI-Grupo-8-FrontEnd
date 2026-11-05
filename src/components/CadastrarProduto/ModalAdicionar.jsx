@@ -1,11 +1,17 @@
 import styles from './ModalAdicionar.module.css';
-import { useId, useState } from 'react';
+import { useState, useEffect } from 'react';
 import WhiteButton from '../Botoes/WhiteButton';
 import GreenButton from '../Botoes/GreenButton';
 
-export default function ModalAdicionar({ isOpen, title, onClose, onAdd, erro, salvando, maxLength }) {
-  const id = useId();
+export default function ModalAdicionar({ isOpen, title, onClose, onAdd, erro, salvando }) {
   const [inputValue, setInputValue] = useState('');
+
+  // Limpa o campo sempre que o modal fecha (sucesso ou cancelamento)
+  useEffect(() => {
+    if (!isOpen) {
+      setInputValue('');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -21,15 +27,11 @@ export default function ModalAdicionar({ isOpen, title, onClose, onAdd, erro, sa
 
   return (
     <div className={styles.overlay}>
-      <div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby={`${id}-titulo`}>
-        <h2 id={`${id}-titulo`} className={styles.title}>{title}</h2>
+      <div className={styles.modal}>
+        <h2 className={styles.title}>{title}</h2>
         <div className={styles.inputGroup}>
-          <label className={styles.label} htmlFor={id}>Nome</label>
+          <label className={styles.label}>Nome</label>
           <input
-            id={id}
-            autoFocus
-            maxLength={maxLength}
-            disabled={salvando}
             type="text"
             className={styles.input}
             value={inputValue}
@@ -38,8 +40,8 @@ export default function ModalAdicionar({ isOpen, title, onClose, onAdd, erro, sa
           {erro && <span className={styles.erro}>{erro}</span>}
         </div>
         <div className={styles.buttons}>
-          <WhiteButton onClick={handleClose} disabled={salvando}>Voltar</WhiteButton>
-          <GreenButton onClick={handleAdd} disabled={salvando || !inputValue.trim()}>{salvando ? 'Salvando...' : 'Adicionar'}</GreenButton>
+          <WhiteButton onClick={handleClose}>Voltar</WhiteButton>
+          <GreenButton onClick={handleAdd}>{salvando ? 'Salvando...' : 'Adicionar'}</GreenButton>
         </div>
       </div>
     </div>

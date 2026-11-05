@@ -1,9 +1,5 @@
 /* GreenButton.module.css */
 .btn1 {
-    border: 0;
-    padding: 0;
-    color: inherit;
-    font: inherit;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -12,7 +8,7 @@
     cursor: pointer;
 }
 
-.btn1 span {
+.btn1 p {
     font-size: 14px;
     margin: 0;
     padding: 0;

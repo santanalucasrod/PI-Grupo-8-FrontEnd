@@ -1,8 +1,5 @@
 /* WhiteButton.module.css */
 .btn {
-    padding: 0;
-    color: inherit;
-    font: inherit;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -12,7 +9,7 @@
     cursor: pointer;
 }
 
-.btn span {
+.btn p {
     font-size: 14px;
     margin: 0;
     padding: 0;

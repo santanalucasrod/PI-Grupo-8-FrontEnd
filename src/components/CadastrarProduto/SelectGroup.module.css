@@ -51,7 +51,7 @@
 }
 
 .select:focus {
-  border-color: var(--theme-accent, #3b2419);
+  border-color: var(--theme-accent, #8D5B42);
 }
 
 .selectError {
@@ -106,13 +106,13 @@
 
 .dropdownItem:hover,
 .dropdownItemAtivo {
-  background-color: #3b2419;
+  background-color: #8D5B42;
   color: #fff;
 }
 
 .dropdownItemNovo {
   font-style: italic;
-  color: var(--theme-accent, #3b2419);
+  color: var(--theme-accent, #8D5B42);
 }
 
 .dropdownItemNovo.dropdownItemAtivo,

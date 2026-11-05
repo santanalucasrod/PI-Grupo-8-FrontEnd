@@ -6,7 +6,7 @@
   width: min(100%, 960px);
   min-height: 68px;
   margin: 0 auto;
-  background: var(--theme-chrome, var(--color-brown, #3b2419));
+  background: var(--theme-chrome, var(--color-brown, #8d5b42));
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -1,74 +1,230 @@
-import { useId, useRef, useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import styles from './SelectGroup.module.css';
 
-// Busca apenas registros persistidos. Novos registros são criados pelo modal +.
-export default function SelectGroup({ label, value, onChange, options = [], onAdd, items, onRemove, maxLength, error }) {
-  const id = useId();
-  const containerRef = useRef(null);
-  const [busca, setBusca] = useState(null);
-  const [aberto, setAberto] = useState(false);
-  const [indice, setIndice] = useState(-1);
-  const nomeSelecionado = options.find((opcao) => String(opcao.value) === String(value))?.label ?? '';
-  const texto = busca ?? nomeSelecionado;
-  const filtradas = options.filter((opcao) => opcao.label.toLocaleLowerCase('pt-BR').includes(texto.trim().toLocaleLowerCase('pt-BR')));
+// Extrai o texto exibido de uma opção, aceitando string simples ou { value, label }
+function getOptionText(opt) {
+  if (opt == null) return '';
+  if (typeof opt === 'string') return opt;
+  return opt.label ?? opt.value ?? String(opt);
+}
 
+// Combobox com busca (digitar para filtrar) e criação de novas opções (tagging),
+// no estilo do select2 (https://select2.org/tagging/), mantendo o design original do select.
+export default function SelectGroup({ label, value, onChange, options, onAdd, items, onRemove, maxLength, error }) {
+  const [inputValue, setInputValue] = useState(getOptionText(value) || '');
+  const [aberto, setAberto] = useState(false);
+  const [extraOpcoes, setExtraOpcoes] = useState([]);
+  const [indiceAtivo, setIndiceAtivo] = useState(-1);
+
+  const containerRef = useRef(null);
+  const inputRef = useRef(null);
+
+  // Mantém o texto do input sincronizado quando o valor vem de fora (ex.: fetch da API)
   useEffect(() => {
-    function fechar(evento) {
-      if (!containerRef.current?.contains(evento.target)) {
+    setInputValue(getOptionText(value) || '');
+  }, [value]);
+
+  // Combina as opções vindas por props com as criadas localmente via digitação, sem duplicar
+  const opcoesCombinadas = useMemo(() => {
+    const vistas = new Set();
+    const resultado = [];
+    [...(options || []), ...extraOpcoes].forEach((opt) => {
+      const texto = getOptionText(opt);
+      const chave = texto.trim().toLowerCase();
+      if (chave && !vistas.has(chave)) {
+        vistas.add(chave);
+        resultado.push(texto);
+      }
+    });
+    return resultado;
+  }, [options, extraOpcoes]);
+
+  const termoBusca = inputValue.trim().toLowerCase();
+
+  const opcoesFiltradas = termoBusca
+    ? opcoesCombinadas.filter((opt) => opt.toLowerCase().includes(termoBusca))
+    : opcoesCombinadas;
+
+  const existeCorrespondenciaExata = opcoesCombinadas.some(
+    (opt) => opt.toLowerCase() === termoBusca
+  );
+
+  const podeCriarNovaTag = termoBusca.length > 0 && !existeCorrespondenciaExata;
+
+  const dispararChange = (novoValor) => {
+    if (onChange) {
+      onChange({ target: { value: novoValor } });
+    }
+  };
+
+  const selecionarOpcao = (opcaoTexto) => {
+    setInputValue(opcaoTexto);
+    setAberto(false);
+    setIndiceAtivo(-1);
+    dispararChange(opcaoTexto);
+  };
+
+  const criarNovaTag = (texto) => {
+    const textoLimpo = texto.trim();
+    if (!textoLimpo) return;
+
+    const jaExiste = opcoesCombinadas.some((opt) => opt.toLowerCase() === textoLimpo.toLowerCase());
+    if (!jaExiste) {
+      setExtraOpcoes((atual) => [...atual, textoLimpo]);
+    }
+    selecionarOpcao(textoLimpo);
+  };
+
+  const confirmarEntrada = () => {
+    if (indiceAtivo >= 0 && opcoesFiltradas[indiceAtivo]) {
+      selecionarOpcao(opcoesFiltradas[indiceAtivo]);
+      return;
+    }
+
+    if (existeCorrespondenciaExata) {
+      const opcaoExata = opcoesCombinadas.find((opt) => opt.toLowerCase() === termoBusca);
+      selecionarOpcao(opcaoExata);
+      return;
+    }
+
+    if (podeCriarNovaTag) {
+      criarNovaTag(inputValue);
+      return;
+    }
+
+    setAberto(false);
+  };
+
+  const handleInputChange = (e) => {
+    const novoValor = maxLength ? e.target.value.slice(0, maxLength) : e.target.value;
+    setInputValue(novoValor);
+    setAberto(true);
+    setIndiceAtivo(-1);
+  };
+
+  const handleFocus = () => {
+    setAberto(true);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setAberto(true);
+      setIndiceAtivo((atual) => {
+        const total = opcoesFiltradas.length + (podeCriarNovaTag ? 1 : 0);
+        return total === 0 ? -1 : (atual + 1) % total;
+      });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setAberto(true);
+      setIndiceAtivo((atual) => {
+        const total = opcoesFiltradas.length + (podeCriarNovaTag ? 1 : 0);
+        if (total === 0) return -1;
+        return atual <= 0 ? total - 1 : atual - 1;
+      });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (indiceAtivo === opcoesFiltradas.length && podeCriarNovaTag) {
+        criarNovaTag(inputValue);
+      } else {
+        confirmarEntrada();
+      }
+    } else if (e.key === 'Escape') {
+      setAberto(false);
+      setIndiceAtivo(-1);
+      setInputValue(getOptionText(value) || '');
+    }
+  };
+
+  // Fecha o dropdown ao clicar fora do componente
+  useEffect(() => {
+    function handleClickFora(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
         setAberto(false);
-        setBusca(null);
-        setIndice(-1);
+        setIndiceAtivo(-1);
       }
     }
-    document.addEventListener('mousedown', fechar);
-    return () => document.removeEventListener('mousedown', fechar);
+
+    document.addEventListener('mousedown', handleClickFora);
+    return () => document.removeEventListener('mousedown', handleClickFora);
   }, []);
 
-  function selecionar(opcao) {
-    onChange?.({ target: { value: opcao.value } });
-    setBusca(null);
-    setAberto(false);
-    setIndice(-1);
-  }
+  const mostrarDropdown = aberto && (opcoesFiltradas.length > 0 || podeCriarNovaTag);
 
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.header}>
-        <label className={styles.label} htmlFor={id}>{label}</label>
-        {onAdd && <button className={styles.btnAdd} onClick={onAdd} type="button" aria-label={`Adicionar ${label.toLowerCase()}`}>+</button>}
+        <label className={styles.label}>{label}</label>
+        {onAdd && (
+          <button className={styles.btnAdd} onClick={onAdd} type="button">
+            +
+          </button>
+        )}
       </div>
+
       <div className={styles.selectWrapper}>
-        <input id={id} type="text" role="combobox" aria-expanded={aberto} aria-controls={`${id}-opcoes`} aria-autocomplete="list"
-          aria-activedescendant={aberto && indice >= 0 ? `${id}-${indice}` : undefined}
-          aria-invalid={Boolean(error)} className={`${styles.select} ${error ? styles.selectError : ''}`}
-          value={texto} placeholder="Digite para buscar..." autoComplete="off" maxLength={maxLength}
-          onChange={(e) => { setBusca(e.target.value); setAberto(true); setIndice(-1); }}
-          onFocus={() => { setBusca(''); setAberto(true); }}
-          onBlur={(e) => { if (!containerRef.current?.contains(e.relatedTarget)) { setAberto(false); setBusca(null); } }}
-          onKeyDown={(e) => {
-            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-              e.preventDefault();
-              setAberto(true);
-              setIndice((atual) => filtradas.length ? (atual + (e.key === 'ArrowDown' ? 1 : filtradas.length - 1) + filtradas.length) % filtradas.length : -1);
-            } else if (e.key === 'Enter') {
-              e.preventDefault();
-              const opcao = filtradas[indice] ?? filtradas.find((item) => item.label.toLowerCase() === texto.trim().toLowerCase());
-              if (opcao) selecionar(opcao);
-            } else if (e.key === 'Escape') { setAberto(false); setBusca(null); }
-          }} />
-        <span className={styles.arrowIcon} aria-hidden="true">▼</span>
-        {aberto && <ul id={`${id}-opcoes`} className={styles.dropdownList} role="listbox" aria-label={label}>
-          {filtradas.map((opcao, numero) => <li id={`${id}-${numero}`} key={opcao.value} role="option" aria-selected={numero === indice}
-            className={`${styles.dropdownItem} ${numero === indice ? styles.dropdownItemAtivo : ''}`}
-            onMouseDown={(e) => { e.preventDefault(); selecionar(opcao); }} onMouseEnter={() => setIndice(numero)}>{opcao.label}</li>)}
-          {filtradas.length === 0 && <li className={styles.dropdownItem}>Nenhuma opção encontrada. Use + para cadastrar.</li>}
-        </ul>}
+        <input
+          ref={inputRef}
+          type="text"
+          className={`${styles.select} ${error ? styles.selectError : ''}`}
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          placeholder="Digite para buscar..."
+          autoComplete="off"
+          maxLength={maxLength}
+        />
+        <span className={styles.arrowIcon}>▼</span>
+
+        {mostrarDropdown && (
+          <ul className={styles.dropdownList}>
+            {opcoesFiltradas.map((opt, idx) => (
+              <li
+                key={opt}
+                className={`${styles.dropdownItem} ${idx === indiceAtivo ? styles.dropdownItemAtivo : ''}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  selecionarOpcao(opt);
+                }}
+                onMouseEnter={() => setIndiceAtivo(idx)}
+              >
+                {opt}
+              </li>
+            ))}
+
+            {podeCriarNovaTag && (
+              <li
+                className={`${styles.dropdownItem} ${styles.dropdownItemNovo} ${
+                  indiceAtivo === opcoesFiltradas.length ? styles.dropdownItemAtivo : ''
+                }`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  criarNovaTag(inputValue);
+                }}
+                onMouseEnter={() => setIndiceAtivo(opcoesFiltradas.length)}
+              >
+                + Adicionar "{inputValue.trim()}"
+              </li>
+            )}
+          </ul>
+        )}
       </div>
+
       {error && <span className={styles.errorText}>{error}</span>}
-      {items?.length > 0 && <ul className={styles.itemList}>{items.map((item) => <li key={item.id} className={styles.item}>
-        <span className={styles.itemText}>{item.nome}</span>
-        <button className={styles.btnRemove} onClick={() => onRemove(item.id)} type="button" aria-label={`Remover ${item.nome}`}>−</button>
-      </li>)}</ul>}
+
+      {items && items.length > 0 && (
+        <ul className={styles.itemList}>
+          {items.map((item, idx) => (
+            <li key={idx} className={styles.item}>
+              <span className={styles.itemText}>{item}</span>
+              <button className={styles.btnRemove} onClick={() => onRemove(item)} type="button">
+                -
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

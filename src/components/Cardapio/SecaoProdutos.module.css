@@ -60,7 +60,7 @@
 }
 
 .card:focus-visible {
-  outline: 2px solid var(--color-brown, #3b2419);
+  outline: 2px solid var(--color-brown, #8d5b42);
   outline-offset: 2px;
 }
 
@@ -97,7 +97,7 @@
   font-size: 14px;
   line-height: 1.2;
   font-weight: 700;
-  color: var(--theme-accent, var(--color-brown, #3b2419));
+  color: var(--theme-accent, var(--color-brown, #8d5b42));
 }
 
 @media (max-width: 820px) {

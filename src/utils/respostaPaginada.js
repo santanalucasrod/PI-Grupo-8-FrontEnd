@@ -1,7 +1,4 @@
 export function interpretarRespostaPaginada(data) {
-    if (data === '' || data == null) {
-        return { itens: [], paginaAtual: 0, totalPaginas: 0 };
-    }
     if (Array.isArray(data)) {
         return { itens: data, paginaAtual: 0, totalPaginas: null };
     }

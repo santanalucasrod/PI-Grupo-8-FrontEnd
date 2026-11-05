@@ -22,17 +22,7 @@ function inteiroPositivo(valor) {
 
 export async function buscarProdutosAgrupados(signal) {
   const resposta = await api.get('/produtos/agrupados', configuracao(signal));
-  if (resposta.status === 204) return {};
-  if (!resposta.data || typeof resposta.data !== 'object' || Array.isArray(resposta.data) || Object.values(resposta.data).some((lista) => !Array.isArray(lista))) {
-    throw new Error('A API retornou um cardápio inválido.');
-  }
-  return resposta.data;
-}
-
-function listaDaResposta(resposta) {
-  if (resposta.status === 204) return [];
-  if (!Array.isArray(resposta.data)) throw new Error('A API retornou uma lista inválida.');
-  return resposta.data;
+  return resposta.data && typeof resposta.data === 'object' ? resposta.data : {};
 }
 
 export async function buscarIngredientesPorProduto(id, signal) {
@@ -43,7 +33,7 @@ export async function buscarIngredientesPorProduto(id, signal) {
     const resposta = await api.get(`/produtos/${produtoId}/ingredientes`, configuracao(signal));
 
     const vistos = new Set();
-    return listaDaResposta(resposta)
+    return (Array.isArray(resposta.data) ? resposta.data : [])
       .filter((item) => inteiroPositivo(item?.id) && String(item?.nome || '').trim())
       .filter((item) => {
         const chave = String(item.nome).trim().toLocaleLowerCase('pt-BR');
@@ -54,6 +44,7 @@ export async function buscarIngredientesPorProduto(id, signal) {
       .map((item) => ({ id: Number(item.id), nome: String(item.nome).trim() }));
   } catch (erro) {
     if (erro?.code === 'ERR_CANCELED') throw erro;
+    if (erro?.response?.status === 404 || erro?.response?.status === 204) return [];
     throw erro;
   }
 }
@@ -68,7 +59,7 @@ export async function buscarPersonalizacoesPorProduto(id, signal) {
   );
 
   const vistos = new Set();
-  return listaDaResposta(resposta)
+  return (Array.isArray(resposta.data) ? resposta.data : [])
     .filter((item) => inteiroPositivo(item?.id) && String(item?.nome || '').trim())
     .filter((item) => {
       const idPersonalizacao = Number(item.id);
@@ -85,7 +76,7 @@ export async function buscarTamanhosPorProduto(id, signal) {
 
   const resposta = await api.get(`/produtos/${produtoId}/tamanhos`, configuracao(signal));
 
-  return listaDaResposta(resposta)
+  return (Array.isArray(resposta.data) ? resposta.data : [])
     .filter((item) => inteiroPositivo(item?.tamanhoId) && Number.isFinite(Number(item?.precoUnidade)))
     .map((item) => ({
       id: Number(item.tamanhoId),
