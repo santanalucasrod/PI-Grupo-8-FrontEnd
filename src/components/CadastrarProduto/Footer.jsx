@@ -6,7 +6,7 @@ export default function Footer({ onCadastrar, text = "Cadastrar", disabled = fal
   return (
     <footer className={styles.footer}>
       <button className={styles.button} onClick={onCadastrar} disabled={disabled}>
-        <img src={carrinho} alt="Carrinho" className={styles.icon} />
+        <img src={carrinho} alt="" aria-hidden="true" className={styles.icon} />
         {text}
       </button>
     </footer>

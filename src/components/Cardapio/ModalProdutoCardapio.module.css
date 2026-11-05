@@ -37,7 +37,7 @@
 
 .eyebrow {
   margin: 0 0 4px;
-  color: var(--theme-accent, var(--color-brown, #8d5b42));
+  color: var(--theme-accent, var(--color-brown, #3b2419));
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -208,13 +208,13 @@
 }
 
 .opcaoTamanhoAtiva {
-  border-color: var(--color-brown, #8d5b42);
+  border-color: var(--color-brown, #3b2419);
   background: var(--theme-surface-muted, #f3ebe6);
-  box-shadow: inset 0 0 0 1px var(--color-brown, #8d5b42);
+  box-shadow: inset 0 0 0 1px var(--color-brown, #3b2419);
 }
 
 .opcaoTamanho:focus-visible {
-  outline: 2px solid var(--color-brown, #8d5b42);
+  outline: 2px solid var(--color-brown, #3b2419);
   outline-offset: 2px;
 }
 
@@ -230,7 +230,7 @@
   padding: 9px 18px;
   border: 0;
   border-radius: 4px;
-  background: var(--color-brown, #8d5b42);
+  background: var(--color-brown, #3b2419);
   color: #fff;
   font: 600 14px Arial, sans-serif;
   cursor: pointer;
@@ -243,7 +243,7 @@
 
 .fechar:focus-visible,
 .adicionar:focus-visible {
-  outline: 2px solid var(--color-brown, #8d5b42);
+  outline: 2px solid var(--color-brown, #3b2419);
   outline-offset: 2px;
 }
 

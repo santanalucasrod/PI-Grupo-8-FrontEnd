@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { carregarImagemProduto } from './CadastrarProduto/produtoImagemApi';
-import imagemPadrao from '../assets/img-cafe.png';
+import imagemPadrao from '../assets/produto-sem-imagem.svg';
 
 export default function ImagemProduto({ produtoId, pathFt, preview, alt = '', ...props }) {
   const [imagem, setImagem] = useState(null);

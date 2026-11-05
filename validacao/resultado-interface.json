@@ -1,0 +1,816 @@
+{
+  "checks": [
+    "Edição carrega o produto pela rota com ID",
+    "Edição preenche ingredientes e personalizações vinculados",
+    "Edição preenche tamanho e preço próprios",
+    "Catálogo inclui a segunda página do Spring",
+    "Edição salva categoria com ID persistido",
+    "Edição salva adição e remoção de ingredientes por IDs",
+    "Edição salva personalizações por IDs",
+    "Atualização de preço respeita DELETE e POST existentes no Java",
+    "Novo tamanho salva seu próprio preço",
+    "Ingredientes com nomes iguais preservam seus IDs distintos",
+    "Categoria recém-criada fica selecionada",
+    "Falha parcial mantém dados digitados e informa pendência",
+    "Cadastro usa ID real da categoria criada pelo modal",
+    "Nova tentativa reaproveita produto salvo sem duplicar POST",
+    "Campos obrigatórios impedem cadastro inválido",
+    "Não cria opções fictícias por digitação",
+    "204 é tratado como catálogo vazio",
+    "Falha de catálogo é visível e bloqueia salvar",
+    "Tentar novamente recupera todos os dados",
+    "Formulário mobile não transborda horizontalmente",
+    "Modo escuro mantém contraste e alternância",
+    "Cardápio consulta os três vínculos pela rota do produto",
+    "Tela /produtos renderiza sem erros de JavaScript",
+    "Tela /ingredientes renderiza sem erros de JavaScript",
+    "Tela /personalizacoes renderiza sem erros de JavaScript",
+    "Tela /categorias renderiza sem erros de JavaScript",
+    "Tela /pedidos renderiza sem erros de JavaScript",
+    "Tela /funcionarios renderiza sem erros de JavaScript",
+    "Tela /cardapio/sacola renderiza sem erros de JavaScript",
+    "Tela /perfil renderiza sem erros de JavaScript",
+    "Tela /dashboard renderiza sem erros de JavaScript",
+    "Tela /categorias/cadastro renderiza sem erros de JavaScript",
+    "Tela /ingredientes/cadastro renderiza sem erros de JavaScript",
+    "Tela /personalizacoes/cadastro renderiza sem erros de JavaScript",
+    "Tela /funcionarios/cadastro renderiza sem erros de JavaScript",
+    "Produto inexistente exibe erro e bloqueia salvar",
+    "Nenhum erro de JavaScript nas telas verificadas"
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=1&size=100",
+      "body": null
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/42",
+      "query": "",
+      "body": {
+        "nome": "Cappuccino de validação",
+        "precoUnidade": 14.5,
+        "descricao": "Café espresso com leite vaporizado.",
+        "categoria": {
+          "id": 3,
+          "nome": "Cafés"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/42/ingredientes",
+      "query": "",
+      "body": [
+        10,
+        12
+      ]
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/42/personalizacoes",
+      "query": "",
+      "body": [
+        20,
+        21
+      ]
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "DELETE",
+      "endpoint": "/produtos/42/tamanhos/1",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": {
+        "tamanhoId": 1,
+        "precoUnidade": 15.9
+      }
+    },
+    {
+      "method": "POST",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": {
+        "tamanhoId": 2,
+        "precoUnidade": 19.9
+      }
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=1&size=100",
+      "body": null
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/43",
+      "query": "",
+      "body": {
+        "nome": "Cappuccino de validação",
+        "precoUnidade": 14.5,
+        "descricao": "Café espresso com leite vaporizado.",
+        "categoria": {
+          "id": 3,
+          "nome": "Cafés"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/43/ingredientes",
+      "query": "",
+      "body": [
+        10,
+        11,
+        13
+      ]
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/43/personalizacoes",
+      "query": "",
+      "body": [
+        20
+      ]
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/43/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/agrupados",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=1&size=100",
+      "body": null
+    },
+    {
+      "method": "POST",
+      "endpoint": "/categorias",
+      "query": "",
+      "body": {
+        "nome": "Categoria criada no teste"
+      }
+    },
+    {
+      "method": "POST",
+      "endpoint": "/produtos",
+      "query": "",
+      "body": {
+        "nome": "Produto de validação",
+        "precoUnidade": 12.5,
+        "descricao": "Descrição para o teste de cadastro.",
+        "categoria": {
+          "id": 9,
+          "nome": "Categoria criada no teste"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/77/ingredientes",
+      "query": "",
+      "body": []
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/77/personalizacoes",
+      "query": "",
+      "body": []
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/77/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/77",
+      "query": "",
+      "body": {
+        "nome": "Produto de validação",
+        "precoUnidade": 12.5,
+        "descricao": "Descrição para o teste de cadastro.",
+        "categoria": {
+          "id": 9,
+          "nome": "Categoria criada no teste"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/77/ingredientes",
+      "query": "",
+      "body": []
+    },
+    {
+      "method": "PUT",
+      "endpoint": "/produtos/77/personalizacoes",
+      "query": "",
+      "body": []
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/77/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/agrupados",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=1&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=1&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/agrupados",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/42/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/agrupados",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=7",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=7",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=7",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=7",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/pedidos",
+      "query": "?ativos=true",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/funcionarios/crud",
+      "query": "?page=0&size=7",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/funcionarios/crud",
+      "query": "?page=0&size=7",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/dashboard/resumo",
+      "query": "?inicio=2026-10-07&fim=2026-11-05",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/categorias",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/personalizacoes",
+      "query": "?page=0&size=100",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/999",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/999/ingredientes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/999/personalizacoes",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/produtos/999/tamanhos",
+      "query": "",
+      "body": null
+    },
+    {
+      "method": "GET",
+      "endpoint": "/ingredientes",
+      "query": "?page=1&size=100",
+      "body": null
+    }
+  ]
+}

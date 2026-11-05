@@ -2,9 +2,9 @@ import styles from './WhiteButton.module.css';
 
 export default function WhiteButton(props){
     return(
-      <div className={styles.btn} onClick={props.onClick}>
-        <p>{props.children}</p>
-      </div>  
+      <button type="button" className={styles.btn} onClick={props.onClick} disabled={props.disabled}>
+        <span>{props.children}</span>
+      </button>
     );
 }
 

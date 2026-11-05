@@ -41,7 +41,9 @@ export function validarProduto({ nome, preco, descricao, categoria }) {
   }
 
   const descricaoLimpa = (descricao || '').trim();
-  if (descricaoLimpa.length > LIMITES.descricao) {
+  if (!descricaoLimpa) {
+    erros.descricao = 'Informe a descrição do produto.';
+  } else if (descricaoLimpa.length > LIMITES.descricao) {
     erros.descricao = `A descrição pode ter no máximo ${LIMITES.descricao} caracteres.`;
   }
 

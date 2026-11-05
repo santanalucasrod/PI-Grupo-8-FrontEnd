@@ -14,7 +14,7 @@
 
 .container:focus-within {
     border-color: var(--color-brown);
-    outline: 2px solid var(--theme-border, rgb(141 91 66 / 0.15));
+    outline: 2px solid var(--theme-border, rgb(59 36 25 / 0.15));
 }
 
 .icone {

@@ -43,7 +43,7 @@ function aplicarTemaGrafico(chart) {
     eixo.grid.color = tokens.getPropertyValue('--theme-chart-grid').trim() || 'rgba(0,0,0,0.06)';
   }
   const paleta = [
-    ['#8D5B42', tokens.getPropertyValue('--theme-chart-brown').trim() || '#d1a07e'],
+    ['#3b2419', tokens.getPropertyValue('--theme-chart-brown').trim() || '#d1a07e'],
     ['#5C3A22', tokens.getPropertyValue('--theme-chart-brown-dark').trim() || '#c69776'],
   ];
   function ajustarCor(valor) {
@@ -59,7 +59,7 @@ function aplicarTemaGrafico(chart) {
 Chart.register({ id: 'temaKento', beforeUpdate: aplicarTemaGrafico });
 
 const CORES = {
-  marrom: "#8D5B42",
+  marrom: "#3b2419",
   marromEscuro: "#5C3A22",
   creme: "#C8AA8C",
   alerta: "#D9822B",

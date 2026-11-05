@@ -25,7 +25,7 @@
 }
 
 .textarea:focus {
-  border-color: var(--theme-accent, #8D5B42);
+  border-color: var(--theme-accent, #3b2419);
 }
 
 .textareaError {

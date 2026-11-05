@@ -194,8 +194,8 @@
 }
 
 .linkAtivo {
-  color: var(--theme-accent, #8d5b42);
-  background: rgba(141, 91, 66, 0.08);
+  color: var(--theme-accent, #3b2419);
+  background: rgba(59, 36, 25, 0.08);
   border-left-color: var(--color-brown);
 }
 

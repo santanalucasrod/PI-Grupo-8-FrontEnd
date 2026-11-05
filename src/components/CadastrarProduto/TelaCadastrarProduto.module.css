@@ -24,3 +24,42 @@
   display: flex;
   flex-direction: column;
 }
+
+.campos {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  text-align: left;
+}
+
+.aviso {
+  width: min(100%, 960px);
+  padding: 12px;
+  border-radius: 8px;
+  color: var(--theme-danger-text, #9b2c2c);
+  background: var(--theme-danger-surface, #fff0eb);
+  box-sizing: border-box;
+}
+
+.aviso button {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--color-brown);
+  color: #fff;
+  cursor: pointer;
+}
+
+.tamanhos {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--theme-border, #c9b6a5);
+}
+
+.tamanhos h3 { margin: 0; font-size: 16px; }
+.tamanhos p { font-size: 13px; color: var(--theme-muted, #62584f); }
+.tamanho { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 12px 0; font-size: 14px; }
+.tamanho label { display: flex; align-items: center; gap: 8px; }
+.tamanho input[type='checkbox'] { accent-color: var(--color-brown); }
+.tamanho input[type='number'] { width: 110px; min-width: 0; padding: 8px; border: 1px solid var(--theme-border, #c9b6a5); border-radius: 4px; }

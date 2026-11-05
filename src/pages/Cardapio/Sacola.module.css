@@ -23,7 +23,7 @@
 
 .eyebrow {
   margin: 0 0 6px;
-  color: var(--theme-accent, var(--color-brown, #8d5b42));
+  color: var(--theme-accent, var(--color-brown, #3b2419));
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -49,9 +49,9 @@
 
 .voltar,
 .alterar {
-  border: 1px solid var(--color-brown, #8d5b42);
+  border: 1px solid var(--color-brown, #3b2419);
   background: var(--theme-surface, #fff);
-  color: var(--theme-accent, var(--color-brown, #8d5b42));
+  color: var(--theme-accent, var(--color-brown, #3b2419));
 }
 
 .painel {
@@ -133,8 +133,8 @@
 
 .vazia button,
 .finalizar {
-  border: 1px solid var(--color-brown, #8d5b42);
-  background: var(--color-brown, #8d5b42);
+  border: 1px solid var(--color-brown, #3b2419);
+  background: var(--color-brown, #3b2419);
   color: #fff;
 }
 
@@ -177,7 +177,7 @@
 .alterar:focus-visible,
 .finalizar:focus-visible,
 .remover:focus-visible {
-  outline: 2px solid var(--color-brown, #8d5b42);
+  outline: 2px solid var(--color-brown, #3b2419);
   outline-offset: 2px;
 }
 

@@ -45,70 +45,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
    });
  }
 
- const USAR_DADOS_MOCK = false;
-
- const PEDIDOS_MOCK = [
-   {
-     id: 101,
-     nomeCliente: "Ana Beatriz",
-     status: "EM_PREPARO",
-     descricao: "Cliente vai retirar no balcão",
-     itens: [
-       { id: 1, nomeProduto: "Cappuccino", quantidade: 1, pronto: true, volumeMl: 300, observacao: "Sem açúcar" },
-       { id: 2, nomeProduto: "Pão de queijo", quantidade: 2, pronto: true },
-       { id: 3, nomeProduto: "Água com gás", quantidade: 1, pronto: false, volumeMl: 500 },
-     ],
-   },
-   {
-     id: 102,
-     nomeCliente: "Marcos Vinícius",
-     status: "EM_PREPARO",
-     descricao: "",
-     itens: [
-       { id: 4, nomeProduto: "Espresso duplo", quantidade: 1, pronto: false, volumeMl: 60 },
-       { id: 5, nomeProduto: "Croissant", quantidade: 1, pronto: false },
-     ],
-   },
-   {
-     id: 103,
-     nomeCliente: "Juliana Prado",
-     status: "EM_PREPARO",
-     descricao: "Alergia a lactose",
-     itens: [
-       { id: 6, nomeProduto: "Latte", quantidade: 1, pronto: true, volumeMl: 350, observacao: "Leite de aveia" },
-     ],
-   },
-   {
-     id: 104,
-     nomeCliente: "Pedro Henrique",
-     status: "PENDENTE",
-     descricao: "",
-     itens: [
-       { id: 7, nomeProduto: "Mocha", quantidade: 1, pronto: false, volumeMl: 400 },
-       { id: 8, nomeProduto: "Bolo de cenoura", quantidade: 1, pronto: false },
-     ],
-   },
-   {
-     id: 105,
-     nomeCliente: "Camila Souza",
-     status: "PENDENTE",
-     descricao: "",
-     itens: [
-       { id: 9, nomeProduto: "Chá gelado", quantidade: 2, pronto: false, volumeMl: 400, observacao: "Menos gelo" },
-     ],
-   },
-   {
-     id: 106,
-     nomeCliente: "",
-     status: "PENDENTE",
-     descricao: "",
-     itens: [
-       { id: 10, nomeProduto: "Café coado", quantidade: 1, pronto: false, volumeMl: 300 },
-       { id: 11, nomeProduto: "Torrada", quantidade: 1, pronto: false },
-     ],
-   },
- ];
- 
  /**
   * Tela de visualização da fila de pedidos, feita para o barista.
   *
@@ -140,7 +76,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
    const controllerAtual = useRef(null);
 
    const carregarPedidos = useCallback(async () => {
-     if (USAR_DADOS_MOCK) return;
      if (mutacoesEmAndamento.current > 0) return;
 
      controllerAtual.current?.abort();
@@ -176,15 +111,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
    }, []);
 
    useEffect(() => {
-     if (USAR_DADOS_MOCK) {
-       // simula um pequeno delay de rede pra ver o "Carregando..." também
-       const timeout = setTimeout(() => {
-         setPedidos(PEDIDOS_MOCK);
-         setCarregando(false);
-         primeiraCargaFeita.current = true;
-       }, 400);
-       return () => clearTimeout(timeout);
-     }
 
      const primeiraCarga = setTimeout(carregarPedidos, 0);
      const intervalo = setInterval(carregarPedidos, INTERVALO_ATUALIZACAO_MS);
@@ -234,7 +160,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
        }))
      );
 
-     if (USAR_DADOS_MOCK) return; // no mock, a atualização otimista já basta
 
      await executarMutacao(
        () =>
@@ -256,7 +181,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
        atual.map((p) => (p.id === pedidoId ? { ...p, status: "EM_PREPARO" } : p))
      );
 
-     if (USAR_DADOS_MOCK) return;
 
      await executarMutacao(
        () =>
@@ -269,11 +193,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
    async function concluirPedido(pedidoId) {
      if (mutacoesEmAndamento.current > 0) return;
-     if (USAR_DADOS_MOCK) {
-       setPedidos((atual) => atual.filter((p) => p.id !== pedidoId));
-       setPopoverAberto((aberto) => (aberto === pedidoId ? null : aberto));
-       return;
-     }
 
      await executarMutacao(async () => {
        await api.patch(`/pedidos/${pedidoId}/status`, {
@@ -293,10 +212,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
        setPopoverAberto((aberto) => (aberto === pedido.id ? null : aberto));
      };
 
-     if (USAR_DADOS_MOCK) {
-       removerDaTela();
-       return;
-     }
 
      await executarMutacao(async () => {
        await api.patch(`/pedidos/${pedido.id}/cancelar`, null, {
@@ -308,12 +223,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
    async function devolverParaFila(pedidoId) {
      if (mutacoesEmAndamento.current > 0) return;
-     if (USAR_DADOS_MOCK) {
-       setPedidos((atual) => atual.map((pedido) =>
-         pedido.id === pedidoId ? { ...pedido, status: 'PENDENTE' } : pedido
-       ));
-       return;
-     }
 
      await executarMutacao(async () => {
        const resposta = await api.patch(`/pedidos/${pedidoId}/status`, {

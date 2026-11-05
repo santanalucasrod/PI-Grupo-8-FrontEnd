@@ -1,7 +1,7 @@
 .footer {
   width: 100%;
   height: 80px;
-  background-color: var(--theme-chrome, #8D5B42);
+  background-color: var(--theme-chrome, #3b2419);
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -32,6 +32,8 @@
   height: 18px;
   object-fit: contain;
 }
+
+.button:disabled { opacity: 0.6; cursor: not-allowed; }
 
 :global(:root[data-theme]) .footer {
   backdrop-filter: var(--theme-blur, none);
